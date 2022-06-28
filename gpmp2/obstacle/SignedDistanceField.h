@@ -11,6 +11,8 @@
 #include <gpmp2/config.h>
 
 #include <gtsam/base/Matrix.h>
+#include <gtsam/base/MatrixSerialization.h>
+#include <gtsam/base/VectorSerialization.h>
 #include <gtsam/geometry/Point3.h>
 
 #include <boost/tuple/tuple.hpp>
@@ -181,7 +183,7 @@ public:
   /// print
   void print(const std::string& str = "") const {
     std::cout << str;
-    std::cout << "field origin:     "; origin_.print();
+    std::cout << "field origin:     " << origin_.transpose() << std::endl;
     std::cout << "field resolution: " << cell_size_ << std::endl;
     std::cout << "field size:       " << field_cols_ << " x "
         << field_rows_ << " x " << field_z_ << std::endl;
