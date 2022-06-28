@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 
-from gpmp2_python.datasets.generate3Ddataset import generate3Ddataset
-from gpmp2_python.robots.generateArm import generateArm
-from gpmp2_python.utils.plot_utils import *
-from gpmp2_python.utils.signedDistanceField3D import signedDistanceField3D
+from gpmp2.datasets.generate3Ddataset import generate3Ddataset
+from gpmp2.robots.generateArm import generateArm
+from gpmp2.utils.plot_utils import *
+from gpmp2.utils.signedDistanceField3D import signedDistanceField3D
 
 
 # dataset

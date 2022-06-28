@@ -1,12 +1,11 @@
-import numpy as np
-from gtsam import *
-from gpmp2 import *
 import matplotlib.pyplot as plt
-
-from gpmp2_python.datasets.generate2Ddataset import generate2Ddataset
-from gpmp2_python.robots.generateArm import generateArm
-from gpmp2_python.utils.plot_utils import *
-from gpmp2_python.utils.signedDistanceField2D import signedDistanceField2D
+import numpy as np
+from gpmp2 import *
+from gpmp2.datasets.generate2Ddataset import generate2Ddataset
+from gpmp2.robots.generateArm import generateArm
+from gpmp2.utils.plot_utils import *
+from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
+from gtsam import *
 
 
 def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
