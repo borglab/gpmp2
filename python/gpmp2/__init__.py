@@ -1,1 +1,3 @@
-from gpmp2.version import __version__
+from gpmp2.gpmp2 import *
+
+__version__ = "0.3.0"

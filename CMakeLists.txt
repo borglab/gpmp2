@@ -15,6 +15,12 @@ set(GPMP2_VERSION_MINOR 3)
 set(GPMP2_VERSION_PATCH 0)
 set(gpmp2_VERSION_STRING "${GPMP2_VERSION_MAJOR}.${GPMP2_VERSION_MINOR}.${GPMP2_VERSION_PATCH}")
 
+add_compile_options(-faligned-new)
+
+# Enforce c++11 standards
+add_compile_options(-std=c++11) # CMake 3.1 and earlier
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # option: whether turn on Matlab toolbox
 option(GPMP2_BUILD_STATIC_LIBRARY "whether build static library" OFF)
@@ -22,7 +28,7 @@ option(GPMP2_BUILD_MATLAB_TOOLBOX "whether build matlab toolbox, need shared lib
 option(GPMP2_BUILD_PYTHON_TOOLBOX "whether build python toolbox, need shared lib" OFF)
 
 if(GPMP2_BUILD_STATIC_LIBRARY AND GPMP2_BUILD_MATLAB_TOOLBOX)
-  message(FATAL_ERROR "matlab toolbox needs shared lib")
+  message(FATAL_ERROR "Matlab toolbox needs shared lib to be built")
 endif()
 
 
@@ -41,11 +47,7 @@ include(GtsamTesting)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${GTSAM_DIR}/../GTSAMCMakeTools")
 
 # Boost - same requirement as gtsam
-find_package(Boost 1.50 REQUIRED)
-find_package(Boost COMPONENTS filesystem REQUIRED)
-find_package(Boost COMPONENTS system REQUIRED)
-find_package(Boost COMPONENTS thread REQUIRED)
-find_package(Boost COMPONENTS serialization REQUIRED)
+find_package(Boost 1.65 COMPONENTS filesystem system thread serialization REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 
@@ -76,18 +78,7 @@ endif()
 
 # Wrapping to Python
 if(GPMP2_BUILD_PYTHON_TOOLBOX)
-  include_directories(${GTSAM_DIR}/cython)
-  include_directories(/usr/local/cython)
-  include(GtsamCythonWrap)
-  include_directories(${GTSAM_EIGENCY_INSTALL_PATH})
-
-  wrap_and_install_library_cython("gpmp2.h"
-                                  "from gtsam.gtsam cimport *" # extra import of gtsam/gtsam.pxd Cython header
-                                  "${CMAKE_INSTALL_PREFIX}/cython" # install path
-                                  gpmp2  # library to link with
-                                  "gtsam"  # dependencies which need to be built before wrapping
-                                  )
-  add_definitions(-DBOOST_OPTIONAL_ALLOW_BINDING_TO_RVALUES -DBOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES)
+  add_subdirectory(python)
 endif()
 
 # Install config and export files
