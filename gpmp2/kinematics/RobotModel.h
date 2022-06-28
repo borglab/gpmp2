@@ -28,7 +28,7 @@ struct BodySphere {
 
 
 /// vector of body sphere, typedef here to wrap in matlab
-typedef std::vector<BodySphere> BodySphereVector;
+using BodySphereVector = std::vector<BodySphere>;
 
 
 /**

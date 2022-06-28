@@ -1,4 +1,4 @@
-// gpmp2 matlab/python wrapper intreface file
+// gpmp2 matlab/python wrapper interface file
 
 /* *   Forward declarations and class definitions for Cython:
  *     - Need to specify the base class (both this forward class and base
