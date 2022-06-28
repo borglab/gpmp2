@@ -77,7 +77,7 @@ gtsam::Matrix RobotModel<FK>::sphereCentersMat(const Pose& jp) const {
   // convert to matrix
   gtsam::Matrix points_mat(3, nr_body_spheres());
   for (size_t i = 0; i < nr_body_spheres(); i++)
-    points_mat.col(i) = sph_centers[i].vector();
+    points_mat.col(i) = sph_centers[i];
   return points_mat;
 }
 
