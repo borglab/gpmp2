@@ -23,7 +23,7 @@ setup(
     name='${PROJECT_NAME}',
     description='${PROJECT_DESCRIPTION}',
     url='${PROJECT_HOMEPAGE_URL}',
-    version='${PROJECT_VERSION}',
+    version='${gpmp2_VERSION_STRING}',
     author="${PROJECT_AUTHOR}",
     author_email="${PROJECT_AUTHOR_EMAIL}",
     license='Simplified BSD license',
