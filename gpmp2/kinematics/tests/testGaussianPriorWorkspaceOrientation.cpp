@@ -39,7 +39,7 @@ TEST(GaussianPriorWorkspaceOrientationArm, error) {
   GaussianPriorWorkspaceOrientationArm factor(0, arm, 1, des, cost_model);
   actual = factor.evaluateError(q, H_act);
   expect = Vector3(-0.613943126, 1.48218982, 0.613943126);
-  H_exp = numericalDerivative11(boost::function<Vector3(const Vector2&)>(
+  H_exp = numericalDerivative11(std::function<Vector3(const Vector2&)>(
       boost::bind(&GaussianPriorWorkspaceOrientationArm::evaluateError, factor, _1, boost::none)), q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));

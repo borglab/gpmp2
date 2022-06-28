@@ -37,16 +37,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolatePose) {
   actual = base.interpolatePose(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
   expect = Pose2(0, 0, 0);
-  expectH1 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-6);
-  expectH2 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-6);
-  expectH3 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-6);
-  expectH4 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
@@ -64,16 +64,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolatePose) {
   actual = base.interpolatePose(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
   expect = Pose2(0.03, 0, 0);
-  expectH1 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-4);
-  expectH2 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-4);
-  expectH3 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-4);
-  expectH4 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-4);
   EXPECT(assert_equal(expect, actual, 1e-6));
@@ -91,16 +91,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolatePose) {
   actual = base.interpolatePose(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
   expect = Pose2(0, 0, 0.03);
-  expectH1 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-6);
-  expectH2 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-6);
-  expectH3 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-6);
-  expectH4 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
@@ -117,16 +117,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolatePose) {
   v2 = (Vector3() << 0.6, -0.2, 0.8).finished();
   actual = base.interpolatePose(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
-  expectH1 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-6);
-  expectH2 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-6);
-  expectH3 = numericalDerivative11(boost::function<Pose2(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Pose2(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-6);
-  expectH4 = numericalDerivative11(boost::function<Pose2(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Pose2(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolatePose, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-6);
   EXPECT(assert_equal(expectH1, actualH1, 1e-8));
@@ -155,16 +155,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolateVelocity) {
   actual = base.interpolateVelocity(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
   expect = Vector3(0, 0, 0);
-  expectH1 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-6);
-  expectH2 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-6);
-  expectH3 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-6);
-  expectH4 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
@@ -182,16 +182,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolateVelocity) {
   actual = base.interpolateVelocity(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
   expect = Vector3(1, 0, 0);
-  expectH1 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-4);
-  expectH2 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-4);
-  expectH3 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-4);
-  expectH4 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-4);
   EXPECT(assert_equal(expect, actual, 1e-6));
@@ -209,16 +209,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolateVelocity) {
   actual = base.interpolateVelocity(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
   expect = Vector3(0, 0, 1);
-  expectH1 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-6);
-  expectH2 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-6);
-  expectH3 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-6);
-  expectH4 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
@@ -235,16 +235,16 @@ TEST(GaussianProcessInterpolatorPose2, interpolateVelocity) {
   v2 = (Vector3() << 0.6, -0.2, 0.8).finished();
   actual = base.interpolateVelocity(p1, v1, p2, v2, actualH1, actualH2,
       actualH3, actualH4);
-  expectH1 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH1 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           _1, v1, p2, v2, boost::none, boost::none, boost::none, boost::none)), p1, 1e-6);
-  expectH2 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH2 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, _1, p2, v2, boost::none, boost::none, boost::none, boost::none)), v1, 1e-6);
-  expectH3 = numericalDerivative11(boost::function<Vector3(const Pose2&)>(
+  expectH3 = numericalDerivative11(std::function<Vector3(const Pose2&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, _1, v2, boost::none, boost::none, boost::none, boost::none)), p2, 1e-6);
-  expectH4 = numericalDerivative11(boost::function<Vector3(const Vector3&)>(
+  expectH4 = numericalDerivative11(std::function<Vector3(const Vector3&)>(
       boost::bind(&GaussianProcessInterpolatorPose2::interpolateVelocity, base,
           p1, v1, p2, _1, boost::none, boost::none, boost::none, boost::none)), v2, 1e-6);
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));

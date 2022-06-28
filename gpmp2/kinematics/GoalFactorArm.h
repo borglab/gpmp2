@@ -86,7 +86,7 @@ public:
   void print(const std::string& s="", const gtsam::KeyFormatter& keyFormatter = gtsam::DefaultKeyFormatter) const {
     std::cout << s << "GoalFactorArm :" << std::endl;
     Base::print("", keyFormatter);
-    std::cout << "dest : "; dest_point_.print();
+    std::cout << "dest : " << dest_point_.transpose() << std::endl;
   }
 
 private:

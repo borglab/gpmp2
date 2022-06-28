@@ -44,7 +44,7 @@ TEST(GoalFactorArm, error) {
   factor = GoalFactorArm(0, cost_model, arm, goal);
   actual = factor.evaluateError(q, H_act);
   expect = Vector3(0, 0, 0);
-  H_exp = numericalDerivative11(boost::function<Vector3(const Vector2&)>(
+  H_exp = numericalDerivative11(std::function<Vector3(const Vector2&)>(
       boost::bind(&GoalFactorArm::evaluateError, factor, _1, boost::none)), q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
@@ -55,7 +55,7 @@ TEST(GoalFactorArm, error) {
   factor = GoalFactorArm(0, cost_model, arm, goal);
   actual = factor.evaluateError(q, H_act);
   expect = Vector3(0, 0, 0);
-  H_exp = numericalDerivative11(boost::function<Vector3(const Vector2&)>(
+  H_exp = numericalDerivative11(std::function<Vector3(const Vector2&)>(
       boost::bind(&GoalFactorArm::evaluateError, factor, _1, boost::none)), q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
@@ -66,7 +66,7 @@ TEST(GoalFactorArm, error) {
   factor = GoalFactorArm(0, cost_model, arm, goal);
   actual = factor.evaluateError(q, H_act);
   expect = Vector3(-0.585786437626905, 1.414213562373095, 0);
-  H_exp = numericalDerivative11(boost::function<Vector3(const Vector2&)>(
+  H_exp = numericalDerivative11(std::function<Vector3(const Vector2&)>(
       boost::bind(&GoalFactorArm::evaluateError, factor, _1, boost::none)), q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));

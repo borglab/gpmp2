@@ -110,13 +110,13 @@ TEST(ObstacleSDFFactorGPArm, error) {
   err_act = factor.evaluateError(q1, qdot1, q2, qdot2, H1_act, H2_act, H3_act, H4_act);
   sdf_exp = (Vector(4) << 0.1810125, 0.099675, 0.06035, 0.06035).finished();
   err_exp = convertSDFtoErr(sdf_exp, obs_eps+r);
-  H1_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H1_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, _1, qdot1, q2, qdot2)), q1, 1e-6);
-  H2_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H2_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, q1, _1, q2, qdot2)), qdot1, 1e-6);
-  H3_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H3_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, q1, qdot1, _1, qdot2)), q2, 1e-6);
-  H4_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H4_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, q1, qdot1, q2, _1)), qdot2, 1e-6);
   EXPECT(assert_equal(err_exp, err_act, 1e-6));
   EXPECT(assert_equal(H1_exp, H1_act, 1e-6));
@@ -133,13 +133,13 @@ TEST(ObstacleSDFFactorGPArm, error) {
   err_act = factor.evaluateError(q1, qdot1, q2, qdot2, H1_act, H2_act, H3_act, H4_act);
   sdf_exp = (Vector(4) << 0.1810125, 0.095702211510784, 0.01035442302156, 0).finished();
   err_exp = convertSDFtoErr(sdf_exp, obs_eps+r);
-  H1_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H1_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, _1, qdot1, q2, qdot2)), q1, 1e-6);
-  H2_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H2_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, q1, _1, q2, qdot2)), qdot1, 1e-6);
-  H3_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H3_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, q1, qdot1, _1, qdot2)), q2, 1e-6);
-  H4_exp = numericalDerivative11(boost::function<Vector(const Vector2&)>(
+  H4_exp = numericalDerivative11(std::function<Vector(const Vector2&)>(
       boost::bind(&errorWrapper, factor, q1, qdot1, q2, _1)), qdot2, 1e-6);
   EXPECT(assert_equal(err_exp, err_act, 1e-6));
   EXPECT(assert_equal(H1_exp, H1_act, 1e-6));

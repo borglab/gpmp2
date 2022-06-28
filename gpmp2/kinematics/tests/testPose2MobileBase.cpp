@@ -56,13 +56,13 @@ TEST(Pose2MobileBase, Example) {
   vvec_exp.clear();
   vvec_exp.push_back(Vector3(0, 0, 0));
   pJp_exp.clear();
-  pJp_exp.push_back(numericalDerivativeDynamic(boost::function<Pose3(const Pose2&)>(
+  pJp_exp.push_back(numericalDerivativeDynamic(std::function<Pose3(const Pose2&)>(
       boost::bind(&fkpose, robot, _1, qdot)), q, 1e-6));
   // vJp_exp.clear();
-  // vJp_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Pose2&)>(
+  // vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Pose2&)>(
   //     boost::bind(&fkvelocity, robot, _1, qdot)), q, 1e-6));
   // vJv_exp.clear();
-  // vJv_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Vector3&)>(
+  // vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Vector3&)>(
   //     boost::bind(&fkvelocity, robot, q, _1)), qdot, 1e-6));
   //robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act, vJv_act);
   robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
@@ -81,13 +81,13 @@ TEST(Pose2MobileBase, Example) {
   vvec_exp.clear();
   vvec_exp.push_back(Vector3(1, 0, 1));
   pJp_exp.clear();
-  pJp_exp.push_back(numericalDerivativeDynamic(boost::function<Pose3(const Pose2&)>(
+  pJp_exp.push_back(numericalDerivativeDynamic(std::function<Pose3(const Pose2&)>(
       boost::bind(&fkpose, robot, _1, qdot)), q, 1e-6));
   // vJp_exp.clear();
-  // vJp_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Pose2&)>(
+  // vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Pose2&)>(
   //     boost::bind(&fkvelocity, robot, _1, qdot)), q, 1e-6));
   // vJv_exp.clear();
-  // vJv_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Vector3&)>(
+  // vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Vector3&)>(
   //     boost::bind(&fkvelocity, robot, q, _1)), qdot, 1e-6));
   //robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act, vJv_act);
   robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
@@ -106,13 +106,13 @@ TEST(Pose2MobileBase, Example) {
   vvec_exp.clear();
   vvec_exp.push_back(Vector3(0, 0, 0));
   pJp_exp.clear();
-  pJp_exp.push_back(numericalDerivativeDynamic(boost::function<Pose3(const Pose2&)>(
+  pJp_exp.push_back(numericalDerivativeDynamic(std::function<Pose3(const Pose2&)>(
       boost::bind(&fkpose, robot, _1, qdot)), q, 1e-6));
   // vJp_exp.clear();
-  // vJp_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Pose2&)>(
+  // vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Pose2&)>(
   //     boost::bind(&fkvelocity, robot, _1, qdot)), q, 1e-6));
   // vJv_exp.clear();
-  // vJv_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Vector3&)>(
+  // vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Vector3&)>(
   //     boost::bind(&fkvelocity, robot, q, _1)), qdot, 1e-6));
   //robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act, vJv_act);
   robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
@@ -131,13 +131,13 @@ TEST(Pose2MobileBase, Example) {
   vvec_exp.clear();
   vvec_exp.push_back(Vector3(1, 0, 1));
   pJp_exp.clear();
-  pJp_exp.push_back(numericalDerivativeDynamic(boost::function<Pose3(const Pose2&)>(
+  pJp_exp.push_back(numericalDerivativeDynamic(std::function<Pose3(const Pose2&)>(
       boost::bind(&fkpose, robot, _1, qdot)), q, 1e-6));
   // vJp_exp.clear();
-  // vJp_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Pose2&)>(
+  // vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Pose2&)>(
   //     boost::bind(&fkvelocity, robot, _1, qdot)), q, 1e-6));
   // vJv_exp.clear();
-  // vJv_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Vector3&)>(
+  // vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Vector3&)>(
   //     boost::bind(&fkvelocity, robot, q, _1)), qdot, 1e-6));
   //robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act, vJv_act);
   robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
@@ -152,13 +152,13 @@ TEST(Pose2MobileBase, Example) {
   qdot = (Vector3() << 3.2, 4.9, -3.3).finished();
   qdymc = qdot;
   pJp_exp.clear();
-  pJp_exp.push_back(numericalDerivativeDynamic(boost::function<Pose3(const Pose2&)>(
+  pJp_exp.push_back(numericalDerivativeDynamic(std::function<Pose3(const Pose2&)>(
       boost::bind(&fkpose, robot, _1, qdot)), q, 1e-6));
   // vJp_exp.clear();
-  // vJp_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Pose2&)>(
+  // vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Pose2&)>(
   //     boost::bind(&fkvelocity, robot, _1, qdot)), q, 1e-6));
   // vJv_exp.clear();
-  // vJv_exp.push_back(numericalDerivativeDynamic(boost::function<Vector3(const Vector3&)>(
+  // vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const Vector3&)>(
   //     boost::bind(&fkvelocity, robot, q, _1)), qdot, 1e-6));
   //robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act, vJv_act);
   robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
