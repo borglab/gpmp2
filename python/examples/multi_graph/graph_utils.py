@@ -1,9 +1,9 @@
+from random import random, seed
+
 import numpy as np
-from gtsam import *
 from gpmp2 import *
-from random import seed
-from random import random
-import copy
+from gtsam import *
+from gtsam.symbol_shorthand import V, X
 
 
 class Problem:
@@ -95,14 +95,14 @@ def get_initializations(nr_chains, problem):
     init_values = Values()
 
     for i in range(0, problem.total_time_step + 1):
-        key_pos = symbol(ord("x"), i)
+        key_pos = X(i)
         pos_keys.append(key_pos)
-        key_vel = symbol(ord("v"), i)
+        key_vel = V(i)
 
         # initialize as straight line in conf space
         pose = problem.start_conf * float(problem.total_time_step - i) / float(
-            problem.total_time_step
-        ) + problem.end_conf * i / float(problem.total_time_step)
+            problem.total_time_step) + problem.end_conf * i / float(
+                problem.total_time_step)
 
         mean_chain.append(pose)
         vel = problem.avg_vel
@@ -112,25 +112,25 @@ def get_initializations(nr_chains, problem):
         # start/end priors
         if i == 0:
             graph.push_back(
-                PriorFactorVector(key_pos, problem.start_conf, problem.pose_fix_model)
-            )
+                PriorFactorVector(key_pos, problem.start_conf,
+                                  problem.pose_fix_model))
             graph.push_back(
-                PriorFactorVector(key_vel, problem.start_vel, problem.vel_fix_model)
-            )
+                PriorFactorVector(key_vel, problem.start_vel,
+                                  problem.vel_fix_model))
         elif i == problem.total_time_step:
             graph.push_back(
-                PriorFactorVector(key_pos, problem.end_conf, problem.pose_fix_model)
-            )
+                PriorFactorVector(key_pos, problem.end_conf,
+                                  problem.pose_fix_model))
             graph.push_back(
-                PriorFactorVector(key_vel, problem.end_vel, problem.vel_fix_model)
-            )
+                PriorFactorVector(key_vel, problem.end_vel,
+                                  problem.vel_fix_model))
 
         # GP priors and cost factor
         if i > 0:
-            key_pos1 = symbol(ord("x"), i - 1)
-            key_pos2 = symbol(ord("x"), i)
-            key_vel1 = symbol(ord("v"), i - 1)
-            key_vel2 = symbol(ord("v"), i)
+            key_pos1 = X(i - 1)
+            key_pos2 = X(i)
+            key_vel1 = V(i - 1)
+            key_vel2 = V(i)
 
             temp = problem.gp_factor_function(
                 key_pos1,
@@ -148,7 +148,7 @@ def get_initializations(nr_chains, problem):
 
     pos_keys = np.asarray(pos_keys)
     # TODO: check with mustafa if to include start and goal
-    pos_key_vect = createKeyVector(pos_keys)
+    pos_key_vect = KeyVector(pos_keys)
     marginals = Marginals(graph, result)
     joint_marginal = marginals.jointMarginalCovariance(pos_key_vect)
     cov_mat = joint_marginal.fullMatrix()
@@ -159,11 +159,8 @@ def get_initializations(nr_chains, problem):
     initializations = []
     # fix start and goal state of the samples and also resize them properly!
     for i in range(nr_chains):
-        initializations.append(
-            samples[i, :].reshape(
-                (problem.total_time_step + 1, problem.start_conf.shape[0])
-            )
-        )
+        initializations.append(samples[i, :].reshape(
+            (problem.total_time_step + 1, problem.start_conf.shape[0])))
         initializations[-1][0, :] = problem.start_conf
         initializations[-1][-1, :] = problem.end_conf
 
@@ -177,10 +174,8 @@ def get_parabolic_initialization(nr_chains, problem):
     for i in range(0, problem.window_size + 1):
         # initialize as straight line in conf space
         pose = problem.start_conf * float(problem.window_size - i) / float(
-            problem.window_size
-        ) + problem.end_conf * (problem.init_fraction_length * i) / float(
-            problem.window_size
-        )
+            problem.window_size) + problem.end_conf * (
+                problem.init_fraction_length * i) / float(problem.window_size)
         mean_chain.append(pose)
 
         local_chain = []
@@ -207,9 +202,9 @@ def get_parabolic_initialization(nr_chains, problem):
 
     problem.parabola_factor = 1
 
-    co_effs = np.linspace(
-        -1 * problem.parabola_factor, problem.parabola_factor, num=nr_chains
-    )
+    co_effs = np.linspace(-1 * problem.parabola_factor,
+                          problem.parabola_factor,
+                          num=nr_chains)
 
     global_chains = []
     for i in range(co_effs.shape[0]):
@@ -268,7 +263,8 @@ def get_parabolic_planner_graph(inits, problem):
             planner_id = len(nodes)
             if j == total_time_step - 1:
                 terminal_node_ids.append(planner_id)
-            nodes[planner_id] = Node(planner_id, inits[i][j, :], problem.avg_vel)
+            nodes[planner_id] = Node(planner_id, inits[i][j, :],
+                                     problem.avg_vel)
             map_[(i, j)] = planner_id
 
     for i in range(nr_chains):  # go through each chain
@@ -391,8 +387,8 @@ def get_gtsam_graph(node_list, problem):
 
     # add all nodes
     for i in range(len(node_list)):
-        key_pos = symbol(ord("x"), i)
-        key_vel = symbol(ord("v"), i)
+        key_pos = X(i)
+        key_vel = V(i)
 
         #% initialize as straight line in conf space
         init_values.insert(key_pos, node_list[i].pose)
@@ -401,18 +397,18 @@ def get_gtsam_graph(node_list, problem):
         #% start/end priors
         if i == 0:
             graph.push_back(
-                PriorFactorVector(key_pos, node_list[i].pose, problem.pose_fix_model)
-            )
+                PriorFactorVector(key_pos, node_list[i].pose,
+                                  problem.pose_fix_model))
             graph.push_back(
-                PriorFactorVector(key_vel, problem.start_vel, problem.vel_fix_model)
-            )
+                PriorFactorVector(key_vel, problem.start_vel,
+                                  problem.vel_fix_model))
         elif i == 1:
             graph.push_back(
-                PriorFactorVector(key_pos, node_list[i].pose, problem.pose_fix_model)
-            )
+                PriorFactorVector(key_pos, node_list[i].pose,
+                                  problem.pose_fix_model))
             graph.push_back(
-                PriorFactorVector(key_vel, problem.end_vel, problem.vel_fix_model)
-            )
+                PriorFactorVector(key_vel, problem.end_vel,
+                                  problem.vel_fix_model))
 
         if i > 0:
             #% cost factor
@@ -423,18 +419,17 @@ def get_gtsam_graph(node_list, problem):
                     problem.sdf,
                     problem.cost_sigma,
                     problem.epsilon_dist,
-                )
-            )
+                ))
 
             node_list[i].gt_graph_ob_id = graph.size() - 1
 
         # add edges for each node
 
         for neigh_id in node_list[i].neighbours:
-            key_pos1 = symbol(ord("x"), i)
-            key_pos2 = symbol(ord("x"), neigh_id)
-            key_vel1 = symbol(ord("v"), i)
-            key_vel2 = symbol(ord("v"), neigh_id)
+            key_pos1 = X(i)
+            key_pos2 = X(neigh_id)
+            key_vel1 = V(i)
+            key_vel2 = V(neigh_id)
 
             graph.push_back(
                 problem.gp_factor_function(
@@ -444,14 +439,14 @@ def get_gtsam_graph(node_list, problem):
                     key_vel2,
                     problem.delta_t,
                     problem.Qc_model,
-                )
-            )
+                ))
             node_list[i].neighbours[neigh_id].append(graph.size() - 1)
 
             #% GP cost factor
             if problem.use_GP_inter and problem.check_inter > 0:
                 for j in range(1, problem.check_inter + 1):
-                    tau = j * (problem.total_time_sec / problem.total_check_step)
+                    tau = j * (problem.total_time_sec /
+                               problem.total_check_step)
                     graph.push_back(
                         problem.obstalce_gp_factor_function(
                             key_pos1,
@@ -465,15 +460,14 @@ def get_gtsam_graph(node_list, problem):
                             problem.Qc_model,
                             problem.delta_t,
                             tau,
-                        )
-                    )
+                        ))
                     node_list[i].neighbours[neigh_id].append(graph.size() - 1)
     return graph, init_values
 
 
 #### Dijkstra specific stuff
 
-from Queue import PriorityQueue
+from queue import PriorityQueue
 
 
 class Planner(object):
@@ -491,11 +485,13 @@ class Planner(object):
     def get_edge_cost(self, first_idx, second_idx):
         cost = 0
         # add cost of gp and obstacle interpolation factors
-        for gt_factor_id in self.planner_graph[first_idx].neighbours[second_idx]:
+        for gt_factor_id in self.planner_graph[first_idx].neighbours[
+                second_idx]:
             cost += self.get_factor_error(gt_factor_id)
         # add cost of state obstacle factor
         if second_idx != 1:
-            cost += self.get_factor_error(self.planner_graph[second_idx].gt_graph_ob_id)
+            cost += self.get_factor_error(
+                self.planner_graph[second_idx].gt_graph_ob_id)
         return cost
 
     def get_shortest_path(self):
@@ -533,5 +529,5 @@ class Planner(object):
 
 def update_planner_graph(result, planner_graph):
     for i in range(len(planner_graph)):
-        planner_graph[i].pose = result.atVector(symbol(ord("x"), i))
-        planner_graph[i].vel = result.atVector(symbol(ord("v"), i))
+        planner_graph[i].pose = result.atVector(X(i))
+        planner_graph[i].vel = result.atVector(V(i))

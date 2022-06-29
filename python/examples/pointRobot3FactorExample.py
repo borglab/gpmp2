@@ -1,13 +1,12 @@
-import numpy as np
-from gtsam import *
-from gpmp2 import *
 import matplotlib.pyplot as plt
-
+import numpy as np
+from gpmp2 import *
 from gpmp2.datasets.generate2Ddataset import generate2Ddataset
 from gpmp2.robots.generateArm import generateArm
 from gpmp2.utils.plot_utils import *
 from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
-
+from gtsam import *
+from gtsam.symbol_shorthand import V, X
 
 dataset = generate2Ddataset("MultiObstacleDataset")
 rows = dataset.rows
@@ -41,22 +40,22 @@ pR = PointRobot(3, 1)
 spheres_data = np.asarray([0.0, 0.0, 0.0, 0.0, 1.5])
 nr_body = spheres_data.shape[0]
 sphere_vec = BodySphereVector()
-sphere_vec.push_back(
-    BodySphere(spheres_data[0], spheres_data[4], Point3(spheres_data[1:4]))
+sphere_vec.append(
+    BodySphere(int(spheres_data[0]), spheres_data[4], Point3(spheres_data[1:4]))
 )
 pR_model = Pose2MobileBaseModel(Pose2MobileBase(), sphere_vec)
 
 # GP
 Qc = np.identity(pR_model.dof())
-Qc_model = noiseModel_Gaussian.Covariance(Qc)
+Qc_model = noiseModel.Gaussian.Covariance(Qc)
 
 # Obstacle avoid settings
 cost_sigma = 0.005
 epsilon_dist = 1.5
 
 # prior to start/goal
-pose_fix = noiseModel_Isotropic.Sigma(pR_model.dof(), 0.0001)
-vel_fix = noiseModel_Isotropic.Sigma(pR_model.dof(), 0.0001)
+pose_fix = noiseModel.Isotropic.Sigma(pR_model.dof(), 0.0001)
+vel_fix = noiseModel.Isotropic.Sigma(pR_model.dof(), 0.0001)
 
 
 # start and end conf
@@ -79,8 +78,8 @@ init_values = Values()
 
 
 for i in range(0, total_time_step + 1):
-    key_pos = symbol(ord("x"), i)
-    key_vel = symbol(ord("v"), i)
+    key_pos = X(i)
+    key_vel = V(i)
 
     #% initialize as straight line in conf space
     pose = Pose2(
@@ -104,10 +103,10 @@ for i in range(0, total_time_step + 1):
 
     # GP priors and cost factor
     if i > 0:
-        key_pos1 = symbol(ord("x"), i - 1)
-        key_pos2 = symbol(ord("x"), i)
-        key_vel1 = symbol(ord("v"), i - 1)
-        key_vel2 = symbol(ord("v"), i)
+        key_pos1 = X(i - 1)
+        key_pos2 = X(i)
+        key_vel1 = V(i - 1)
+        key_vel2 = V(i)
 
         temp = GaussianProcessPriorPose2(
             key_pos1, key_vel1, key_pos2, key_vel2, delta_t, Qc_model
@@ -172,8 +171,8 @@ plotEvidenceMap2D(
 )
 for i in range(total_time_step + 1):
     axis.set_title("Optimized Values")
-    conf = result.atPose2(symbol(ord("x"), i))
-    print(conf.x(), conf.y(), conf.theta(), result.atVector(symbol(ord("v"), i)))
+    conf = result.atPose2(X(i))
+    print(conf.x(), conf.y(), conf.theta(), result.atVector(V(i)))
     plotPointRobot2D_theta(figure, axis, pR_model, [conf.x(), conf.y(), conf.theta()])
     plt.pause(pause_time)
 

@@ -6,6 +6,7 @@ from gpmp2.robots.generateArm import generateArm
 from gpmp2.utils.plot_utils import *
 from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
 from gtsam import *
+from gtsam.symbol_shorthand import V, X
 
 
 def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
@@ -13,7 +14,8 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
     start_conf = start_conf_val
     end_conf = end_conf_val
 
-    avg_vel = (end_conf_val - start_conf_val / params.total_time_step) / params.delta_t
+    avg_vel = (end_conf_val -
+               start_conf_val / params.total_time_step) / params.delta_t
 
     # plot param
 
@@ -22,8 +24,8 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
     init_values = Values()
 
     for i in range(0, params.total_time_step + 1):
-        key_pos = symbol(ord("x"), i)
-        key_vel = symbol(ord("v"), i)
+        key_pos = X(i)
+        key_vel = V(i)
 
         #% initialize as straight line in conf space
         # pose = Pose2(start_conf_val * float(params.total_time_step-i)/float(params.total_time_step) + end_conf_val * i/float(params.total_time_step))
@@ -35,23 +37,27 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
 
         #% start/end priors
         if i == 0:
-            graph.push_back(PriorFactorVector(key_pos, start_conf, params.pose_fix))
-            graph.push_back(PriorFactorVector(key_vel, start_vel, params.vel_fix))
+            graph.push_back(
+                PriorFactorVector(key_pos, start_conf, params.pose_fix))
+            graph.push_back(
+                PriorFactorVector(key_vel, start_vel, params.vel_fix))
 
         graph.add(VehicleDynamicsFactorVector(key_pos, key_vel, 0.001))
 
         # GP priors and cost factor
         if i > 0:
-            graph.push_back(PriorFactorVector(key_pos, end_conf, params.pose_fix_model))
-            graph.push_back(PriorFactorVector(key_vel, end_vel, params.vel_fix_model))
-            key_pos1 = symbol(ord("x"), i - 1)
-            key_pos2 = symbol(ord("x"), i)
-            key_vel1 = symbol(ord("v"), i - 1)
-            key_vel2 = symbol(ord("v"), i)
+            graph.push_back(
+                PriorFactorVector(key_pos, end_conf, params.pose_fix_model))
+            graph.push_back(
+                PriorFactorVector(key_vel, end_vel, params.vel_fix_model))
+            key_pos1 = X(i - 1)
+            key_pos2 = X(i)
+            key_vel1 = V(i - 1)
+            key_vel2 = V(i)
 
-            temp = GaussianProcessPriorLinear(
-                key_pos1, key_vel1, key_pos2, key_vel2, params.delta_t, params.Qc_model
-            )
+            temp = GaussianProcessPriorLinear(key_pos1, key_vel1, key_pos2,
+                                              key_vel2, params.delta_t,
+                                              params.Qc_model)
             graph.push_back(temp)
 
             #% cost factor
@@ -62,8 +68,7 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
                     sdf,
                     params.cost_sigma,
                     params.epsilon_dist,
-                )
-            )
+                ))
 
             #% GP cost factor
             if params.use_GP_inter and params.check_inter > 0:
@@ -82,8 +87,7 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
                             params.Qc_model,
                             params.delta_t,
                             tau,
-                        )
-                    )
+                        ))
 
     if params.use_trustregion_opt:
         parameters = DoglegParams()
@@ -94,12 +98,12 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
         # parameters.setVerbosity('ERROR')
         optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-    print("Initial Error = %d\n", graph.error(init_values))
+    print("Initial Error = {}".format(graph.error(init_values)))
 
     optimizer.optimizeSafely()
     result = optimizer.values()
 
-    print("Final Error = %d\n", graph.error(result))
+    print("Final Error = {}".format(graph.error(result)))
 
     res_flag = True
     if graph.error(result) > params.acceptable_error_threshold:
@@ -107,7 +111,8 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
     return result, res_flag
 
 
-def get_sdf(occ_grid_topic):  # TODO this will change to ros occupancy grid processonr
+def get_sdf(occ_grid_topic
+            ):  # TODO this will change to ros occupancy grid processonr
     dataset = generate2Ddataset("MultiObstacleDataset")
     rows = dataset.rows
     cols = dataset.cols
@@ -120,9 +125,8 @@ def get_sdf(occ_grid_topic):  # TODO this will change to ros occupancy grid proc
 
     figure1 = plt.figure(0)
     axis1 = figure1.gca()  # for 3-d, set gca(projection='3d')
-    plotSignedDistanceField2D(
-        figure1, axis1, field, dataset.origin_x, dataset.origin_y, dataset.cell_size
-    )
+    plotSignedDistanceField2D(figure1, axis1, field, dataset.origin_x,
+                              dataset.origin_y, dataset.cell_size)
 
     return sdf, dataset
 
@@ -142,22 +146,24 @@ class Parameters(object):  # TODO: read from yaml file or rosparams
     spheres_data = np.asarray([0.0, 0.0, 0.0, 0.0, 1.5])
     nr_body = spheres_data.shape[0]
     sphere_vec = BodySphereVector()
-    sphere_vec.push_back(
-        BodySphere(spheres_data[0], spheres_data[4], Point3(spheres_data[1:4]))
-    )
+    sphere_vec.append(
+        BodySphere(int(spheres_data[0]), spheres_data[4],
+                   Point3(spheres_data[1:4])))
     pR_model = PointRobotModel(pR, sphere_vec)
 
     # GP
     Qc = np.identity(pR_model.dof())
-    Qc_model = noiseModel_Gaussian.Covariance(Qc)
+    Qc_model = noiseModel.Gaussian.Covariance(Qc)
 
     # Obstacle avoid settings
     cost_sigma = 0.2
     epsilon_dist = 4.0
 
     # prior to start/goal
-    pose_fix = pose_fix_model = noiseModel_Isotropic.Sigma(pR_model.dof(), 0.0001)
-    vel_fix = vel_fix_model = noiseModel_Isotropic.Sigma(pR_model.dof(), 0.0001)
+    pose_fix = pose_fix_model = noiseModel.Isotropic.Sigma(
+        pR_model.dof(), 0.0001)
+    vel_fix = vel_fix_model = noiseModel.Isotropic.Sigma(
+        pR_model.dof(), 0.0001)
 
     use_trustregion_opt = True
 
@@ -171,18 +177,20 @@ class Parameters(object):  # TODO: read from yaml file or rosparams
 
 def get_robot_state(result):  # todo: this will change to ros subscriber.
 
-    conf = result.atVector(symbol(ord("x"), 1))
-    vel = result.atVector(symbol(ord("v"), 1))
+    conf = result.atVector(X(1))
+    vel = result.atVector(V(1))
     return conf, vel
 
 
-def get_robot_action(result):  # TODO: Get action from result and command therobot
+def get_robot_action(
+        result):  # TODO: Get action from result and command therobot
     action_vel = None
     action_vel_traj = None
     return action_vel, action_vel_traj
 
 
-def command_robot(action_vel, action_vel_traj):  # TODO: this should be non-blocking
+def command_robot(action_vel,
+                  action_vel_traj):  # TODO: this should be non-blocking
     pass
 
 
@@ -190,10 +198,10 @@ def plot_path(result, axis, params):
     x = []
     y = []
     for i in range(params.total_time_step + 1):
-        conf = result.atVector(symbol(ord("x"), i))
+        conf = result.atVector(X(i))
         x.append(conf[0])
         y.append(conf[1])
-    (handle,) = axis.plot(x, y, "s")
+    (handle, ) = axis.plot(x, y, "s")
     return handle
 
 
@@ -211,30 +219,27 @@ def main():
     ## Plots
     figure = plt.figure(1)
     axis = figure.gca()
-    plotEvidenceMap2D(
-        figure, axis, dataset.map, dataset.origin_x, dataset.origin_y, dataset.cell_size
-    )
+    plotEvidenceMap2D(figure, axis, dataset.map, dataset.origin_x,
+                      dataset.origin_y, dataset.cell_size)
 
     init_distance = np.linalg.norm(curstate_val - end_conf_val)
     graph_handle = None
-    while np.linalg.norm(curstate_val - end_conf_val) > params.goal_region_threshold:
+    while np.linalg.norm(curstate_val -
+                         end_conf_val) > params.goal_region_threshold:
         # Goal prior factors
-        params.pose_fix_model = noiseModel_Isotropic.Sigma(
+        params.pose_fix_model = noiseModel.Isotropic.Sigma(
             3,
-            params.sigma_goal
-            * np.linalg.norm(curstate_val - end_conf_val)
-            / init_distance,
+            params.sigma_goal * np.linalg.norm(curstate_val - end_conf_val) /
+            init_distance,
         )
-        params.vel_fix_model = noiseModel_Isotropic.Sigma(
+        params.vel_fix_model = noiseModel.Isotropic.Sigma(
             3,
-            params.sigma_goal
-            * np.linalg.norm(curstate_val - end_conf_val)
-            / init_distance,
+            params.sigma_goal * np.linalg.norm(curstate_val - end_conf_val) /
+            init_distance,
         )
 
-        result, res_flag = get_plan(
-            curstate_val, curstate_vel, end_conf_val, end_vel, sdf, params
-        )
+        result, res_flag = get_plan(curstate_val, curstate_vel, end_conf_val,
+                                    end_vel, sdf, params)
         graph_handle = plot_path(result, axis, params)
 
         action_vel, action_vel_traj = get_robot_action(result)
