@@ -1,9 +1,9 @@
 import os
 
 try:
-    from setuptools import find_packages, setup
+    from setuptools import setup, find_packages
 except ImportError:
-    from distutils.core import find_packages, setup
+    from distutils.core import setup, find_packages
 
 packages = find_packages()
 
@@ -23,7 +23,7 @@ setup(
     name='${PROJECT_NAME}',
     description='${PROJECT_DESCRIPTION}',
     url='${PROJECT_HOMEPAGE_URL}',
-    version='${gpmp2_VERSION_STRING}',
+    version='${PROJECT_VERSION}',
     author="${PROJECT_AUTHOR}",
     author_email="${PROJECT_AUTHOR_EMAIL}",
     license='Simplified BSD license',

@@ -28,7 +28,7 @@
 virtual class gtsam::noiseModel::Base;
 virtual class gtsam::NonlinearFactor;
 virtual class gtsam::NonlinearFactorGraph;
-virtual class gtsam::NoiseModelFactor : gtsam::NonlinearFactor;
+virtual class gtsam::NoiseModelFactor;
 
 namespace gpmp2 {
 
@@ -66,10 +66,8 @@ class GaussianProcessPriorLinear : gtsam::NoiseModelFactor {
                              double delta,
                              const gtsam::noiseModel::Base* Qc_model);
   // Vector evaluateError(Vector pose) const;
-  gtsam::Vector evaluateError(const gtsam::Vector& pose1,
-                              const gtsam::Vector& vel1,
-                              const gtsam::Vector& pose2,
-                              const gtsam::Vector& vel2);
+  Vector evaluateError(const Vector& pose1, const Vector& vel1,
+                       const Vector& pose2, const Vector& vel2);
   // enabling serialization functionality
   void serialize() const;
 };
