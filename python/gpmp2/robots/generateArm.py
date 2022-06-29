@@ -1,7 +1,8 @@
-import numpy as np
-from gtsam import *
-from gpmp2 import *
 import math
+
+import numpy as np
+from gpmp2 import Arm, ArmModel, BodySphere, BodySphereVector
+from gtsam import Point3, Pose3, Rot3
 
 
 def generateArm(arm_str, base_pose=None):
@@ -40,12 +41,13 @@ def generateArm(arm_str, base_pose=None):
             [1, 0.0, 0.0, 0.0, 0.01],
         ]
         spheres_data = np.asarray(spheres_data)
+
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.push_back(
+            sphere_vec.append(
                 BodySphere(
-                    spheres_data[i, 0], spheres_data[i, 4], Point3(spheres_data[i, 1:4])
+                    int(spheres_data[i, 0]), spheres_data[i, 4], Point3(spheres_data[i, 1:4])
                 )
             )
         arm_model = ArmModel(arm, sphere_vec)
