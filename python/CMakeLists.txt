@@ -7,7 +7,6 @@ set(WRAP_PYTHON_VERSION
 gtwrap_get_python_version(${WRAP_PYTHON_VERSION})
 message(STATUS "Wrapper Python Version: ${WRAP_PYTHON_VERSION}")
 
-
 set(PYTHON_REQUIREMENTS_PATH "requirements.txt")
 set(PYTHON_TESTS "${PROJECT_NAME}.tests")
 
@@ -22,6 +21,8 @@ configure_file(${GPMP2_PYTHON_PATH}/requirements.txt
   ${GPMP2_PYTHON_BINARY_DIR}/requirements.txt COPYONLY)
 configure_file(${GPMP2_PYTHON_PATH}/templates/${PROJECT_NAME}.tpl
   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.tpl)
+
+### Copy the gpmp2 python directory
 file(COPY ${GPMP2_PYTHON_PATH}/${PROJECT_NAME}
   DESTINATION ${GPMP2_PYTHON_BINARY_DIR})
 
@@ -39,7 +40,7 @@ pybind_wrap(
   "${PROJECT_NAME}" # top namespace in the cpp file
   "${ignore}" # ignore classes
   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.tpl
-  "${PROJECT_NAME}" # libraries to link against
+  ${PROJECT_NAME} # libraries to link against
   "${PROJECT_NAME}" # dependencies to build first
   ON # use boost
 )
