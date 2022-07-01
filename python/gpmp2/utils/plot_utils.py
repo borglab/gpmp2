@@ -81,8 +81,9 @@ def plotEvidenceMap2D(figure, axis, prob_grid, origin_x, origin_y, cell_size):
     c = axis.pcolor(grid_X, grid_Y, temp, vmin=z_min, vmax=z_max)
     # figure.colorbar(c, ax=axis) # add colorbar
 
-    axis.invert_yaxis(
-    )  # TODO: check this again! same as set(gca,'YDir','normal')
+    # TODO: check this again! same as set(gca,'YDir','normal')
+    axis.invert_yaxis()
+
     # axis equal
     axis.axis("equal")
     axis.axis([
