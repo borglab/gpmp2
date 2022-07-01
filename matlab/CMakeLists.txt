@@ -51,9 +51,9 @@ install(
 set(interface_files "${PROJECT_SOURCE_DIR}/gpmp2.i")
 matlab_wrap("${interface_files}" "${PROJECT_NAME}" "" "" "" "")
 
+# Add the Matlab scripts that are a part of the toolbox
+install_matlab_scripts("${PROJECT_SOURCE_DIR}/matlab/" "*.m;*.fig")
+
 # We print out our configuration for an easy visual check
-message("========== Configuration Options ==========")
-message(STATUS "Project:                  ${PROJECT_NAME}")
-message(STATUS "MATLAB Root:              ${MATLAB_ROOT}")
-message(STATUS "Mex Compiler:             ${Matlab_MEX_COMPILER}")
-message("===========================================")
+message(STATUS "MATLAB Root: ${MATLAB_ROOT}")
+message(STATUS "Mex Compiler: ${Matlab_MEX_COMPILER}")
