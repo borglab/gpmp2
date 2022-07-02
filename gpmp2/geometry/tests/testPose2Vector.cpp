@@ -1,27 +1,24 @@
 /**
-*  @file testPose2Vector.cpp
-*  @author Jing Dong
-**/
+ *  @file testPose2Vector.cpp
+ *  @author Jing Dong
+ **/
 
 #include <CppUnitLite/TestHarness.h>
-
+#include <gpmp2/geometry/Pose2Vector.h>
+#include <gpmp2/geometry/numericalDerivativeDynamic.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Testable.h>
 #include <gtsam/inference/Symbol.h>
-#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
+#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/Values.h>
 #include <gtsam/slam/PriorFactor.h>
-
-#include <gpmp2/geometry/Pose2Vector.h>
-#include <gpmp2/geometry/numericalDerivativeDynamic.h>
 
 #include <iostream>
 
 using namespace std;
 using namespace gtsam;
 using namespace gpmp2;
-
 
 /* ************************************************************************** */
 TEST(Pose2Vector, Lie) {
@@ -32,14 +29,14 @@ TEST(Pose2Vector, Lie) {
 
 /* ************************************************************************** */
 TEST(Pose2Vector, Contructors) {
-  Pose2Vector p1;     // default nothing
-  Pose2Vector pi(Pose2(), Vector::Zero(3));     // manual identity
-  p1 = pi;  // assignment
+  Pose2Vector p1;                            // default nothing
+  Pose2Vector pi(Pose2(), Vector::Zero(3));  // manual identity
+  p1 = pi;                                   // assignment
 
   Vector d(6);
   d << 0.1, 0.2, 0.3, 4, 5, 6;
   Pose2Vector expected(Pose2::Expmap((Vector(3) << 0.1, 0.2, 0.3).finished()),
-      (Vector(3) << 4, 5, 6).finished());
+                       (Vector(3) << 4, 5, 6).finished());
   Pose2Vector p2 = p1.expmap(d);
   EXPECT(assert_equal(expected, p2, 1e-9));
   EXPECT(assert_equal(d, p1.logmap(p2), 1e-9));
@@ -59,7 +56,8 @@ Pose2Vector compose_proxy(const Pose2Vector& A, const Pose2Vector& B) {
   return A.compose(B);
 }
 TEST(Pose2Vector, compose) {
-  Pose2Vector state1(Pose2(1, 1, M_PI_2), Vector3(0.2, -0.1, 0.3)), state2 = state1;
+  Pose2Vector state1(Pose2(1, 1, M_PI_2), Vector3(0.2, -0.1, 0.3)),
+      state2 = state1;
   Pose2Vector expcomp(Pose2(0, 2, M_PI), Vector3(0.4, -0.2, 0.6)), actcomp;
 
   Matrix actH1, actH2;
@@ -96,9 +94,7 @@ TEST(Pose2Vector, between) {
 }
 
 /* ************************************************************************** */
-Pose2Vector inverse_proxy(const Pose2Vector& A) {
-  return A.inverse();
-}
+Pose2Vector inverse_proxy(const Pose2Vector& A) { return A.inverse(); }
 TEST(Pose2Vector, inverse) {
   Pose2Vector state1(Pose2(1, 1, M_PI_2), Vector3(0.2, -0.1, 0.3));
   Pose2Vector expinv(Pose2(-1, 1, -M_PI_2), Vector3(-0.2, 0.1, -0.3)), actinv;
@@ -114,7 +110,8 @@ TEST(Pose2Vector, inverse) {
 
 /* ************************************************************************* */
 TEST(Pose2Vector, optimization) {
-  Pose2Vector state1(Pose2(3, 4, 5), Vector3(3,4,2)), state2(Pose2(1, 5, 7), Vector3(2,3,4));
+  Pose2Vector state1(Pose2(3, 4, 5), Vector3(3, 4, 2)),
+      state2(Pose2(1, 5, 7), Vector3(2, 3, 4));
 
   // prior factor graph
   noiseModel::Isotropic::shared_ptr model_prior =

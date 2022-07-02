@@ -1,17 +1,15 @@
 /**
-*  @file testDynamicVector.cpp
-*  @author Jing Dong
-**/
+ *  @file testDynamicVector.cpp
+ *  @author Jing Dong
+ **/
 
 #include <CppUnitLite/TestHarness.h>
-
 #include <gpmp2/geometry/DynamicVector.h>
-
-#include <gtsam/base/Vector.h>
 #include <gtsam/base/Testable.h>
+#include <gtsam/base/Vector.h>
 #include <gtsam/inference/Symbol.h>
-#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
+#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/Values.h>
 #include <gtsam/slam/PriorFactor.h>
 
@@ -20,7 +18,6 @@
 using namespace std;
 using namespace gtsam;
 using namespace gpmp2;
-
 
 GTSAM_CONCEPT_TESTABLE_INST(DynamicVector)
 GTSAM_CONCEPT_LIE_INST(DynamicVector)
@@ -36,7 +33,7 @@ TEST(DynamicVector, Concept) {
 /* ************************************************************************** */
 TEST_UNSAFE(DynamicVector, contructor) {
   Vector a(3);
-  a << 1,2,3;
+  a << 1, 2, 3;
   DynamicVector v(a);
 
   EXPECT_LONGS_EQUAL(3, v.dim());
@@ -46,18 +43,17 @@ TEST_UNSAFE(DynamicVector, contructor) {
 /* ************************************************************************** */
 TEST_UNSAFE(DynamicVector, access_element) {
   Vector a(3);
-  a << 1,2,3;
+  a << 1, 2, 3;
   DynamicVector v(a);
 
-  for (size_t i = 1; i < 3; i++)
-    EXPECT_DOUBLES_EQUAL(a(i), v(i), 1e-9);
+  for (size_t i = 1; i < 3; i++) EXPECT_DOUBLES_EQUAL(a(i), v(i), 1e-9);
 }
 
 /* ************************************************************************** */
 TEST_UNSAFE(DynamicVector, equals) {
   Vector a(3), b(3);
-  a << 1,2,3;
-  b << 4,5,6;
+  a << 1, 2, 3;
+  b << 4, 5, 6;
   DynamicVector v1(a), v2(a), v3(b);
 
   EXPECT(assert_equal(v1, v2, 1e-9));
@@ -68,9 +64,9 @@ TEST_UNSAFE(DynamicVector, equals) {
 /* ************************************************************************** */
 TEST_UNSAFE(DynamicVector, addition) {
   Vector a(3), b(3), c(3);
-  a << 1,2,3;
-  b << 4,5,6;
-  c << 5,7,9;
+  a << 1, 2, 3;
+  b << 4, 5, 6;
+  c << 5, 7, 9;
   DynamicVector v1(a), v2(b), v3(c);
 
   EXPECT(assert_equal(v3, v1 + v2, 1e-9));
@@ -81,9 +77,9 @@ TEST_UNSAFE(DynamicVector, addition) {
 /* ************************************************************************** */
 TEST_UNSAFE(DynamicVector, subtraction) {
   Vector a(3), b(3), c(3);
-  a << 1,2,3;
-  b << 4,5,6;
-  c << 5,7,9;
+  a << 1, 2, 3;
+  b << 4, 5, 6;
+  c << 5, 7, 9;
   DynamicVector v1(a), v2(b), v3(c);
 
   EXPECT(assert_equal(v1, v3 - v2, 1e-9));
@@ -92,10 +88,9 @@ TEST_UNSAFE(DynamicVector, subtraction) {
 
 /* ************************************************************************** */
 TEST_UNSAFE(DynamicVector, optimization) {
-
   Vector a(3), b(3), c(3);
-  a << 1,2,3;
-  b << 4,5,6;
+  a << 1, 2, 3;
+  b << 4, 5, 6;
   DynamicVector v1(a), v2(b);
 
   // prior factor graph

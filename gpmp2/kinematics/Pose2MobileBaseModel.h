@@ -1,6 +1,7 @@
 /**
  *  @file   Pose2MobileBaseModel.h
- *  @brief  SE(2) mobile base with physical body, which is represented by spheres
+ *  @brief  SE(2) mobile base with physical body, which is represented by
+ *spheres
  *  @author Mustafa Mukadam
  *  @date   Jan 22, 2018
  **/
@@ -18,4 +19,4 @@ namespace gpmp2 {
  */
 typedef RobotModel<Pose2MobileBase> Pose2MobileBaseModel;
 
-}
+}  // namespace gpmp2

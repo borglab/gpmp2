@@ -7,16 +7,14 @@
 
 #pragma once
 
-#include <gpmp2/kinematics/ForwardKinematics.h>
 #include <gpmp2/config.h>
-
-#include <gtsam/geometry/Pose3.h>
+#include <gpmp2/kinematics/ForwardKinematics.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Vector.h>
+#include <gtsam/geometry/Pose3.h>
 
-#include <vector>
 #include <cmath>
-
+#include <vector>
 
 namespace gpmp2 {
 
@@ -24,13 +22,13 @@ namespace gpmp2 {
  * Abstract PointRobot class without any physical model representation
  * Inherited from ForwardKinematics
  */
-class GPMP2_EXPORT PointRobot : public ForwardKinematics<gtsam::Vector, gtsam::Vector> {
-
-private:
+class GPMP2_EXPORT PointRobot
+    : public ForwardKinematics<gtsam::Vector, gtsam::Vector> {
+ private:
   // typedefs
   typedef ForwardKinematics<gtsam::Vector, gtsam::Vector> Base;
 
-public:
+ public:
   /// default constructor do nothing
   PointRobot() {}
 
@@ -40,10 +38,10 @@ public:
   /// Default destructor
   virtual ~PointRobot() {}
 
-
   /**
    *  Forward kinematics: robot configuration to poses in workspace
-   *  Velocity kinematics: optional robot velocities to linear velocities in workspace, no angular rate
+   *  Velocity kinematics: optional robot velocities to linear velocities in
+   *workspace, no angular rate
    *
    *  @param jp   robot pose in config space
    *  @param jv   robot velocity in config space
@@ -51,13 +49,15 @@ public:
    *  @param jvx  robot velocity in work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  void forwardKinematics(const gtsam::Vector& jp, boost::optional<const gtsam::Vector&> jv,
-      std::vector<gtsam::Pose3>& jpx, boost::optional<std::vector<gtsam::Vector3>&> jvx,
+  void forwardKinematics(
+      const gtsam::Vector& jp, boost::optional<const gtsam::Vector&> jv,
+      std::vector<gtsam::Pose3>& jpx,
+      boost::optional<std::vector<gtsam::Vector3>&> jvx,
       boost::optional<std::vector<gtsam::Matrix>&> J_jpx_jp = boost::none,
       boost::optional<std::vector<gtsam::Matrix>&> J_jvx_jp = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_jvx_jv = boost::none) const;
+      boost::optional<std::vector<gtsam::Matrix>&> J_jvx_jv =
+          boost::none) const;
 
+};  // PointRobot
 
-}; // PointRobot
-
-} // namespace gpmp2
+}  // namespace gpmp2

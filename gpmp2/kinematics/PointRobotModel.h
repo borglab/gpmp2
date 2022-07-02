@@ -17,4 +17,4 @@ namespace gpmp2 {
  */
 typedef RobotModel<PointRobot> PointRobotModel;
 
-}
+}  // namespace gpmp2

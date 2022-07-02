@@ -4,12 +4,10 @@
  *  @date   July 20, 2016
  **/
 
- #include <CppUnitLite/TestHarness.h>
-
+#include <CppUnitLite/TestHarness.h>
+#include <gpmp2/kinematics/PointRobotModel.h>
 #include <gtsam/base/Testable.h>
 #include <gtsam/base/numericalDerivative.h>
-
-#include <gpmp2/kinematics/PointRobotModel.h>
 
 #include <iostream>
 
@@ -18,14 +16,16 @@ using namespace gtsam;
 using namespace gpmp2;
 
 // fk wrapper
-Pose3 fkpose(const PointRobot& pR, const Vector& jp, const Vector& jv, size_t i) {
+Pose3 fkpose(const PointRobot& pR, const Vector& jp, const Vector& jv,
+             size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
   pR.forwardKinematics(jp, jv, pos, vel);
   return pos[i];
 }
 
-Vector3 fkvelocity(const PointRobot& pR, const Vector& jp, const Vector& jv, size_t i) {
+Vector3 fkvelocity(const PointRobot& pR, const Vector& jp, const Vector& jv,
+                   size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
   pR.forwardKinematics(jp, jv, pos, vel);
@@ -33,21 +33,22 @@ Vector3 fkvelocity(const PointRobot& pR, const Vector& jp, const Vector& jv, siz
 }
 
 // sphere position wrapper
-Point3 sph_pos_wrapper_batch(const PointRobotModel& pR_model, const Vector& jp, size_t i) {
+Point3 sph_pos_wrapper_batch(const PointRobotModel& pR_model, const Vector& jp,
+                             size_t i) {
   vector<Point3> pos;
   pR_model.sphereCenters(jp, pos);
   return pos[i];
 }
 
-Point3 sph_pos_wrapper_single(const PointRobotModel& pR_model, const Vector& jp, size_t i) {
+Point3 sph_pos_wrapper_single(const PointRobotModel& pR_model, const Vector& jp,
+                              size_t i) {
   return pR_model.sphereCenter(i, jp);
 }
 
 /* ************************************************************************** */
 TEST(PointRobot, 2DExample) {
-
   // 2D point robot
-  PointRobot pR(2,1);
+  PointRobot pR(2, 1);
   Vector2 p, v;
   vector<Pose3> pvec_exp, pvec_act;
   vector<Vector3> vvec_exp, vvec_act;
@@ -66,14 +67,20 @@ TEST(PointRobot, 2DExample) {
   vvec_exp.push_back(Vector3(v(0), v(1), 0));
 
   pJp_exp.clear();
-  pJp_exp.push_back(numericalDerivative11(std::function<Pose3(const Vector2&)>(
-      boost::bind(&fkpose, pR, _1, v, size_t(0))), p, 1e-6));
+  pJp_exp.push_back(
+      numericalDerivative11(std::function<Pose3(const Vector2&)>(
+                                boost::bind(&fkpose, pR, _1, v, size_t(0))),
+                            p, 1e-6));
   vJp_exp.clear();
-  vJp_exp.push_back(numericalDerivative11(std::function<Vector3(const Vector2&)>(
-      boost::bind(&fkvelocity, pR, _1, v, size_t(0))), p, 1e-6));
+  vJp_exp.push_back(
+      numericalDerivative11(std::function<Vector3(const Vector2&)>(
+                                boost::bind(&fkvelocity, pR, _1, v, size_t(0))),
+                            p, 1e-6));
   vJv_exp.clear();
-  vJv_exp.push_back(numericalDerivative11(std::function<Vector3(const Vector2&)>(
-      boost::bind(&fkvelocity, pR, p, _1, size_t(0))), v, 1e-6));
+  vJv_exp.push_back(
+      numericalDerivative11(std::function<Vector3(const Vector2&)>(
+                                boost::bind(&fkvelocity, pR, p, _1, size_t(0))),
+                            v, 1e-6));
 
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
@@ -84,9 +91,8 @@ TEST(PointRobot, 2DExample) {
 
 /* ************************************************************************** */
 TEST(PointRobotModel, 2DExample) {
-
   // 2D point robot
-  PointRobot pR(2,1);
+  PointRobot pR(2, 1);
   Vector2 p;
 
   vector<Point3> sph_centers_exp, sph_centers_act;
@@ -109,12 +115,17 @@ TEST(PointRobotModel, 2DExample) {
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
-    Jcq_exp = numericalDerivative11(std::function<Point3(const Vector2&)>(
-          boost::bind(&sph_pos_wrapper_batch, pR_model, _1, i)), p, 1e-6);
+    Jcq_exp =
+        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
+                                  &sph_pos_wrapper_batch, pR_model, _1, i)),
+                              p, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
-    EXPECT(assert_equal(sph_centers_exp[i], pR_model.sphereCenter(i, p, Jcq_act)));
-    Jcq_exp = numericalDerivative11(std::function<Point3(const Vector2&)>(
-          boost::bind(&sph_pos_wrapper_single, pR_model, _1, i)), p, 1e-6);
+    EXPECT(
+        assert_equal(sph_centers_exp[i], pR_model.sphereCenter(i, p, Jcq_act)));
+    Jcq_exp =
+        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
+                                  &sph_pos_wrapper_single, pR_model, _1, i)),
+                              p, 1e-6);
     EXPECT(assert_equal(Jcq_exp, Jcq_act, 1e-9));
   }
 }

@@ -1,6 +1,7 @@
 /**
  *  @file  DynamicVector.h
- *  @brief Wrapper of dynamic size eigen vector with all Lie group traits implemented 
+ *  @brief Wrapper of dynamic size eigen vector with all Lie group traits
+ *implemented
  *  @author Jing Dong
  *  @date Oct 3, 2016
  **/
@@ -8,13 +9,11 @@
 #pragma once
 
 #include <gpmp2/config.h>
-
-#include <Eigen/Core> // from gtsam included path, use gtsam eigen version
 #include <gtsam/base/Vector.h>
 #include <gtsam/base/VectorSpace.h>
 
+#include <Eigen/Core>  // from gtsam included path, use gtsam eigen version
 #include <iostream>
-
 
 namespace gpmp2 {
 
@@ -24,12 +23,11 @@ namespace gpmp2 {
  * fully implemented in gtsam
  */
 class GPMP2_EXPORT DynamicVector {
-
-private:
+ private:
   size_t dim_;
   Eigen::VectorXd vector_;
 
-public:
+ public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   // default constructor do nothing
@@ -37,13 +35,13 @@ public:
 
   // eigen constructor
   // non-explicit conversion enabled
-  DynamicVector(const Eigen::VectorXd& vector) : dim_(vector.size()), vector_(vector) {}
+  DynamicVector(const Eigen::VectorXd& vector)
+      : dim_(vector.size()), vector_(vector) {}
 
   virtual ~DynamicVector() {}
 
   // access element for convenience
   double operator()(size_t i) const { return vector_(i); }
-
 
   /// @name VectorSpace
   /// @{
@@ -54,7 +52,8 @@ public:
 
   // no static identity implemented
   static DynamicVector identity() {
-    throw std::runtime_error("[DynamicVector] ERROR: no static identity implemented");
+    throw std::runtime_error(
+        "[DynamicVector] ERROR: no static identity implemented");
     return DynamicVector();
   }
 
@@ -69,9 +68,7 @@ public:
   }
 
   // inversion
-  DynamicVector operator-() const {
-    return DynamicVector(-this->vector_);
-  }
+  DynamicVector operator-() const { return DynamicVector(-this->vector_); }
 
   // conversion to gtsam::Vector
   const Eigen::VectorXd& vector() const { return vector_; }
@@ -98,14 +95,13 @@ public:
   /// @}
 };
 
-} // \ namespace gpmp2
-
+}  // namespace gpmp2
 
 // gtsam traits for DynamicVector
 namespace gtsam {
 
-template<>
-struct traits<gpmp2::DynamicVector> : public internal::VectorSpace<gpmp2::DynamicVector> {
-};
+template <>
+struct traits<gpmp2::DynamicVector>
+    : public internal::VectorSpace<gpmp2::DynamicVector> {};
 
-}
+}  // namespace gtsam

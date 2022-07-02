@@ -5,7 +5,6 @@
  *  @date   Sep 22, 2020
  **/
 
-
 #pragma once
 
 #include <gpmp2/kinematics/ArmModel.h>
@@ -16,4 +15,4 @@ namespace gpmp2 {
 // template use ArmModel as robot type
 typedef SelfCollision<ArmModel> SelfCollisionArm;
 
-}
+}  // namespace gpmp2

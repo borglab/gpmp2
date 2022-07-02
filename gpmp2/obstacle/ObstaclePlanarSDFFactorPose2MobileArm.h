@@ -1,6 +1,7 @@
 /**
  *  @file  ObstaclePlanarSDFFactorPose2MobileArm.h
- *  @brief Obstacle avoidance cost factor, using Arm planar and signed distance field
+ *  @brief Obstacle avoidance cost factor, using Arm planar and signed distance
+ *field
  *  @author Jing Dong
  *  @date  Oct 13, 2016
  **/
@@ -13,8 +14,7 @@
 namespace gpmp2 {
 
 // template use ArmModel as robot type
-typedef ObstaclePlanarSDFFactor<Pose2MobileArmModel> ObstaclePlanarSDFFactorPose2MobileArm;
+typedef ObstaclePlanarSDFFactor<Pose2MobileArmModel>
+    ObstaclePlanarSDFFactorPose2MobileArm;
 
-}
-
-
+}  // namespace gpmp2

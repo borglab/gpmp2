@@ -7,7 +7,6 @@
 
 #include <gpmp2/obstacle/SignedDistanceField.h>
 
-
 namespace gpmp2 {
 
 /* ************************************************************************** */
@@ -18,12 +17,10 @@ void SignedDistanceField::saveSDF(const std::string filename) {
   if (fext == "xml") {
     boost::archive::xml_oarchive oa(ofs);
     oa << BOOST_SERIALIZATION_NVP(*this);
-  }
-  else if (fext == "bin") {
+  } else if (fext == "bin") {
     boost::archive::binary_oarchive oa(ofs);
     oa << *this;
-  }
-  else {
+  } else {
     boost::archive::text_oarchive oa(ofs);
     oa << *this;
   }
@@ -33,20 +30,18 @@ void SignedDistanceField::saveSDF(const std::string filename) {
 void SignedDistanceField::loadSDF(const std::string filename) {
   std::ifstream ifs(filename.c_str());
   if (!ifs.good())
-    std::cout<<"File \'"<<filename<<"\' does not exist!"<<std::endl;
+    std::cout << "File \'" << filename << "\' does not exist!" << std::endl;
   std::string fext = filename.substr(filename.find_last_of(".") + 1);
   if (fext == "xml") {
     boost::archive::xml_iarchive ia(ifs);
     ia >> BOOST_SERIALIZATION_NVP(*this);
-  }
-  else if (fext == "bin") {
+  } else if (fext == "bin") {
     boost::archive::binary_iarchive ia(ifs);
     ia >> *this;
-  }
-  else {
+  } else {
     boost::archive::text_iarchive ia(ifs);
     ia >> *this;
   }
 }
 
-}
+}  // namespace gpmp2

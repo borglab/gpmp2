@@ -1,18 +1,16 @@
 /**
-*  @file testJointLimitFactorVector.cpp
-*  @author Jing Dong
-**/
+ *  @file testJointLimitFactorVector.cpp
+ *  @author Jing Dong
+ **/
 
 #include <CppUnitLite/TestHarness.h>
-
+#include <gpmp2/kinematics/JointLimitFactorVector.h>
 #include <gtsam/base/numericalDerivative.h>
 #include <gtsam/inference/Symbol.h>
-#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
+#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/Values.h>
 #include <gtsam/slam/PriorFactor.h>
-
-#include <gpmp2/kinematics/JointLimitFactorVector.h>
 
 #include <iostream>
 
@@ -20,12 +18,11 @@ using namespace std;
 using namespace gtsam;
 using namespace gpmp2;
 
-
 /* ************************************************************************** */
 TEST(JointLimitFactorVector, error) {
-
   // settings
-  noiseModel::Gaussian::shared_ptr cost_model = noiseModel::Isotropic::Sigma(2, 1.0);
+  noiseModel::Gaussian::shared_ptr cost_model =
+      noiseModel::Isotropic::Sigma(2, 1.0);
 
   // 2 link simple example
   Vector2 dlimit(-5.0, -10.0), ulimit(5, 10.0);
@@ -39,8 +36,10 @@ TEST(JointLimitFactorVector, error) {
   conf = Vector2(0.0, 0.0);
   actual = factor.evaluateError(conf, H_act);
   expect = Vector2(0.0, 0.0);
-  H_exp = numericalDerivative11(std::function<Vector2(const Vector2&)>(
-      boost::bind(&JointLimitFactorVector::evaluateError, factor, _1, boost::none)), conf, 1e-6);
+  H_exp = numericalDerivative11(
+      std::function<Vector2(const Vector2&)>(boost::bind(
+          &JointLimitFactorVector::evaluateError, factor, _1, boost::none)),
+      conf, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
 
@@ -48,8 +47,10 @@ TEST(JointLimitFactorVector, error) {
   conf = Vector2(-10.0, -10.0);
   actual = factor.evaluateError(conf, H_act);
   expect = Vector2(7.0, 2.0);
-  H_exp = numericalDerivative11(std::function<Vector2(const Vector2&)>(
-    boost::bind(&JointLimitFactorVector::evaluateError, factor, _1, boost::none)), conf, 1e-6);
+  H_exp = numericalDerivative11(
+      std::function<Vector2(const Vector2&)>(boost::bind(
+          &JointLimitFactorVector::evaluateError, factor, _1, boost::none)),
+      conf, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
 
@@ -57,8 +58,10 @@ TEST(JointLimitFactorVector, error) {
   conf = Vector2(10.0, 10.0);
   actual = factor.evaluateError(conf, H_act);
   expect = Vector2(7.0, 2.0);
-  H_exp = numericalDerivative11(std::function<Vector2(const Vector2&)>(
-    boost::bind(&JointLimitFactorVector::evaluateError, factor, _1, boost::none)), conf, 1e-6);
+  H_exp = numericalDerivative11(
+      std::function<Vector2(const Vector2&)>(boost::bind(
+          &JointLimitFactorVector::evaluateError, factor, _1, boost::none)),
+      conf, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
 }
@@ -68,8 +71,10 @@ TEST(JointLimitFactorVector, optimization_1) {
   // zero point
 
   // settings
-  noiseModel::Gaussian::shared_ptr cost_model = noiseModel::Isotropic::Sigma(2, 0.001);
-  noiseModel::Gaussian::shared_ptr prior_model = noiseModel::Isotropic::Sigma(2, 1000);
+  noiseModel::Gaussian::shared_ptr cost_model =
+      noiseModel::Isotropic::Sigma(2, 0.001);
+  noiseModel::Gaussian::shared_ptr prior_model =
+      noiseModel::Isotropic::Sigma(2, 1000);
   Key qkey = Symbol('x', 0);
   Vector2 dlimit(-5.0, -10.0), ulimit(5, 10.0);
   Vector2 thresh(2.0, 2.0);
@@ -99,8 +104,10 @@ TEST(JointLimitFactorVector, optimization_2) {
   // over down limit
 
   // settings
-  noiseModel::Gaussian::shared_ptr cost_model = noiseModel::Isotropic::Sigma(2, 0.001);
-  noiseModel::Gaussian::shared_ptr prior_model = noiseModel::Isotropic::Sigma(2, 1000);
+  noiseModel::Gaussian::shared_ptr cost_model =
+      noiseModel::Isotropic::Sigma(2, 0.001);
+  noiseModel::Gaussian::shared_ptr prior_model =
+      noiseModel::Isotropic::Sigma(2, 1000);
   Key qkey = Symbol('x', 0);
   Vector2 dlimit(-5.0, -10.0), ulimit(5, 10.0);
   Vector2 thresh(2.0, 2.0);
@@ -130,8 +137,10 @@ TEST(JointLimitFactorVector, optimization_3) {
   // over up limit
 
   // settings
-  noiseModel::Gaussian::shared_ptr cost_model = noiseModel::Isotropic::Sigma(2, 0.001);
-  noiseModel::Gaussian::shared_ptr prior_model = noiseModel::Isotropic::Sigma(2, 1000);
+  noiseModel::Gaussian::shared_ptr cost_model =
+      noiseModel::Isotropic::Sigma(2, 0.001);
+  noiseModel::Gaussian::shared_ptr prior_model =
+      noiseModel::Isotropic::Sigma(2, 1000);
   Key qkey = Symbol('x', 0);
   Vector2 dlimit(-5.0, -10.0), ulimit(5, 10.0);
   Vector2 thresh(2.0, 2.0);
@@ -162,5 +171,3 @@ int main() {
   TestResult tr;
   return TestRegistry::runAllTests(tr);
 }
-
-

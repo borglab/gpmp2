@@ -16,4 +16,4 @@ namespace gpmp2 {
 // template use ArmModel as robot type
 typedef GaussianPriorWorkspacePose<ArmModel> GaussianPriorWorkspacePoseArm;
 
-}
+}  // namespace gpmp2

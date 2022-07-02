@@ -10,16 +10,13 @@
 using namespace gtsam;
 using namespace std;
 
-
 namespace gpmp2 {
 
 /* ************************************************************************** */
 bool readSDFvolfile(const std::string& filename_pre, SignedDistanceField& sdf) {
-
   const string headfilename = filename_pre + ".vol.head";
   ifstream head_file(headfilename.c_str(), ios::in);
-  if (!head_file.is_open())
-    return false;
+  if (!head_file.is_open()) return false;
 
   size_t field_rows, field_cols, field_z;
   double origin_x, origin_y, origin_z;
@@ -36,8 +33,7 @@ bool readSDFvolfile(const std::string& filename_pre, SignedDistanceField& sdf) {
 
   const string datafilename = filename_pre + ".vol.data";
   ifstream data_file(datafilename.c_str(), ios::in);
-  if (!data_file.is_open())
-    return false;
+  if (!data_file.is_open()) return false;
 
   vector<Matrix> vmat;
   for (size_t z = 0; z < field_z; z++) {
@@ -49,19 +45,17 @@ bool readSDFvolfile(const std::string& filename_pre, SignedDistanceField& sdf) {
     for (size_t y = 0; y < field_rows; y++) {
       for (size_t z = 0; z < field_z; z++) {
         data_file >> tmpsdf;
-        vmat[z](y,x) = tmpsdf;
+        vmat[z](y, x) = tmpsdf;
       }
     }
   }
 
   data_file.close();
 
-  sdf = SignedDistanceField(Point3(origin_x, origin_y, origin_z), vol_res, vmat);
+  sdf =
+      SignedDistanceField(Point3(origin_x, origin_y, origin_z), vol_res, vmat);
 
   return true;
 }
 
-
-}
-
-
+}  // namespace gpmp2

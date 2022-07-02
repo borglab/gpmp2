@@ -15,19 +15,20 @@
 
 #else
 // Windows replacement
-// See http://web.archive.org/web/20130406033313/http://suacommunity.com/dictionary/gettimeofday-entry.php
+// See
+// http://web.archive.org/web/20130406033313/http://suacommunity.com/dictionary/gettimeofday-entry.php
 #include <time.h>
 #include <windows.h>
 
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
-#define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
+#define DELTA_EPOCH_IN_MICROSECS 11644473600000000Ui64
 #else
-#define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
+#define DELTA_EPOCH_IN_MICROSECS 11644473600000000ULL
 #endif
 
 struct timezone {
-  int  tz_minuteswest; /* minutes W of Greenwich */
-  int  tz_dsttime;     /* type of dst correction */
+  int tz_minuteswest; /* minutes W of Greenwich */
+  int tz_dsttime;     /* type of dst correction */
 };
 
 // Definition of a gettimeofday function
@@ -43,8 +44,8 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
   if (NULL != tv) {
     GetSystemTimeAsFileTime(&ft);
 
-    // The GetSystemTimeAsFileTime returns the number of 100 nanosecond 
-    // intervals since Jan 1, 1601 in a structure. Copy the high bits to 
+    // The GetSystemTimeAsFileTime returns the number of 100 nanosecond
+    // intervals since Jan 1, 1601 in a structure. Copy the high bits to
     // the 64 bit tmpres, shift it left by 32 then or in the low 32 bits.
     tmpres |= ft.dwHighDateTime;
     tmpres <<= 32;
@@ -53,11 +54,11 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
     // Convert to microseconds by dividing by 10
     tmpres /= 10;
 
-    // The Unix epoch starts on Jan 1 1970.  Need to subtract the difference 
+    // The Unix epoch starts on Jan 1 1970.  Need to subtract the difference
     // in seconds from Jan 1 1601.
     tmpres -= DELTA_EPOCH_IN_MICROSECS;
 
-    // Finally change microseconds to seconds and place in the seconds value. 
+    // Finally change microseconds to seconds and place in the seconds value.
     // The modulus picks up the microseconds.
     tv->tv_sec = (long)(tmpres / 1000000UL);
     tv->tv_usec = (long)(tmpres % 1000000UL);
@@ -77,19 +78,17 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 #endif
 
-
 namespace gpmp2 {
 
 /* ************************************************************************* */
 // timer class
 class Timer {
-
-private:
+ private:
   std::string str_;
   timeval starttime_, endtime_;
-  signed long timer_usec_;   // accumulator
+  signed long timer_usec_;  // accumulator
 
-public:
+ public:
   Timer() : str_(), timer_usec_(0) {}
   Timer(std::string str) : str_(str), timer_usec_(0) {}
   virtual ~Timer() {}
@@ -97,17 +96,15 @@ public:
   // ===================================================================
   // one-time timer
   // start timer
-  void tic() {
-    gettimeofday(&starttime_, 0);
-  }
+  void tic() { gettimeofday(&starttime_, 0); }
 
   // stop timer and get time
   signed long toc() {
     gettimeofday(&endtime_, 0);
-    signed long usec = 1000000 * (static_cast<signed long>(endtime_.tv_sec)
-        - static_cast<signed long>(starttime_.tv_sec))
-        + static_cast<signed long>(endtime_.tv_usec)
-        - static_cast<signed long>(starttime_.tv_usec);
+    signed long usec = 1000000 * (static_cast<signed long>(endtime_.tv_sec) -
+                                  static_cast<signed long>(starttime_.tv_sec)) +
+                       static_cast<signed long>(endtime_.tv_usec) -
+                       static_cast<signed long>(starttime_.tv_usec);
     std::cout << str_ << " time used: " << usec << "us" << std::endl;
     return usec;
   }
@@ -115,16 +112,14 @@ public:
   // ===================================================================
   // accumulated timer
   // start timer
-  void start() {
-    gettimeofday(&starttime_, 0);
-  }
+  void start() { gettimeofday(&starttime_, 0); }
   // stop timer
   void stop() {
     gettimeofday(&endtime_, 0);
-    timer_usec_ += 1000000 * (static_cast<signed long>(endtime_.tv_sec)
-        - static_cast<signed long>(starttime_.tv_sec))
-        + static_cast<signed long>(endtime_.tv_usec)
-        - static_cast<signed long>(starttime_.tv_usec);
+    timer_usec_ += 1000000 * (static_cast<signed long>(endtime_.tv_sec) -
+                              static_cast<signed long>(starttime_.tv_sec)) +
+                   static_cast<signed long>(endtime_.tv_usec) -
+                   static_cast<signed long>(starttime_.tv_usec);
   }
   // dispaly time
   signed long showtime() {
@@ -132,9 +127,7 @@ public:
     return timer_usec_;
   }
   // clear internal
-  void clear() {
-    timer_usec_ = 0;
-  }
+  void clear() { timer_usec_ = 0; }
 };
 
-}   // namespace gpmp2
+}  // namespace gpmp2

@@ -5,15 +5,13 @@
  *  @date  Nov 23, 2015
  **/
 
-
 #pragma once
 
 #include <gpmp2/kinematics/Arm.h>
-
-#include <gtsam/nonlinear/NonlinearFactor.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Vector.h>
 #include <gtsam/geometry/Pose3.h>
+#include <gtsam/nonlinear/NonlinearFactor.h>
 
 #include <iostream>
 #include <vector>
@@ -23,9 +21,8 @@ namespace gpmp2 {
 /**
  * unary factor connect to the last pose in arm configuration space
  */
-class GoalFactorArm: public gtsam::NoiseModelFactor1<gtsam::Vector> {
-
-private:
+class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
+ private:
   // typedefs
   typedef GoalFactorArm This;
   typedef gtsam::NoiseModelFactor1<gtsam::Vector> Base;
@@ -36,8 +33,7 @@ private:
   // destination point
   gtsam::Point3 dest_point_;
 
-public:
-
+ public:
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
@@ -48,16 +44,15 @@ public:
    * @param cost_model cost function covariance
    */
   GoalFactorArm(gtsam::Key poseKey, const gtsam::SharedNoiseModel& cost_model,
-      const Arm& arm, const gtsam::Point3& dest_point) :
-        Base(cost_model, poseKey), arm_(arm), dest_point_(dest_point) {}
+                const Arm& arm, const gtsam::Point3& dest_point)
+      : Base(cost_model, poseKey), arm_(arm), dest_point_(dest_point) {}
 
   virtual ~GoalFactorArm() {}
 
-
   /// error function
   gtsam::Vector evaluateError(
-      const gtsam::Vector& conf, boost::optional<gtsam::Matrix&> H1 = boost::none) const {
-
+      const gtsam::Vector& conf,
+      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
     using namespace gtsam;
 
     // fk
@@ -76,28 +71,29 @@ public:
     }
   }
 
-
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
     return boost::static_pointer_cast<gtsam::NonlinearFactor>(
-        gtsam::NonlinearFactor::shared_ptr(new This(*this))); }
+        gtsam::NonlinearFactor::shared_ptr(new This(*this)));
+  }
 
   /** print contents */
-  void print(const std::string& s="", const gtsam::KeyFormatter& keyFormatter = gtsam::DefaultKeyFormatter) const {
+  void print(const std::string& s = "",
+             const gtsam::KeyFormatter& keyFormatter =
+                 gtsam::DefaultKeyFormatter) const {
     std::cout << s << "GoalFactorArm :" << std::endl;
     Base::print("", keyFormatter);
     std::cout << "dest : " << dest_point_.transpose() << std::endl;
   }
 
-private:
-
+ private:
   /** Serialization function */
   friend class boost::serialization::access;
-  template<class ARCHIVE>
-  void serialize(ARCHIVE & ar, const unsigned int version) {
-    ar & boost::serialization::make_nvp("NoiseModelFactor4",
-        boost::serialization::base_object<Base>(*this));
+  template <class ARCHIVE>
+  void serialize(ARCHIVE& ar, const unsigned int version) {
+    ar& boost::serialization::make_nvp(
+        "NoiseModelFactor4", boost::serialization::base_object<Base>(*this));
   }
 };
 
-}
+}  // namespace gpmp2
