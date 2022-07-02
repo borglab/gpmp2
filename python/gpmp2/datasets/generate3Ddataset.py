@@ -1,7 +1,8 @@
-from gtsam import *
-from gpmp2 import *
 import math
+
 import numpy as np
+from gpmp2 import *
+from gtsam import *
 
 
 class Dataset:
@@ -25,23 +26,21 @@ def add_obstacle(position, size, map, corner):
     half_size_z = int(math.floor((size[2] - 1) / 2))
 
     # occupency grid
-    map[
-        position[0] - half_size_row - 1 : position[0] + half_size_row,
-        position[1] - half_size_col - 1 : position[1] + half_size_col,
-        position[2] - half_size_z - 1 : position[2] + half_size_z,
-    ] = np.ones((2 * half_size_row + 1, 2 * half_size_col + 1, 2 * half_size_z + 1))
+    map[position[0] - half_size_row - 1:position[0] + half_size_row,
+        position[1] - half_size_col - 1:position[1] + half_size_col,
+        position[2] - half_size_z - 1:position[2] + half_size_z, ] = np.ones(
+            (2 * half_size_row + 1, 2 * half_size_col + 1,
+             2 * half_size_z + 1))
 
     # corner
-    temp = np.asarray(
-        [
-            position[0] - half_size_row - 1,
-            position[0] + half_size_row - 1,
-            position[1] - half_size_col - 1,
-            position[1] + half_size_col - 1,
-            position[2] - half_size_z - 1,
-            position[2] + half_size_z - 1,
-        ]
-    ).reshape(1, 6)
+    temp = np.asarray([
+        position[0] - half_size_row - 1,
+        position[0] + half_size_row - 1,
+        position[1] - half_size_col - 1,
+        position[1] + half_size_col - 1,
+        position[2] - half_size_z - 1,
+        position[2] + half_size_z - 1,
+    ]).reshape(1, 6)
 
     if corner is None:
         corner = temp
@@ -84,9 +83,10 @@ def generate3Ddataset(dataset_str):
         dataset.map = np.zeros((dataset.rows, dataset.cols, dataset.z))
         # obstacles
         dataset.corner_idx = None
-        dataset.map, dataset.corner_idx = add_obstacle(
-            [150, 150, 150], [20, 20, 20], dataset.map, dataset.corner_idx
-        )
+        dataset.map, dataset.corner_idx = add_obstacle([150, 150, 150],
+                                                       [20, 20, 20],
+                                                       dataset.map,
+                                                       dataset.corner_idx)
 
     # dataset 2: desk dataset for WAM WAMDeskDataset
     elif dataset_str is "WAMDeskDataset":
@@ -102,46 +102,46 @@ def generate3Ddataset(dataset_str):
         dataset.map = np.zeros((dataset.rows, dataset.cols, dataset.z))
         # obstacles
         dataset.corner_idx = None
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [170, 220, 130], [140, 60, 5], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [105, 195, 90], [10, 10, 80], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [235, 195, 90], [10, 10, 80], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [105, 245, 90], [10, 10, 80], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [235, 245, 90], [10, 10, 80], dataset.map, dataset.corner_idx
-        )
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([170, 220, 130], [140, 60, 5],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([105, 195, 90], [10, 10, 80],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([235, 195, 90], [10, 10, 80],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([105, 245, 90], [10, 10, 80],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([235, 245, 90], [10, 10, 80],
+                                            dataset.map, dataset.corner_idx)
 
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [250, 190, 145], [60, 5, 190], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [250, 90, 145], [60, 5, 190], dataset.map, dataset.corner_idx
-        )
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([250, 190, 145], [60, 5, 190],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([250, 90, 145], [60, 5, 190],
+                                            dataset.map, dataset.corner_idx)
 
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [200, 190, 145], [40, 5, 190], dataset.map, dataset.corner_idx
-        )
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([200, 190, 145], [40, 5, 190],
+                                            dataset.map, dataset.corner_idx)
         # [dataset.map, dataset.corner_idx] = add_obstacle([130 40 95], [60, 5, 190], dataset.map, dataset.corner_idx);
 
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [250, 140, 240], [60, 100, 5], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [250, 140, 190], [60, 100, 5], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [250, 140, 140], [60, 100, 5], dataset.map, dataset.corner_idx
-        )
-        [dataset.map, dataset.corner_idx] = add_obstacle(
-            [250, 140, 90], [60, 100, 5], dataset.map, dataset.corner_idx
-        )
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([250, 140, 240], [60, 100, 5],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([250, 140, 190], [60, 100, 5],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([250, 140, 140], [60, 100, 5],
+                                            dataset.map, dataset.corner_idx)
+        [dataset.map,
+         dataset.corner_idx] = add_obstacle([250, 140, 90], [60, 100, 5],
+                                            dataset.map, dataset.corner_idx)
 
     # no such dataset
     else:
