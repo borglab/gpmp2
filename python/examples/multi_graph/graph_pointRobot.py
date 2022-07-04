@@ -3,9 +3,9 @@ from gtsam import *
 from gpmp2 import *
 
 import matplotlib.pyplot as plt
-from gpmp2_python.datasets.generate2Ddataset import generate2Ddataset
-from gpmp2_python.utils.signedDistanceField2D import signedDistanceField2D
-from gpmp2_python.utils.plot_utils import *
+from gpmp2.datasets.generate2Ddataset import generate2Ddataset
+from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
+from gpmp2.utils.plot_utils import *
 from graph_utils import *
 import time
 
