@@ -12,6 +12,7 @@
 #include <gtsam/base/Lie.h>
 #include <gtsam/base/Vector.h>
 #include <gtsam/base/Matrix.h>
+#include <gtsam/base/MatrixSerialization.h>
 
 #include <iostream>
 
@@ -176,10 +177,9 @@ private:
     ar & BOOST_SERIALIZATION_NVP(dof_);
     ar & BOOST_SERIALIZATION_NVP(delta_t_);
     ar & BOOST_SERIALIZATION_NVP(tau_);
-    using namespace boost::serialization;
-    ar & make_nvp("Qc", make_array(Qc_.data(), Qc_.size()));
-    ar & make_nvp("Lambda", make_array(Lambda_.data(), Lambda_.size()));
-    ar & make_nvp("Psi", make_array(Psi_.data(), Psi_.size()));
+    ar & BOOST_SERIALIZATION_NVP(Qc_);
+    ar & BOOST_SERIALIZATION_NVP(Lambda_);
+    ar & BOOST_SERIALIZATION_NVP(Psi_);
   }
   
 };

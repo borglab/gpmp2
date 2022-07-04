@@ -40,7 +40,7 @@ TEST(JointLimitFactorPose2Vector, error) {
   conf = Pose2Vector(Pose2(), Vector2(0.0, 0.0));
   actual = factor.evaluateError(conf, H_act);
   expect = (Vector5() << 0, 0, 0, 0.0, 0.0).finished();
-  H_exp = numericalDerivativeDynamic(boost::function<Vector(const Pose2Vector&)>(
+  H_exp = numericalDerivativeDynamic(std::function<Vector(const Pose2Vector&)>(
       boost::bind(&JointLimitFactorPose2Vector::evaluateError, factor, _1, boost::none)), conf, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
@@ -49,7 +49,7 @@ TEST(JointLimitFactorPose2Vector, error) {
   conf = Pose2Vector(Pose2(), Vector2(-10.0, -10.0));
   actual = factor.evaluateError(conf, H_act);
   expect = (Vector5() << 0, 0, 0, 7.0, 2.0).finished();
-  H_exp = numericalDerivativeDynamic(boost::function<Vector(const Pose2Vector&)>(
+  H_exp = numericalDerivativeDynamic(std::function<Vector(const Pose2Vector&)>(
     boost::bind(&JointLimitFactorPose2Vector::evaluateError, factor, _1, boost::none)), conf, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
@@ -58,7 +58,7 @@ TEST(JointLimitFactorPose2Vector, error) {
   conf = Pose2Vector(Pose2(), Vector2(10.0, 10.0));
   actual = factor.evaluateError(conf, H_act);
   expect = (Vector5() << 0, 0, 0, 7.0, 2.0).finished();
-  H_exp = numericalDerivativeDynamic(boost::function<Vector(const Pose2Vector&)>(
+  H_exp = numericalDerivativeDynamic(std::function<Vector(const Pose2Vector&)>(
     boost::bind(&JointLimitFactorPose2Vector::evaluateError, factor, _1, boost::none)), conf, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));

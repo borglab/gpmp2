@@ -23,7 +23,7 @@ namespace gpmp2 {
 
 
 template<class Y, class X>
-gtsam::Matrix numericalDerivativeDynamic(boost::function<Y(const X&)> h, const X& x,
+gtsam::Matrix numericalDerivativeDynamic(std::function<Y(const X&)> h, const X& x,
     double delta = 1e-5) {
 
   BOOST_STATIC_ASSERT_MSG( (boost::is_base_of<gtsam::manifold_tag,

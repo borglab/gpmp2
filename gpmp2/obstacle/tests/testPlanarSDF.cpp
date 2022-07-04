@@ -62,13 +62,13 @@ TEST(PlanarSDFutils, test1) {
   Point2 p;
   p = Point2(-0.13, -0.14);
   field.getSignedDistance(p, grad_act);
-  grad_exp = numericalDerivative11(boost::function<double(const Point2&)>(
+  grad_exp = numericalDerivative11(std::function<double(const Point2&)>(
       boost::bind(sdf_wrapper, field, _1)), p, 1e-6);
   EXPECT(assert_equal(grad_exp, grad_act, 1e-6));
 
   p = Point2(0.18, 0.12);
   field.getSignedDistance(p, grad_act);
-  grad_exp = numericalDerivative11(boost::function<double(const Point2&)>(
+  grad_exp = numericalDerivative11(std::function<double(const Point2&)>(
       boost::bind(sdf_wrapper, field, _1)), p, 1e-6);
   EXPECT(assert_equal(grad_exp, grad_act, 1e-6));
 
