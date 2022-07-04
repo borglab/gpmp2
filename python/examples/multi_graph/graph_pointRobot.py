@@ -30,7 +30,8 @@ if __name__ == "__main__":
     problem.total_time_step = 20
     problem.total_check_step = 50.0
     problem.delta_t = problem.total_time_sec / problem.total_time_step
-    problem.check_inter = int(problem.total_check_step / problem.total_time_step - 1)
+    problem.check_inter = int(problem.total_check_step /
+                              problem.total_time_step - 1)
 
     # point robot model
     pR = PointRobot(2, 1)
@@ -38,8 +39,8 @@ if __name__ == "__main__":
     nr_body = spheres_data.shape[0]
     sphere_vec = BodySphereVector()
     sphere_vec.append(
-        BodySphere(int(spheres_data[0]), spheres_data[4], Point3(spheres_data[1:4]))
-    )
+        BodySphere(int(spheres_data[0]), spheres_data[4],
+                   Point3(spheres_data[1:4])))
     problem.gpmp_robot = PointRobotModel(pR, sphere_vec)
 
     # GP
@@ -59,7 +60,8 @@ if __name__ == "__main__":
     problem.start_vel = np.asarray([0, 0])
     problem.end_conf = np.asarray([17, 14])
     problem.end_vel = np.asarray([0, 0])
-    problem.avg_vel = (problem.end_conf / problem.total_time_step) / problem.delta_t
+    problem.avg_vel = (problem.end_conf /
+                       problem.total_time_step) / problem.delta_t
 
     # plot param
     problem.pause_time = problem.total_time_sec / problem.total_time_step

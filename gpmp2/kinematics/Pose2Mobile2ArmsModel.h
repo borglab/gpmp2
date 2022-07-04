@@ -1,6 +1,7 @@
 /**
  *  @file  Pose2Mobile2ArmsModel.h
- *  @brief mobile pose2 + 2 x Arm with physical body, which represented by spheres
+ *  @brief mobile pose2 + 2 x Arm with physical body, which represented by
+ *spheres
  *  @author Jing Dong
  *  @date  Aug 20, 2016
  **/
@@ -18,5 +19,4 @@ namespace gpmp2 {
  */
 typedef RobotModel<Pose2Mobile2Arms> Pose2Mobile2ArmsModel;
 
-}
-
+}  // namespace gpmp2

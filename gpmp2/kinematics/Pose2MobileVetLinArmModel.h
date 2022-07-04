@@ -1,6 +1,7 @@
 /**
  *  @file   Pose2MobileVetLinArmModel.h
- *  @brief  mobile pose2 + linear actuator + Arm with physical body, represented by spheres
+ *  @brief  mobile pose2 + linear actuator + Arm with physical body, represented
+ *by spheres
  *  @author Mustafa Mukadam
  *  @date   Sep 3, 2017
  **/
@@ -18,4 +19,4 @@ namespace gpmp2 {
  */
 typedef RobotModel<Pose2MobileVetLinArm> Pose2MobileVetLinArmModel;
 
-}
+}  // namespace gpmp2

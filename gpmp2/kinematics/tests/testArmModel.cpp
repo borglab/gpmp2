@@ -1,22 +1,19 @@
 /**
-*  @file testArmModel.cpp
-*  @author Jing Dong
-*  @date Dec 30, 2015
-**/
+ *  @file testArmModel.cpp
+ *  @author Jing Dong
+ *  @date Dec 30, 2015
+ **/
 
 #include <CppUnitLite/TestHarness.h>
-
+#include <gpmp2/kinematics/ArmModel.h>
 #include <gtsam/base/Testable.h>
 #include <gtsam/base/numericalDerivative.h>
-
-#include <gpmp2/kinematics/ArmModel.h>
 
 #include <iostream>
 
 using namespace std;
 using namespace gtsam;
 using namespace gpmp2;
-
 
 // sph pos wrapper
 Point3 sph_pos_wrapper_batch(const ArmModel& arm, const Vector& jp, size_t i) {
@@ -31,7 +28,6 @@ Point3 sph_pos_wrapper_single(const ArmModel& arm, const Vector& jp, size_t i) {
 
 /* ************************************************************************** */
 TEST(ArmModel, 2linkPlanarExamples) {
-
   // 2 link simple example, with none zero base poses
   Vector2 a(1, 1), alpha(0, 0), d(0, 0);
   Pose3 base_pose(Rot3(), Point3(2.0, 1.0, -1.0));
@@ -66,17 +62,21 @@ TEST(ArmModel, 2linkPlanarExamples) {
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
-    Jcq_exp = numericalDerivative11(std::function<Point3(const Vector2&)>(
-          boost::bind(&sph_pos_wrapper_batch, arm, _1, i)), q, 1e-6);
+    Jcq_exp =
+        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
+                                  &sph_pos_wrapper_batch, arm, _1, i)),
+                              q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
     EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, Jcq_act)));
-    Jcq_exp = numericalDerivative11(std::function<Point3(const Vector2&)>(
-          boost::bind(&sph_pos_wrapper_single, arm, _1, i)), q, 1e-6);
+    Jcq_exp =
+        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
+                                  &sph_pos_wrapper_single, arm, _1, i)),
+                              q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, Jcq_act, 1e-9));
   }
 
   // at non-origin
-  q = Vector2(M_PI/4.0, M_PI/4.0);
+  q = Vector2(M_PI / 4.0, M_PI / 4.0);
   sph_centers_exp.clear();
   sph_centers_exp.push_back(Point3(2, 1, -1));
   sph_centers_exp.push_back(Point3(2.353553390593274, 1.353553390593274, -1));
@@ -88,16 +88,19 @@ TEST(ArmModel, 2linkPlanarExamples) {
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
-    Jcq_exp = numericalDerivative11(std::function<Point3(const Vector2&)>(
-          boost::bind(&sph_pos_wrapper_batch, arm, _1, i)), q, 1e-6);
+    Jcq_exp =
+        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
+                                  &sph_pos_wrapper_batch, arm, _1, i)),
+                              q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
     EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, Jcq_act)));
-    Jcq_exp = numericalDerivative11(std::function<Point3(const Vector2&)>(
-          boost::bind(&sph_pos_wrapper_single, arm, _1, i)), q, 1e-6);
+    Jcq_exp =
+        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
+                                  &sph_pos_wrapper_single, arm, _1, i)),
+                              q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, Jcq_act, 1e-9));
   }
 }
-
 
 /* ************************************************************************** */
 /* main function */

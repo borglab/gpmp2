@@ -1,10 +1,6 @@
 import numpy as np
-from gtsam import *
 from gpmp2 import *
-import numpy as np
 from gtsam import *
-from gpmp2 import *
-import math
 from scipy import ndimage
 
 

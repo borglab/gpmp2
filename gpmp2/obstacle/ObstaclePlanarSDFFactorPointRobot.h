@@ -1,6 +1,7 @@
 /**
  *  @file   ObstaclePlanarSDFFactorPointRobot.h
- *  @brief  Obstacle avoidance cost factor, for point robot, using signed distance field
+ *  @brief  Obstacle avoidance cost factor, for point robot, using signed
+ *distance field
  *  @author Mustafa Mukadam
  *  @date   July 20, 2016
  **/
@@ -13,6 +14,7 @@
 namespace gpmp2 {
 
 // template uses PointRobotModel as robot type
-typedef ObstaclePlanarSDFFactor<PointRobotModel> ObstaclePlanarSDFFactorPointRobot;
+typedef ObstaclePlanarSDFFactor<PointRobotModel>
+    ObstaclePlanarSDFFactorPointRobot;
 
-}
+}  // namespace gpmp2

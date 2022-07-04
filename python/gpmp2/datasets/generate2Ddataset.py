@@ -1,9 +1,9 @@
-import numpy as np
-from gtsam import *
-from gpmp2 import *
 import math
 from random import Random
 
+import numpy as np
+from gpmp2 import *
+from gtsam import *
 
 dataset_random = Random()
 
@@ -39,9 +39,8 @@ def random_number(min_val, max_val):
 
 def get_center(x, y, dataset):
 
-    center = (
-        np.asarray([y - dataset.origin_y, x - dataset.origin_x]) / dataset.cell_size
-    )
+    center = (np.asarray([y - dataset.origin_y, x - dataset.origin_x]) /
+              dataset.cell_size)
     return center.astype(int)
 
 
@@ -50,24 +49,25 @@ def get_dim(w, h, dataset):
     return np.asarray([h, w]) / dataset.cell_size
 
 
-def add_obstacle(
-    position, size, map, landmarks=None, origin_x=None, origin_y=None, cell_size=None
-):
+def add_obstacle(position,
+                 size,
+                 map,
+                 landmarks=None,
+                 origin_x=None,
+                 origin_y=None,
+                 cell_size=None):
 
     half_size_row = int(math.floor((size[0] - 1) / 2))
     half_size_col = int(math.floor((size[1] - 1) / 2))
 
     # occupency grid. here map is assumed to be numpy array
 
-    temp = map[
-        position[0] - half_size_row - 1 : position[0] + half_size_row,
-        position[1] - half_size_col - 1 : position[1] + half_size_col,
-    ]
+    temp = map[position[0] - half_size_row - 1:position[0] + half_size_row,
+               position[1] - half_size_col - 1:position[1] + half_size_col, ]
 
-    map[
-        position[0] - half_size_row - 1 : position[0] + half_size_row,
-        position[1] - half_size_col - 1 : position[1] + half_size_col,
-    ] = np.ones(temp.shape)
+    map[position[0] - half_size_row - 1:position[0] + half_size_row,
+        position[1] - half_size_col - 1:position[1] +
+        half_size_col, ] = np.ones(temp.shape)
 
     # landmarks
     if landmarks is not None and origin_x is not None and origin_y is not None:
@@ -145,15 +145,12 @@ def generate2Ddataset(dataset_str):
         # map
         dataset.map = np.zeros((dataset.rows, dataset.cols))
         # obstacles
-        dataset.map = add_obstacle(
-            get_center(12, 10, dataset), get_dim(5, 7, dataset), dataset.map
-        )
-        dataset.map = add_obstacle(
-            get_center(-7, 10, dataset), get_dim(10, 7, dataset), dataset.map
-        )
-        dataset.map = add_obstacle(
-            get_center(0, -5, dataset), get_dim(10, 5, dataset), dataset.map
-        )
+        dataset.map = add_obstacle(get_center(12, 10, dataset),
+                                   get_dim(5, 7, dataset), dataset.map)
+        dataset.map = add_obstacle(get_center(-7, 10, dataset),
+                                   get_dim(10, 7, dataset), dataset.map)
+        dataset.map = add_obstacle(get_center(0, -5, dataset),
+                                   get_dim(10, 5, dataset), dataset.map)
 
     # mobile 2d map
     elif dataset_str is "MobileMap1":
@@ -166,23 +163,18 @@ def generate2Ddataset(dataset_str):
         # map
         dataset.map = np.zeros((dataset.rows, dataset.cols))
         # obstacles
-        dataset.map = add_obstacle(
-            get_center(0, 0, dataset), get_dim(1, 5, dataset), dataset.map
-        )
+        dataset.map = add_obstacle(get_center(0, 0, dataset),
+                                   get_dim(1, 5, dataset), dataset.map)
         # dataset.map = add_obstacle(get_center(-2.5,-2,dataset), get_dim(5,1,dataset), dataset.map);
         # wall
-        dataset.map = add_obstacle(
-            get_center(0, 4.5, dataset), get_dim(10, 1, dataset), dataset.map
-        )
-        dataset.map = add_obstacle(
-            get_center(0, -4.5, dataset), get_dim(10, 1, dataset), dataset.map
-        )
-        dataset.map = add_obstacle(
-            get_center(4.5, 0, dataset), get_dim(1, 10, dataset), dataset.map
-        )
-        dataset.map = add_obstacle(
-            get_center(-4.5, 0, dataset), get_dim(1, 10, dataset), dataset.map
-        )
+        dataset.map = add_obstacle(get_center(0, 4.5, dataset),
+                                   get_dim(10, 1, dataset), dataset.map)
+        dataset.map = add_obstacle(get_center(0, -4.5, dataset),
+                                   get_dim(10, 1, dataset), dataset.map)
+        dataset.map = add_obstacle(get_center(4.5, 0, dataset),
+                                   get_dim(1, 10, dataset), dataset.map)
+        dataset.map = add_obstacle(get_center(-4.5, 0, dataset),
+                                   get_dim(1, 10, dataset), dataset.map)
 
     # no such dataset
     else:

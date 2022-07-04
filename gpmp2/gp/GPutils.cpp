@@ -9,16 +9,13 @@
 
 using namespace gtsam;
 
-
 namespace gpmp2 {
 
 /* ************************************************************************** */
 Matrix getQc(const SharedNoiseModel Qc_model) {
   noiseModel::Gaussian *Gassian_model =
-      dynamic_cast<noiseModel::Gaussian*>(Qc_model.get());
+      dynamic_cast<noiseModel::Gaussian *>(Qc_model.get());
   return (Gassian_model->R().transpose() * Gassian_model->R()).inverse();
 }
 
-} // namespace gpmp2
-
-
+}  // namespace gpmp2

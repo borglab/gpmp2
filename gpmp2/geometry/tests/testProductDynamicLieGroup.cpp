@@ -5,20 +5,18 @@
  * @brief unit tests for Lie group type machinery
  */
 
-#include <gpmp2/geometry/ProductDynamicLieGroup.h>
+#include <CppUnitLite/TestHarness.h>
 #include <gpmp2/geometry/DynamicLieTraits.h>
+#include <gpmp2/geometry/ProductDynamicLieGroup.h>
 #include <gpmp2/geometry/numericalDerivativeDynamic.h>
-
-#include <gtsam/geometry/Pose2.h>
-#include <gtsam/geometry/Point2.h>
 #include <gtsam/base/testLie.h>
+#include <gtsam/geometry/Point2.h>
+#include <gtsam/geometry/Pose2.h>
 #include <gtsam/inference/Symbol.h>
-#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
+#include <gtsam/nonlinear/NonlinearFactorGraph.h>
 #include <gtsam/nonlinear/Values.h>
 #include <gtsam/slam/PriorFactor.h>
-
-#include <CppUnitLite/TestHarness.h>
 
 using namespace std;
 using namespace gtsam;
@@ -34,16 +32,18 @@ typedef ProductDynamicLieGroup<Point2, Pose2> Product;
 }
 
 namespace gtsam {
-template<> struct traits<Product> : internal::DynamicLieGroupTraits<Product> {
+template <>
+struct traits<Product> : internal::DynamicLieGroupTraits<Product> {
   static void Print(const Product& m, const string& s = "") {
     cout << s << "(" << m.first << "," << m.second.translation() << "/"
-        << m.second.theta() << ")" << endl;
+         << m.second.theta() << ")" << endl;
   }
   static bool Equals(const Product& m1, const Product& m2, double tol = 1e-8) {
-    return traits<Point2>::Equals(m1.first, m2.first, tol) && m1.second.equals(m2.second, tol);
+    return traits<Point2>::Equals(m1.first, m2.first, tol) &&
+           m1.second.equals(m2.second, tol);
   }
 };
-}
+}  // namespace gtsam
 
 //******************************************************************************
 TEST(ProductDynamicLieGroup, ProductLieGroup) {
@@ -63,7 +63,7 @@ TEST(ProductDynamicLieGroup, ProductLieGroup) {
 Product compose_proxy(const Product& A, const Product& B) {
   return A.compose(B);
 }
-TEST( ProductDynamicLieGroup, compose ) {
+TEST(ProductDynamicLieGroup, compose) {
   Product state1(Point2(1, 2), Pose2(3, 4, 5)), state2 = state1;
 
   Matrix actH1, actH2;
@@ -80,7 +80,7 @@ TEST( ProductDynamicLieGroup, compose ) {
 Product between_proxy(const Product& A, const Product& B) {
   return A.between(B);
 }
-TEST( ProductDynamicLieGroup, between ) {
+TEST(ProductDynamicLieGroup, between) {
   Product state1(Point2(1, 2), Pose2(3, 4, 5)), state2 = state1;
 
   Matrix actH1, actH2;
@@ -94,10 +94,8 @@ TEST( ProductDynamicLieGroup, between ) {
 }
 
 /* ************************************************************************* */
-Product inverse_proxy(const Product& A) {
-  return A.inverse();
-}
-TEST( ProductDynamicLieGroup, inverse ) {
+Product inverse_proxy(const Product& A) { return A.inverse(); }
+TEST(ProductDynamicLieGroup, inverse) {
   Product state1(Point2(1, 2), Pose2(3, 4, 5));
 
   Matrix actH1;
@@ -108,10 +106,8 @@ TEST( ProductDynamicLieGroup, inverse ) {
 }
 
 /* ************************************************************************* */
-Product expmap_proxy(const Vector5& vec) {
-  return Product::Expmap(vec);
-}
-TEST( ProductDynamicLieGroup, Expmap ) {
+Product expmap_proxy(const Vector5& vec) { return Product::Expmap(vec); }
+TEST(ProductDynamicLieGroup, Expmap) {
   Vector5 vec;
   vec << 1, 2, 0.1, 0.2, 0.3;
 
@@ -123,10 +119,8 @@ TEST( ProductDynamicLieGroup, Expmap ) {
 }
 
 /* ************************************************************************* */
-Vector5 logmap_proxy(const Product& p) {
-  return Product::Logmap(p);
-}
-TEST( ProductDynamicLieGroup, Logmap ) {
+Vector5 logmap_proxy(const Product& p) { return Product::Logmap(p); }
+TEST(ProductDynamicLieGroup, Logmap) {
   Product state(Point2(1, 2), Pose2(3, 4, 5));
 
   Matrix actH;
@@ -137,8 +131,9 @@ TEST( ProductDynamicLieGroup, Logmap ) {
 }
 
 /* ************************************************************************* */
-TEST( ProductDynamicLieGroup, optimization ) {
-  Product state1(Point2(1, 2), Pose2(3, 4, 5)), state2(Point2(3, 4), Pose2(1, 5, 7));
+TEST(ProductDynamicLieGroup, optimization) {
+  Product state1(Point2(1, 2), Pose2(3, 4, 5)),
+      state2(Point2(3, 4), Pose2(1, 5, 7));
 
   // prior factor graph
   noiseModel::Isotropic::shared_ptr model_prior =
@@ -166,4 +161,3 @@ int main() {
   return TestRegistry::runAllTests(tr);
 }
 //******************************************************************************
-
