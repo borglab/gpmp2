@@ -1,7 +1,7 @@
 import numpy as np
-from gtsam import *
-from gpmp2 import *
-import math
+from gpmp2 import (Arm, BodySphere, BodySphereVector, Pose2Mobile2Arms,
+                   Pose2MobileArm, Pose2MobileArmModel, Pose2MobileVetLin2Arms)
+from gtsam import Point3, Pose3, Rot3
 
 
 def generateMobileArm(inp_str, base_T_arm=None):
@@ -44,11 +44,9 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.push_back(
-                BodySphere(
-                    spheres_data[i, 0], spheres_data[i, 4], Point3(spheres_data[i, 1:4])
-                )
-            )
+            sphere_vec.append(
+                BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
+                           Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
 
     #%  2 simple arms on mobile base, each arm has two links
@@ -91,11 +89,9 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.push_back(
-                BodySphere(
-                    spheres_data[i, 0], spheres_data[i, 4], Point3(spheres_data[i, 1:4])
-                )
-            )
+            sphere_vec.append(
+                BodySphere(spheres_data[i, 0], spheres_data[i, 4],
+                           Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
 
     #%  2DMobileArm2
@@ -124,17 +120,16 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.push_back(
-                BodySphere(
-                    spheres_data[i, 0], spheres_data[i, 4], Point3(spheres_data[i, 1:4])
-                )
-            )
+            sphere_vec.append(
+                BodySphere(spheres_data[i, 0], spheres_data[i, 4],
+                           Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
 
     #%  Vector: omni drive base with 6 DOF Kinova JACO2 arm
     elif inp_str is "Vector":
         #% arm: JACO2 6DOF arm
-        alpha = np.asarray([np.pi / 2, np.pi, np.pi / 2, 1.0472, 1.0472, np.pi])
+        alpha = np.asarray(
+            [np.pi / 2, np.pi, np.pi / 2, 1.0472, 1.0472, np.pi])
         a = np.asarray([0, 0.41, 0, 0, 0, 0])
         d = np.asarray([0.2755, 0, -0.0098, -0.2501, -0.0856, -0.2228])
         #% theta = [0, 0, 0, 0, 0, 0]';
@@ -236,17 +231,16 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.push_back(
-                BodySphere(
-                    spheres_data[i, 0], spheres_data[i, 4], Point3(spheres_data[i, 1:4])
-                )
-            )
+            sphere_vec.append(
+                BodySphere(spheres_data[i, 0], spheres_data[i, 4],
+                           Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
 
     #%  PR2: 3 DOF base + 1 DOF linear actuator + 2 x 7 DOF arms
     elif inp_str is "PR2":
         #% abstract arm
-        alpha = np.asarray([-1.5708, 1.5708, -1.5708, 1.5708, -1.5708, 1.5708, 0])
+        alpha = np.asarray(
+            [-1.5708, 1.5708, -1.5708, 1.5708, -1.5708, 1.5708, 0])
         a = np.asarray(np.asarray([0.1, 0, 0, 0, 0, 0, 0]))
         d = np.asarray([0, 0, 0.4, 0, 0.321, 0, 0])
         theta = np.asarray([0, 1.5708, 0, 0, 0, 0, 0])
@@ -255,9 +249,8 @@ def generateMobileArm(inp_str, base_T_arm=None):
         base_T_torso = Pose3(Rot3(), Point3(np.asarray([-0.05, 0, 0.790675])))
         torso_T_arm_l = Pose3(Rot3(), Point3(np.asarray([0, 0.188, 0])))
         torso_T_arm_r = Pose3(Rot3(), Point3(np.asarray([0, -0.188, 0])))
-        marm = Pose2MobileVetLin2Arms(
-            arm, arm, base_T_torso, torso_T_arm_l, torso_T_arm_r, false
-        )
+        marm = Pose2MobileVetLin2Arms(arm, arm, base_T_torso, torso_T_arm_l,
+                                      torso_T_arm_r, False)
 
         spheres_data = [
             [0, 0.000000, 0.000000, 0.130000, 0.170000],
@@ -330,11 +323,9 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.push_back(
-                BodySphere(
-                    spheres_data[i, 0], spheres_data[i, 4], Point3(spheres_data[i, 1:4])
-                )
-            )
+            sphere_vec.append(
+                BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
+                           Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
 
     #% no such dataset

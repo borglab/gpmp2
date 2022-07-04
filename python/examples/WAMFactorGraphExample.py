@@ -1,15 +1,12 @@
-import numpy as np
-from gtsam import *
-from gpmp2 import *
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d, Axes3D
-
-
+import numpy as np
+from gpmp2 import *
 from gpmp2.datasets.generate3Ddataset import generate3Ddataset
 from gpmp2.robots.generateArm import generateArm
 from gpmp2.utils.plot_utils import *
 from gpmp2.utils.signedDistanceField3D import signedDistanceField3D
-
+from gtsam import *
+from mpl_toolkits.mplot3d import Axes3D, axes3d
 
 # dataset
 dataset = generate3Ddataset("WAMDeskDataset")
@@ -49,7 +46,7 @@ check_inter = total_check_step / total_time_step - 1
 
 # GP
 Qc = np.identity(7)
-Qc_model = noiseModel_Gaussian.Covariance(Qc)
+Qc_model = noiseModel.Gaussian.Covariance(Qc)
 
 # algo settings
 cost_sigma = 0.02
@@ -57,8 +54,8 @@ epsilon_dist = 0.2
 
 # noise model
 fix_sigma = 0.0001
-pose_fix_model = noiseModel_Isotropic.Sigma(7, fix_sigma)
-vel_fix_model = noiseModel_Isotropic.Sigma(7, fix_sigma)
+pose_fix_model = noiseModel.Isotropic.Sigma(7, fix_sigma)
+vel_fix_model = noiseModel.Isotropic.Sigma(7, fix_sigma)
 
 # init sdf
 sdf = SignedDistanceField(

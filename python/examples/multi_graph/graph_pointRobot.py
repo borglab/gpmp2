@@ -1,14 +1,12 @@
-import numpy as np
-from gtsam import *
-from gpmp2 import *
-
 import matplotlib.pyplot as plt
+import numpy as np
+from gpmp2 import *
 from gpmp2.datasets.generate2Ddataset import generate2Ddataset
-from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
 from gpmp2.utils.plot_utils import *
-from graph_utils import *
-import time
+from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
+from gtsam import *
 
+from graph_utils import *
 
 if __name__ == "__main__":
 
@@ -39,22 +37,22 @@ if __name__ == "__main__":
     spheres_data = np.asarray([0.0, 0.0, 0.0, 0.0, 1.5])
     nr_body = spheres_data.shape[0]
     sphere_vec = BodySphereVector()
-    sphere_vec.push_back(
-        BodySphere(spheres_data[0], spheres_data[4], Point3(spheres_data[1:4]))
+    sphere_vec.append(
+        BodySphere(int(spheres_data[0]), spheres_data[4], Point3(spheres_data[1:4]))
     )
     problem.gpmp_robot = PointRobotModel(pR, sphere_vec)
 
     # GP
     problem.Qc = np.identity(2)
-    problem.Qc_model = noiseModel_Gaussian.Covariance(problem.Qc)
+    problem.Qc_model = noiseModel.Gaussian.Covariance(problem.Qc)
 
     # Obstacle avoid settings
     problem.cost_sigma = 0.5
     problem.epsilon_dist = 4.0
 
     # prior to start/goal
-    problem.pose_fix_model = noiseModel_Isotropic.Sigma(2, 0.0001)
-    problem.vel_fix_model = noiseModel_Isotropic.Sigma(2, 0.0001)
+    problem.pose_fix_model = noiseModel.Isotropic.Sigma(2, 0.0001)
+    problem.vel_fix_model = noiseModel.Isotropic.Sigma(2, 0.0001)
 
     # start and end conf
     problem.start_conf = np.asarray([0, 0])
@@ -117,6 +115,6 @@ if __name__ == "__main__":
         axis.set_title("Optimized Values")
         # plot arm
         conf = path[i]
-        # conf = result.atVector(symbol(ord('x'), i))
+        # conf = result.atVector(X(i))
         plotPointRobot2D(figure, axis, problem.gpmp_robot, conf)
         plt.pause(problem.pause_time)

@@ -1,9 +1,8 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.collections as collections
-
-from gtsam import *
+import matplotlib.pyplot as plt
+import numpy as np
 from gpmp2 import *
+from gtsam import *
 
 
 def plot2dMap(axis, dataset_class):
@@ -21,8 +20,7 @@ def plot2dMap(axis, dataset_class):
                 obs.size[0],
                 obs.size[1],
                 color="b",
-            )
-        )
+            ))
 
     pc = collections.PatchCollection(rects)
     axis.add_collection(pc)
@@ -41,9 +39,11 @@ def plotArm(figure, axis, arm, conf, color, width):
 
     position = arm.forwardKinematicsPosition(conf)
     # marker='-'
-    axis.plot(
-        position[0, :], position[1, :], position[2, :], color=color, linewidth=width
-    )
+    axis.plot(position[0, :],
+              position[1, :],
+              position[2, :],
+              color=color,
+              linewidth=width)
 
     axis.plot(
         position[0, :-1],
@@ -81,17 +81,16 @@ def plotEvidenceMap2D(figure, axis, prob_grid, origin_x, origin_y, cell_size):
     c = axis.pcolor(grid_X, grid_Y, temp, vmin=z_min, vmax=z_max)
     # figure.colorbar(c, ax=axis) # add colorbar
 
-    axis.invert_yaxis()  # TODO: check this again! same as set(gca,'YDir','normal')
+    axis.invert_yaxis(
+    )  # TODO: check this again! same as set(gca,'YDir','normal')
     # axis equal
     axis.axis("equal")
-    axis.axis(
-        [
-            origin_x - cell_size / 2,
-            grid_corner_x + cell_size / 2,
-            origin_y - cell_size / 2,
-            grid_corner_y + cell_size / 2,
-        ]
-    )
+    axis.axis([
+        origin_x - cell_size / 2,
+        grid_corner_x + cell_size / 2,
+        origin_y - cell_size / 2,
+        grid_corner_y + cell_size / 2,
+    ])
 
     return c
 
@@ -115,26 +114,20 @@ def plotMap3D(figure, axis, corner_idx, origin, cell_size):
         y2 = corner_idx[i, 3] * cell_size + origin[1]
         z1 = corner_idx[i, 4] * cell_size + origin[2]
         z2 = corner_idx[i, 5] * cell_size + origin[2]
-        axis.plot(
-            [x1, x2, x1, x2], [y1, y1, y2, y2], [z1, z1, z1, z1]
-        )  # ,rstride=4, cstride=4, color='r')
-        axis.plot(
-            [x1, x2, x1, x2], [y1, y1, y2, y2], [z2, z2, z2, z2]
-        )  # ,rstride=4, cstride=4, color='r')
-        axis.plot(
-            [x1, x1, x1, x1], [y1, y1, y2, y2], [z1, z2, z1, z2]
-        )  # ,rstride=4, cstride=4, color='r')
-        axis.plot(
-            [x2, x2, x2, x2], [y1, y1, y2, y2], [z1, z2, z1, z2]
-        )  # ,rstride=4, cstride=4, color='r')
-        axis.plot(
-            [x1, x2, x1, x2], [y1, y1, y1, y1], [z1, z1, z2, z2]
-        )  # ,rstride=4, cstride=4, color='r')
-        axis.plot(
-            [x1, x2, x1, x2], [y2, y2, y2, y2], [z1, z1, z2, z2]
-        )  # ,rstride=4, cstride=4, color='r')
+        axis.plot([x1, x2, x1, x2], [y1, y1, y2, y2],
+                  [z1, z1, z1, z1])  # ,rstride=4, cstride=4, color='r')
+        axis.plot([x1, x2, x1, x2], [y1, y1, y2, y2],
+                  [z2, z2, z2, z2])  # ,rstride=4, cstride=4, color='r')
+        axis.plot([x1, x1, x1, x1], [y1, y1, y2, y2],
+                  [z1, z2, z1, z2])  # ,rstride=4, cstride=4, color='r')
+        axis.plot([x2, x2, x2, x2], [y1, y1, y2, y2],
+                  [z1, z2, z1, z2])  # ,rstride=4, cstride=4, color='r')
+        axis.plot([x1, x2, x1, x2], [y1, y1, y1, y1],
+                  [z1, z1, z2, z2])  # ,rstride=4, cstride=4, color='r')
+        axis.plot([x1, x2, x1, x2], [y2, y2, y2, y2],
+                  [z1, z1, z2, z2])  # ,rstride=4, cstride=4, color='r')
 
-    axis.axis("equal")
+    axis.set_aspect("auto")
 
 
 def plotPlanarArm(figure, axis, arm, conf, color, width):
@@ -197,8 +190,20 @@ def plotPlannarMobileArm(figure, axis, marm, p, vehsize, color, width):
     corner4 = pose.transform_from(Point2(vehsize[0] / 2, -vehsize[1] / 2))
 
     # vehicle base black lines
-    x_corners = [corner1.x(), corner2.x(), corner3.x(), corner4.x(), corner1.x()]
-    y_corners = [corner1.y(), corner2.y(), corner3.y(), corner4.y(), corner1.y()]
+    x_corners = [
+        corner1.x(),
+        corner2.x(),
+        corner3.x(),
+        corner4.x(),
+        corner1.x()
+    ]
+    y_corners = [
+        corner1.y(),
+        corner2.y(),
+        corner3.y(),
+        corner4.y(),
+        corner1.y()
+    ]
     axis.plot(x_corners, y_corners, "k-")
 
     # arm
@@ -221,8 +226,20 @@ def plotPlanarMobileBase(figure, axis, robot, pose, vehsize, color, width):
     corner4 = pose.transform_from(Point2(vehsize[0] / 2, -vehsize[1] / 2))
 
     # vehicle base black lines
-    x_corners = [corner1.x(), corner2.x(), corner3.x(), corner4.x(), corner1.x()]
-    y_corners = [corner1.y(), corner2.y(), corner3.y(), corner4.y(), corner1.y()]
+    x_corners = [
+        corner1.x(),
+        corner2.x(),
+        corner3.x(),
+        corner4.x(),
+        corner1.x()
+    ]
+    y_corners = [
+        corner1.y(),
+        corner2.y(),
+        corner3.y(),
+        corner4.y(),
+        corner1.y()
+    ]
     axis.plot(x_corners, y_corners, "k-")
 
 
@@ -252,7 +269,11 @@ def plotPointRobot2D(figure, axis, robot, conf, color_rgb=[0.4, 0.4, 0.4]):
         )
 
 
-def plotPointRobot2D_theta(figure, axis, robot, conf, color_rgb=[0.4, 0.4, 0.4]):
+def plotPointRobot2D_theta(figure,
+                           axis,
+                           robot,
+                           conf,
+                           color_rgb=[0.4, 0.4, 0.4]):
     # %plotPointRobot2D Plot PointRobotModel in 2D
     # %
     # %   Usage: plotRobotModel(robot, conf, color_rgb)
@@ -302,14 +323,20 @@ def plotRobotModel(figure, axis, robot, conf, color_rgb=[0.4, 0.4, 0.4]):
 
     for i in range(robot.nr_body_spheres()):
         # TODO: check if it is body_points[:,i] or body_point[i,:]
-        plotSphere(
-            figure, axis, robot.sphere_radius(i), body_points[:, i], color=color_rgb
-        )
+        plotSphere(figure,
+                   axis,
+                   robot.sphere_radius(i),
+                   body_points[:, i],
+                   color=color_rgb)
 
 
-def plotSignedDistanceField2D(
-    figure, axis, field, origin_x, origin_y, cell_size, epsilon_dist=0
-):
+def plotSignedDistanceField2D(figure,
+                              axis,
+                              field,
+                              origin_x,
+                              origin_y,
+                              cell_size,
+                              epsilon_dist=0):
     # %PLOTSIGNEDDISTANCEFIELD2D plot 2D SignedDistanceField
     # %
     # %   Usage: PLOTSIGNEDDISTANCEFIELD2D(field, origin_x, origin_y, cell_size, epsilon_dist)
@@ -333,17 +360,16 @@ def plotSignedDistanceField2D(
     figure.colorbar(c, ax=axis)  # add colorbar
 
     # set(gca,'YDir','normal')
-    axis.invert_yaxis()  # TODO: check this again! same as set(gca,'YDir','normal')
+    axis.invert_yaxis(
+    )  # TODO: check this again! same as set(gca,'YDir','normal')
 
     axis.axis("equal")
-    axis.axis(
-        [
-            origin_x - cell_size / 2,
-            grid_corner_x + cell_size / 2,
-            origin_y - cell_size / 2,
-            grid_corner_y + cell_size / 2,
-        ]
-    )
+    axis.axis([
+        origin_x - cell_size / 2,
+        grid_corner_x + cell_size / 2,
+        origin_y - cell_size / 2,
+        grid_corner_y + cell_size / 2,
+    ])
 
     # colorbar
     axis.set_xlabel("X/m")
@@ -351,9 +377,13 @@ def plotSignedDistanceField2D(
     axis.set_title("Signed Distance Field")
 
 
-def plotSignedDistanceField3D(
-    figure, axis, field, origin, cell_size, epsilon_dist=0, marker_size=10
-):
+def plotSignedDistanceField3D(figure,
+                              axis,
+                              field,
+                              origin,
+                              cell_size,
+                              epsilon_dist=0,
+                              marker_size=10):
     # %PLOTSIGNEDDISTANCEFIELD3D plot 3D SignedDistanceField
     # %
     # %   Usage: PLOTSIGNEDDISTANCEFIELD3D(field, origin, cell_size, epsilon_dist)
@@ -379,19 +409,22 @@ def plotSignedDistanceField3D(
     x, y, z = indexes[0, :], indexes[1, :], indexes[2, :]
 
     # Todo: Test this
-    axis.scatter(grid_X(y), grid_Y(x), grid_Z(z), ".", "r", markersize=marker_size)
+    axis.scatter(grid_X(y),
+                 grid_Y(x),
+                 grid_Z(z),
+                 ".",
+                 "r",
+                 markersize=marker_size)
 
     # axis equal
-    axis.axis(
-        [
-            origin(0) - cell_size / 2,
-            grid_corner_x + cell_size / 2,
-            origin(1) - cell_size / 2,
-            grid_corner_y + cell_size / 2,
-            origin(2) - cell_size / 2,
-            grid_corner_z + cell_size / 2,
-        ]
-    )
+    axis.axis([
+        origin(0) - cell_size / 2,
+        grid_corner_x + cell_size / 2,
+        origin(1) - cell_size / 2,
+        grid_corner_y + cell_size / 2,
+        origin(2) - cell_size / 2,
+        grid_corner_z + cell_size / 2,
+    ])
 
     axis.set_xlabel("X/m")
     axis.set_ylabel("Y/m")
@@ -424,9 +457,11 @@ def plotRobotModel2D(figure, axis, robot, conf, color_rgb=[0.4, 0.4, 0.4]):
 
     for i in range(robot.nr_body_spheres()):
         # TODO: check if it is body_points[:,i] or body_point[i,:]
-        plotSphere2D(
-            figure, axis, robot.sphere_radius(i), body_points[:, i], color=color_rgb
-        )
+        plotSphere2D(figure,
+                     axis,
+                     robot.sphere_radius(i),
+                     body_points[:, i],
+                     color=color_rgb)
 
 
 def set3DPlotRange(figure, axis, dataset):
