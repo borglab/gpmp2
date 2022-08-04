@@ -50,7 +50,7 @@ TEST(ProductDynamicLieGroup, ProductLieGroup) {
   BOOST_CONCEPT_ASSERT((IsGroup<Product>));
   BOOST_CONCEPT_ASSERT((IsManifold<Product>));
   BOOST_CONCEPT_ASSERT((IsLieGroup<Product>));
-  Product pair1;
+  Product pair1(Point2(0, 0), Pose2());
   Vector5 d;
   d << 1, 2, 0.1, 0.2, 0.3;
   Product expected(Point2(1, 2), Pose2::Expmap(Vector3(0.1, 0.2, 0.3)));
