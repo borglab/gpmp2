@@ -9,33 +9,32 @@
 #pragma once
 
 #include <gpmp2/geometry/utilsDynamic.h>
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-
-#include <gtsam/linear/VectorValues.h>
-#include <gtsam/linear/JacobianFactor.h>
-#include <gtsam/nonlinear/Values.h>
 #include <gtsam/base/Lie.h>
+#include <gtsam/linear/JacobianFactor.h>
+#include <gtsam/linear/VectorValues.h>
+#include <gtsam/nonlinear/Values.h>
 
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
 
 namespace gpmp2 {
 
-
-template<class Y, class X>
-gtsam::Matrix numericalDerivativeDynamic(std::function<Y(const X&)> h, const X& x,
-    double delta = 1e-5) {
-
-  BOOST_STATIC_ASSERT_MSG( (boost::is_base_of<gtsam::manifold_tag,
-      typename gtsam::traits<Y>::structure_category>::value),
+template <class Y, class X>
+gtsam::Matrix numericalDerivativeDynamic(std::function<Y(const X&)> h,
+                                         const X& x, double delta = 1e-5) {
+  BOOST_STATIC_ASSERT_MSG(
+      (boost::is_base_of<gtsam::manifold_tag,
+                         typename gtsam::traits<Y>::structure_category>::value),
       "Template argument Y must be a manifold type.");
   typedef gtsam::traits<Y> TraitsY;
   typedef typename TraitsY::TangentVector TangentY;
 
-  BOOST_STATIC_ASSERT_MSG( (boost::is_base_of<gtsam::manifold_tag,
-      typename gtsam::traits<X>::structure_category>::value),
+  BOOST_STATIC_ASSERT_MSG(
+      (boost::is_base_of<gtsam::manifold_tag,
+                         typename gtsam::traits<X>::structure_category>::value),
       "Template argument X must be a manifold type.");
-  static const int N = DimensionUtils<X, gtsam::traits<X>::dimension>::getDimension(x) ;
+  static const int N =
+      DimensionUtils<X, gtsam::traits<X>::dimension>::getDimension(x);
   typedef gtsam::traits<X> TraitsX;
   typedef typename TraitsX::TangentVector TangentX;
 
@@ -65,10 +64,10 @@ gtsam::Matrix numericalDerivativeDynamic(std::function<Y(const X&)> h, const X& 
 }
 
 /** use a raw C++ function pointer */
-template<class Y, class X>
+template <class Y, class X>
 typename gtsam::Matrix numericalDerivativeDynamic(Y (*h)(const X&), const X& x,
-    double delta = 1e-5) {
+                                                  double delta = 1e-5) {
   return numericalDerivativeDynamic<Y, X>(boost::bind(h, _1), x, delta);
 }
 
-}
+}  // namespace gpmp2

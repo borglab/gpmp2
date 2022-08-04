@@ -247,6 +247,11 @@ class BodySphere {
   BodySphere(size_t id, double r, const gtsam::Point3& c);
 };
 
+class BodySphereVector {
+  BodySphereVector();
+  void push_back(const gpmp2::BodySphere& sphere);
+};
+
 // Physical ArmModel class
 #include <gpmp2/kinematics/ArmModel.h>
 

@@ -1,30 +1,29 @@
 /**
  *  @file  TrajUtils-inl.h
- *  @brief utils for trajectory optimization, include initialization and interpolation
+ *  @brief utils for trajectory optimization, include initialization and
+ *interpolation
  *  @author Jing Dong, Mustafa Mukadam
  *  @date  May 11, 2015
  **/
 
-#include <gpmp2/planner/TrajUtils.h>
 #include <gpmp2/gp/GaussianProcessInterpolatorLinear.h>
 #include <gpmp2/gp/GaussianProcessInterpolatorPose2.h>
 #include <gpmp2/gp/GaussianProcessInterpolatorPose2Vector.h>
-
+#include <gpmp2/planner/TrajUtils.h>
 #include <gtsam/inference/Symbol.h>
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 
 using namespace gtsam;
 using namespace std;
-
 
 namespace gpmp2 {
 
 /* ************************************************************************** */
 gtsam::Values initArmTrajStraightLine(const Vector& init_conf,
-    const Vector& end_conf, size_t total_step) {
-
+                                      const Vector& end_conf,
+                                      size_t total_step) {
   Values init_values;
 
   // init pose
@@ -35,8 +34,10 @@ gtsam::Values initArmTrajStraightLine(const Vector& init_conf,
     else if (i == total_step)
       conf = end_conf;
     else
-      conf = static_cast<double>(i) / static_cast<double>(total_step) * end_conf +
-          (1.0 - static_cast<double>(i) / static_cast<double>(total_step)) * init_conf;
+      conf =
+          static_cast<double>(i) / static_cast<double>(total_step) * end_conf +
+          (1.0 - static_cast<double>(i) / static_cast<double>(total_step)) *
+              init_conf;
 
     init_values.insert(Symbol('x', i), conf);
   }
@@ -50,21 +51,26 @@ gtsam::Values initArmTrajStraightLine(const Vector& init_conf,
 }
 
 /* ************************************************************************** */
-gtsam::Values initPose2VectorTrajStraightLine(const Pose2& init_pose, const Vector& init_conf,
-    const Pose2& end_pose, const Vector& end_conf, size_t total_step) {
-
+gtsam::Values initPose2VectorTrajStraightLine(const Pose2& init_pose,
+                                              const Vector& init_conf,
+                                              const Pose2& end_pose,
+                                              const Vector& end_conf,
+                                              size_t total_step) {
   Values init_values;
 
-  Vector avg_vel = (Vector(3+init_conf.size()) << end_pose.x()-init_pose.x(), 
-      end_pose.y()-init_pose.y(), end_pose.theta()-init_pose.theta(), 
-      end_conf - init_conf).finished() / static_cast<double>(total_step);
+  Vector avg_vel =
+      (Vector(3 + init_conf.size()) << end_pose.x() - init_pose.x(),
+       end_pose.y() - init_pose.y(), end_pose.theta() - init_pose.theta(),
+       end_conf - init_conf)
+          .finished() /
+      static_cast<double>(total_step);
 
-  for (size_t i=0; i<=total_step; i++) {
+  for (size_t i = 0; i <= total_step; i++) {
     Vector conf;
     Pose2 pose;
     double ratio = static_cast<double>(i) / static_cast<double>(total_step);
     pose = interpolate<Pose2>(init_pose, end_pose, ratio);
-    conf = (1.0 - ratio)*init_conf + ratio*end_conf;
+    conf = (1.0 - ratio) * init_conf + ratio * end_conf;
     init_values.insert(Symbol('x', i), Pose2Vector(pose, conf));
     init_values.insert(Symbol('v', i), avg_vel);
   }
@@ -73,15 +79,18 @@ gtsam::Values initPose2VectorTrajStraightLine(const Pose2& init_pose, const Vect
 }
 
 /* ************************************************************************** */
-gtsam::Values initPose2TrajStraightLine(const Pose2& init_pose, const Pose2& end_pose,
-    size_t total_step) {
-
+gtsam::Values initPose2TrajStraightLine(const Pose2& init_pose,
+                                        const Pose2& end_pose,
+                                        size_t total_step) {
   Values init_values;
 
-  Vector avg_vel = (Vector(3) << end_pose.x()-init_pose.x(), end_pose.y()-init_pose.y(),
-    end_pose.theta()-init_pose.theta()).finished() / static_cast<double>(total_step);
+  Vector avg_vel =
+      (Vector(3) << end_pose.x() - init_pose.x(), end_pose.y() - init_pose.y(),
+       end_pose.theta() - init_pose.theta())
+          .finished() /
+      static_cast<double>(total_step);
 
-  for (size_t i=0; i<=total_step; i++) {
+  for (size_t i = 0; i <= total_step; i++) {
     Pose2 pose;
     double ratio = static_cast<double>(i) / static_cast<double>(total_step);
     pose = interpolate<Pose2>(init_pose, end_pose, ratio);
@@ -94,8 +103,8 @@ gtsam::Values initPose2TrajStraightLine(const Pose2& init_pose, const Pose2& end
 
 /* ************************************************************************** */
 gtsam::Values interpolateArmTraj(const gtsam::Values& opt_values,
-    const gtsam::SharedNoiseModel Qc_model, double delta_t, size_t inter_step) {
-
+                                 const gtsam::SharedNoiseModel Qc_model,
+                                 double delta_t, size_t inter_step) {
   // inter setting
   double inter_dt = delta_t / static_cast<double>(inter_step + 1);
 
@@ -120,23 +129,24 @@ gtsam::Values interpolateArmTraj(const gtsam::Values& opt_values,
       if (pos_idx != 0) {
         // skip first pos to interpolate
 
-        for (size_t inter_idx = 1; inter_idx <= inter_step+1; inter_idx++) {
-
-          if (inter_idx == inter_step+1) {
+        for (size_t inter_idx = 1; inter_idx <= inter_step + 1; inter_idx++) {
+          if (inter_idx == inter_step + 1) {
             // last pose
-            results.insert(Symbol('x', inter_pos_count), opt_values.at<Vector>(Symbol('x', pos_idx)));
-            results.insert(Symbol('v', inter_pos_count), opt_values.at<Vector>(Symbol('v', pos_idx)));
+            results.insert(Symbol('x', inter_pos_count),
+                           opt_values.at<Vector>(Symbol('x', pos_idx)));
+            results.insert(Symbol('v', inter_pos_count),
+                           opt_values.at<Vector>(Symbol('v', pos_idx)));
 
           } else {
             // inter pose
             double tau = static_cast<double>(inter_idx) * inter_dt;
             GaussianProcessInterpolatorLinear gp_inter(Qc_model, delta_t, tau);
             Vector conf1 = opt_values.at<Vector>(Symbol('x', last_pos_idx));
-            Vector vel1  = opt_values.at<Vector>(Symbol('v', last_pos_idx));
+            Vector vel1 = opt_values.at<Vector>(Symbol('v', last_pos_idx));
             Vector conf2 = opt_values.at<Vector>(Symbol('x', pos_idx));
-            Vector vel2  = opt_values.at<Vector>(Symbol('v', pos_idx));
-            Vector conf  = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
-            Vector vel  = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
+            Vector vel2 = opt_values.at<Vector>(Symbol('v', pos_idx));
+            Vector conf = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
+            Vector vel = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
             results.insert(Symbol('x', inter_pos_count), conf);
             results.insert(Symbol('v', inter_pos_count), vel);
           }
@@ -159,30 +169,30 @@ gtsam::Values interpolateArmTraj(const gtsam::Values& opt_values,
 
 /* ************************************************************************** */
 gtsam::Values interpolateArmTraj(const gtsam::Values& opt_values,
-    const gtsam::SharedNoiseModel Qc_model, double delta_t, size_t inter_step, 
-    size_t start_index, size_t end_index) {
-
+                                 const gtsam::SharedNoiseModel Qc_model,
+                                 double delta_t, size_t inter_step,
+                                 size_t start_index, size_t end_index) {
   Values results;
 
   double inter_dt = delta_t / static_cast<double>(inter_step + 1);
   size_t result_index = 0;
 
   for (size_t i = start_index; i < end_index; i++) {
-
-    results.insert(Symbol('x', result_index), opt_values.at<Vector>(Symbol('x', i)));
-    results.insert(Symbol('v', result_index), opt_values.at<Vector>(Symbol('v', i)));
+    results.insert(Symbol('x', result_index),
+                   opt_values.at<Vector>(Symbol('x', i)));
+    results.insert(Symbol('v', result_index),
+                   opt_values.at<Vector>(Symbol('v', i)));
 
     for (size_t inter_idx = 1; inter_idx <= inter_step; inter_idx++) {
-
       result_index++;
       double tau = static_cast<double>(inter_idx) * inter_dt;
       GaussianProcessInterpolatorLinear gp_inter(Qc_model, delta_t, tau);
       Vector conf1 = opt_values.at<Vector>(Symbol('x', i));
-      Vector vel1  = opt_values.at<Vector>(Symbol('v', i));
-      Vector conf2 = opt_values.at<Vector>(Symbol('x', i+1));
-      Vector vel2  = opt_values.at<Vector>(Symbol('v', i+1));
-      Vector conf  = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
-      Vector vel  = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
+      Vector vel1 = opt_values.at<Vector>(Symbol('v', i));
+      Vector conf2 = opt_values.at<Vector>(Symbol('x', i + 1));
+      Vector vel2 = opt_values.at<Vector>(Symbol('v', i + 1));
+      Vector conf = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
+      Vector vel = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
       results.insert(Symbol('x', result_index), conf);
       results.insert(Symbol('v', result_index), vel);
     }
@@ -190,38 +200,39 @@ gtsam::Values interpolateArmTraj(const gtsam::Values& opt_values,
     result_index++;
   }
 
-  results.insert(Symbol('x', result_index), opt_values.at<Vector>(Symbol('x', end_index)));
-  results.insert(Symbol('v', result_index), opt_values.at<Vector>(Symbol('v', end_index)));
+  results.insert(Symbol('x', result_index),
+                 opt_values.at<Vector>(Symbol('x', end_index)));
+  results.insert(Symbol('v', result_index),
+                 opt_values.at<Vector>(Symbol('v', end_index)));
 
   return results;
 }
 
 /* ************************************************************************** */
-gtsam::Values interpolatePose2MobileArmTraj(const gtsam::Values& opt_values,
-    const gtsam::SharedNoiseModel Qc_model, double delta_t, size_t inter_step, 
-    size_t start_index, size_t end_index) {
-
+gtsam::Values interpolatePose2MobileArmTraj(
+    const gtsam::Values& opt_values, const gtsam::SharedNoiseModel Qc_model,
+    double delta_t, size_t inter_step, size_t start_index, size_t end_index) {
   Values results;
 
   double inter_dt = delta_t / static_cast<double>(inter_step + 1);
   size_t result_index = 0;
 
   for (size_t i = start_index; i < end_index; i++) {
-
-    results.insert(Symbol('x', result_index), opt_values.at<Pose2Vector>(Symbol('x', i)));
-    results.insert(Symbol('v', result_index), opt_values.at<Vector>(Symbol('v', i)));
+    results.insert(Symbol('x', result_index),
+                   opt_values.at<Pose2Vector>(Symbol('x', i)));
+    results.insert(Symbol('v', result_index),
+                   opt_values.at<Vector>(Symbol('v', i)));
 
     for (size_t inter_idx = 1; inter_idx <= inter_step; inter_idx++) {
-
       result_index++;
       double tau = static_cast<double>(inter_idx) * inter_dt;
       GaussianProcessInterpolatorPose2Vector gp_inter(Qc_model, delta_t, tau);
       Pose2Vector conf1 = opt_values.at<Pose2Vector>(Symbol('x', i));
-      Vector vel1  = opt_values.at<Vector>(Symbol('v', i));
-      Pose2Vector conf2 = opt_values.at<Pose2Vector>(Symbol('x', i+1));
-      Vector vel2  = opt_values.at<Vector>(Symbol('v', i+1));
-      Pose2Vector conf  = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
-      Vector vel  = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
+      Vector vel1 = opt_values.at<Vector>(Symbol('v', i));
+      Pose2Vector conf2 = opt_values.at<Pose2Vector>(Symbol('x', i + 1));
+      Vector vel2 = opt_values.at<Vector>(Symbol('v', i + 1));
+      Pose2Vector conf = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
+      Vector vel = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
       results.insert(Symbol('x', result_index), conf);
       results.insert(Symbol('v', result_index), vel);
     }
@@ -229,38 +240,40 @@ gtsam::Values interpolatePose2MobileArmTraj(const gtsam::Values& opt_values,
     result_index++;
   }
 
-  results.insert(Symbol('x', result_index), opt_values.at<Pose2Vector>(Symbol('x', end_index)));
-  results.insert(Symbol('v', result_index), opt_values.at<Vector>(Symbol('v', end_index)));
+  results.insert(Symbol('x', result_index),
+                 opt_values.at<Pose2Vector>(Symbol('x', end_index)));
+  results.insert(Symbol('v', result_index),
+                 opt_values.at<Vector>(Symbol('v', end_index)));
 
   return results;
 }
 
 /* ************************************************************************** */
 gtsam::Values interpolatePose2Traj(const gtsam::Values& opt_values,
-    const gtsam::SharedNoiseModel Qc_model, double delta_t, size_t inter_step, 
-    size_t start_index, size_t end_index) {
-
+                                   const gtsam::SharedNoiseModel Qc_model,
+                                   double delta_t, size_t inter_step,
+                                   size_t start_index, size_t end_index) {
   Values results;
 
   double inter_dt = delta_t / static_cast<double>(inter_step + 1);
   size_t result_index = 0;
 
   for (size_t i = start_index; i < end_index; i++) {
-
-    results.insert(Symbol('x', result_index), opt_values.at<Pose2>(Symbol('x', i)));
-    results.insert(Symbol('v', result_index), opt_values.at<Vector>(Symbol('v', i)));
+    results.insert(Symbol('x', result_index),
+                   opt_values.at<Pose2>(Symbol('x', i)));
+    results.insert(Symbol('v', result_index),
+                   opt_values.at<Vector>(Symbol('v', i)));
 
     for (size_t inter_idx = 1; inter_idx <= inter_step; inter_idx++) {
-
       result_index++;
       double tau = static_cast<double>(inter_idx) * inter_dt;
       GaussianProcessInterpolatorPose2 gp_inter(Qc_model, delta_t, tau);
       Pose2 conf1 = opt_values.at<Pose2>(Symbol('x', i));
-      Vector vel1  = opt_values.at<Vector>(Symbol('v', i));
-      Pose2 conf2 = opt_values.at<Pose2>(Symbol('x', i+1));
-      Vector vel2  = opt_values.at<Vector>(Symbol('v', i+1));
-      Pose2 conf  = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
-      Vector vel  = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
+      Vector vel1 = opt_values.at<Vector>(Symbol('v', i));
+      Pose2 conf2 = opt_values.at<Pose2>(Symbol('x', i + 1));
+      Vector vel2 = opt_values.at<Vector>(Symbol('v', i + 1));
+      Pose2 conf = gp_inter.interpolatePose(conf1, vel1, conf2, vel2);
+      Vector vel = gp_inter.interpolateVelocity(conf1, vel1, conf2, vel2);
       results.insert(Symbol('x', result_index), conf);
       results.insert(Symbol('v', result_index), vel);
     }
@@ -268,10 +281,12 @@ gtsam::Values interpolatePose2Traj(const gtsam::Values& opt_values,
     result_index++;
   }
 
-  results.insert(Symbol('x', result_index), opt_values.at<Pose2>(Symbol('x', end_index)));
-  results.insert(Symbol('v', result_index), opt_values.at<Vector>(Symbol('v', end_index)));
+  results.insert(Symbol('x', result_index),
+                 opt_values.at<Pose2>(Symbol('x', end_index)));
+  results.insert(Symbol('v', result_index),
+                 opt_values.at<Vector>(Symbol('v', end_index)));
 
   return results;
 }
 
-}
+}  // namespace gpmp2

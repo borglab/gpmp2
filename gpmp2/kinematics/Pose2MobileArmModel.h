@@ -18,5 +18,4 @@ namespace gpmp2 {
  */
 typedef RobotModel<Pose2MobileArm> Pose2MobileArmModel;
 
-}
-
+}  // namespace gpmp2

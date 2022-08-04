@@ -7,14 +7,15 @@
 
 #pragma once
 
-#include <gpmp2/kinematics/Pose2MobileArmModel.h>
 #include <gpmp2/gp/GaussianProcessInterpolatorPose2Vector.h>
+#include <gpmp2/kinematics/Pose2MobileArmModel.h>
 #include <gpmp2/obstacle/ObstacleSDFFactorGP.h>
 
 namespace gpmp2 {
 
 // template uses Pose2MobileArmModel as robot type
-typedef ObstacleSDFFactorGP<Pose2MobileArmModel, GaussianProcessInterpolatorPose2Vector>
+typedef ObstacleSDFFactorGP<Pose2MobileArmModel,
+                            GaussianProcessInterpolatorPose2Vector>
     ObstacleSDFFactorGPPose2MobileArm;
 
-}
+}  // namespace gpmp2

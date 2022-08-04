@@ -14,6 +14,7 @@
 namespace gpmp2 {
 
 // template use Pose2MobileVetLin2ArmsModel as robot type
-typedef ObstacleSDFFactor<Pose2MobileVetLin2ArmsModel> ObstacleSDFFactorPose2MobileVetLin2Arms;
+typedef ObstacleSDFFactor<Pose2MobileVetLin2ArmsModel>
+    ObstacleSDFFactorPose2MobileVetLin2Arms;
 
-}
+}  // namespace gpmp2

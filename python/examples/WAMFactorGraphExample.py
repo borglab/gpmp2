@@ -36,7 +36,6 @@ plotRobotModel(figure0, axis0, arm, start_conf)
 plotRobotModel(figure0, axis0, arm, end_conf)
 plotMap3D(figure0, axis0, dataset.corner_idx, origin, cell_size)
 
-
 ## settings
 total_time_sec = 2.0
 total_time_step = 10
@@ -58,13 +57,11 @@ pose_fix_model = noiseModel.Isotropic.Sigma(7, fix_sigma)
 vel_fix_model = noiseModel.Isotropic.Sigma(7, fix_sigma)
 
 # init sdf
-sdf = SignedDistanceField(
-    origin_point3, cell_size, field.shape[0], field.shape[1], field.shape[2]
-)
+sdf = SignedDistanceField(origin_point3, cell_size, field.shape[0],
+                          field.shape[1], field.shape[2])
 for z in range(field.shape[2]):
     sdf.initFieldData(
-        z, field[:, :, z]
-    )  # TODO: check this line with its matlab counterpart
+        z, field[:, :, z])  # TODO: check this line with its matlab counterpart
 
 #% plot settings
 plot_inter_traj = False
@@ -75,13 +72,13 @@ else:
     total_plot_step = total_time_step
 pause_time = total_time_sec / total_plot_step
 
-
 ## initial traj
 init_values = initArmTrajStraightLine(start_conf, end_conf, total_time_step)
 
 # plot initial traj
 if plot_inter_traj:
-    plot_values = interpolateArmTraj(init_values, Qc_model, delta_t, plot_inter)
+    plot_values = interpolateArmTraj(init_values, Qc_model, delta_t,
+                                     plot_inter)
 else:
     plot_values = init_values
 
@@ -96,7 +93,6 @@ for i in range(total_plot_step):
     conf = plot_values.atVector(symbol(ord("x"), i))
     plotArm(figure1, axis1, arm.fk_model(), conf, "b", 2)
     plt.pause(pause_time)
-
 
 ## init optimization
 graph = NonlinearFactorGraph()
@@ -121,18 +117,14 @@ for i in range(total_time_step + 1):
         key_vel1 = symbol(ord("v"), i - 1)
         key_vel2 = symbol(ord("v"), i)
         graph.push_back(
-            GaussianProcessPriorLinear(
-                key_pos1, key_vel1, key_pos2, key_vel2, delta_t, Qc_model
-            )
-        )
+            GaussianProcessPriorLinear(key_pos1, key_vel1, key_pos2, key_vel2,
+                                       delta_t, Qc_model))
 
         # cost factor
         graph.push_back(
-            ObstacleSDFFactorArm(key_pos, arm, sdf, cost_sigma, epsilon_dist)
-        )
+            ObstacleSDFFactorArm(key_pos, arm, sdf, cost_sigma, epsilon_dist))
         graph_obs.push_back(
-            ObstacleSDFFactorArm(key_pos, arm, sdf, cost_sigma, epsilon_dist)
-        )
+            ObstacleSDFFactorArm(key_pos, arm, sdf, cost_sigma, epsilon_dist))
 
         # GP cost factor
         if check_inter > 0:
@@ -151,8 +143,7 @@ for i in range(total_time_step + 1):
                         Qc_model,
                         delta_t,
                         tau,
-                    )
-                )
+                    ))
                 graph_obs.push_back(
                     ObstacleSDFFactorGPArm(
                         key_pos1,
@@ -166,8 +157,7 @@ for i in range(total_time_step + 1):
                         Qc_model,
                         delta_t,
                         tau,
-                    )
-                )
+                    ))
 
 ## optimize!
 use_LM = False
@@ -188,10 +178,8 @@ else:
     parameters.setVerbosity("ERROR")
     optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-
 print("Initial Error = %d\n", graph.error(init_values))
 print("Initial Collision Cost: %d\n", graph_obs.error(init_values))
-
 
 optimizer.optimizeSafely()
 result = optimizer.values()
@@ -205,7 +193,6 @@ if plot_inter_traj:
 else:
     plot_values = result
 
-
 # plot final values
 figure2 = plt.figure(2)
 axis2 = Axes3D(figure2)
@@ -216,7 +203,6 @@ for i in range(total_plot_step):
     conf = plot_values.atVector(symbol(ord("x"), i))
     plotArm(figure2, axis2, arm.fk_model(), conf, "b", 2)
     plt.pause(pause_time)
-
 
 # plot final values
 figure3 = plt.figure(3)

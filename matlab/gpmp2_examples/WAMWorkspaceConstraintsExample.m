@@ -161,8 +161,8 @@ opt_setting.set_total_time(total_time_sec);
 opt_setting.set_epsilon(epsilon_dist);
 opt_setting.set_cost_sigma(obs_sigma);
 opt_setting.set_obs_check_inter(check_inter);
-opt_setting.set_conf_prior_model(noiseModel.Isotropic.Sigma(arm.dof(), fix_sigma));
-opt_setting.set_vel_prior_model(noiseModel.Isotropic.Sigma(arm.dof(), fix_sigma));
+opt_setting.set_conf_prior_model(fix_sigma);
+opt_setting.set_vel_prior_model(fix_sigma);
 opt_setting.set_Qc_model(Qc);
 % check for collision
 if CollisionCost3DArm(arm, sdf, plot_values, opt_setting)

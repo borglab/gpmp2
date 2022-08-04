@@ -1,7 +1,7 @@
 /**
  *  @file   GaussianPriorWorkspacePositionArm.h
- *  @brief  Gaussian prior defined on the workspace position of any link of an arm
- *          given its state in configuration space
+ *  @brief  Gaussian prior defined on the workspace position of any link of an
+ *arm given its state in configuration space
  *  @author Mustafa Mukadam
  *  @date   Jan 8, 2018
  **/
@@ -14,6 +14,7 @@
 namespace gpmp2 {
 
 // template use ArmModel as robot type
-typedef GaussianPriorWorkspacePosition<ArmModel> GaussianPriorWorkspacePositionArm;
+typedef GaussianPriorWorkspacePosition<ArmModel>
+    GaussianPriorWorkspacePositionArm;
 
-}
+}  // namespace gpmp2

@@ -68,11 +68,7 @@ add_subdirectory(gpmp2)
 
 # Wrapping to MATLAB
 if(GPMP2_BUILD_MATLAB_TOOLBOX)
-  # wrap
-  include(GtsamMatlabWrap)
-  wrap_and_install_library(gpmp2.h ${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}" "")
-  
-  # install matlab functions and scripts
+  # Build Matlab package
   add_subdirectory(matlab)
 endif()
 
