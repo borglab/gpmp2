@@ -1,6 +1,6 @@
 name: Linux CI
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -11,8 +11,6 @@ jobs:
       CTEST_OUTPUT_ON_FAILURE: ON
       CTEST_PARALLEL_LEVEL: 2
       CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
-      GTSAM_BUILD_UNSTABLE: ${{ matrix.build_unstable }}
-      BOOST_VERSION: 1.67.0
 
     strategy:
       fail-fast: true
@@ -28,11 +26,6 @@ jobs:
         build_type: [Debug, Release]
         build_unstable: [ON]
         include:
-          - name: ubuntu-18.04-gcc-5
-            os: ubuntu-18.04
-            compiler: gcc
-            version: "5"
-
           - name: ubuntu-18.04-gcc-9
             os: ubuntu-18.04
             compiler: gcc
@@ -44,9 +37,6 @@ jobs:
             version: "9"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Install Dependencies
         run: |
           # LLVM (clang) 9 is not in Bionic's repositories so we add the official LLVM repository.
@@ -63,6 +53,7 @@ jobs:
           sudo apt-get -y update
 
           sudo apt-get -y install cmake build-essential pkg-config libpython-dev python-numpy libicu-dev
+          sudo apt-get -y install libtbb-dev libboost-all-dev
 
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
             sudo apt-get install -y g++-${{ matrix.version }} g++-${{ matrix.version }}-multilib
@@ -74,12 +65,27 @@ jobs:
             echo "CXX=clang++-${{ matrix.version }}" >> $GITHUB_ENV
           fi
 
-      - name: Install Boost
+      - name: Install GTSAM
         run: |
-          bash .github/scripts/boost.sh
+          sudo add-apt-repository -y ppa:borglab/gtsam-develop
+          sudo apt-get -y update
+          sudo apt-get -y install libgtsam-no-tbb-dev libgtsam-no-tbb-unstable-dev
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build Directory
+        run: mkdir build
+
+      - name: Configure
+        run: |
+          cmake -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF ..
+        working-directory: ./build
 
       - name: Build
-        run: bash .github/scripts/unix.sh -b
+        run: make -j$(nproc)
+        working-directory: ./build
 
       - name: Test
-        run: bash .github/scripts/unix/sh -t
+        run: make -j$(nproc) check
+        working-directory: ./build
