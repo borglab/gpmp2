@@ -1,3 +1,5 @@
+"""2 Arm Robot Example"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 from gpmp2 import (GaussianProcessPriorLinear, ObstaclePlanarSDFFactorArm,
@@ -80,7 +82,7 @@ init_values = Values()
 graph_obs = NonlinearFactorGraph()
 
 for i in range(0, total_time_step + 1):
-    key_pos = X(i)  # TODO: check this mustafa
+    key_pos = X(i)
     key_vel = V(i)
 
     # initialize as straight line in conf space
@@ -167,14 +169,14 @@ else:
     parameters.setVerbosity("ERROR")
     optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-print("Initial Error = %d\n", graph.error(init_values))
-print("Initial Collision Cost: %d\n", graph_obs.error(init_values))
+print(f"Initial Error = {graph.error(init_values)}\n")
+print(f"Initial Collision Cost: {graph_obs.error(init_values)}\n")
 
 optimizer.optimizeSafely()
 result = optimizer.values()
 
-print("Final Error = %d\n", graph.error(result))
-print("Final Collision Cost: %d\n", graph_obs.error(result))
+print(f"Final Error = {graph.error(result)}\n")
+print(f"Final Collision Cost: {graph_obs.error(result)}\n")
 
 # plot final values
 figure3 = plt.figure(2)

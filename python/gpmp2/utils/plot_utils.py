@@ -2,11 +2,11 @@ import matplotlib.collections as collections
 import matplotlib.pyplot as plt
 import numpy as np
 from gpmp2 import *
-from gtsam import *
+from gtsam import Point2
 
 
 def plot2dMap(axis, dataset_class):
-
+    """Plot 2D map of obstacles"""
     # obs_size = dataset_class.obstacles[0].size
     obs_x = []
     obs_y = []
@@ -29,13 +29,14 @@ def plot2dMap(axis, dataset_class):
 
 
 def plotArm(figure, axis, arm, conf, color, width):
-    # PLOTARM Plot Arm class in 3D
-    #
-    #   Usage: PLOTARM(arm, conf, color, width)
-    #   @arm    Arm object
-    #   @conf   arm configuration vector
-    #   @color  color string, use plot convention, e.g. 'r' is red
-    #   @width  line width
+    """
+    PLOTARM Plot Arm class in 3D
+      Usage: PLOTARM(arm, conf, color, width)
+    @arm    Arm object
+    @conf   arm configuration vector
+    @color  color string, use plot convention, e.g. 'r' is red
+    @width  line width
+    """
 
     position = arm.forwardKinematicsPosition(conf)
     # marker='-'
@@ -55,12 +56,15 @@ def plotArm(figure, axis, arm, conf, color, width):
 
 
 def plotEvidenceMap2D(figure, axis, prob_grid, origin_x, origin_y, cell_size):
-    # PLOTEVIDENCEMAP2D Plot 2D evidence grid map, for 2D dataset visualization
-    #
-    #   Usage: PLOTEVIDENCEMAP2D(prob_grid, origin_x, origin_y, cell_size)
-    #   @prob_grid              evidence grid matrix
-    #   @origin_x, origin_y     origin (down-left) corner of the map
-    #   @cell_size              cell size
+    """
+    Plot 2D evidence grid map, for 2D dataset visualization
+      Usage: plotEvidenceMap2D(prob_grid, origin_x, origin_y, cell_size)
+    @figure                 Matplotlib figure object
+    @axis                   Matplotlib axes
+    @prob_grid              evidence grid matrix
+    @origin_x, origin_y     origin (down-left) corner of the map
+    @cell_size              cell size
+    """
 
     # map display setting
     # colormap([0.3 0.3 0.3; 0.7 0.7 0.7; 1 1 1]);
@@ -79,7 +83,7 @@ def plotEvidenceMap2D(figure, axis, prob_grid, origin_x, origin_y, cell_size):
     z_max = np.amax(temp)
 
     c = axis.pcolor(grid_X, grid_Y, temp, vmin=z_min, vmax=z_max)
-    # figure.colorbar(c, ax=axis) # add colorbar
+    figure.colorbar(c, ax=axis) # add colorbar
 
     # TODO: check this again! same as set(gca,'YDir','normal')
     axis.invert_yaxis()
@@ -156,10 +160,10 @@ def plotPlanarArm(figure, axis, arm, conf, color, width):
 # 	# color  = [(r,g,b)] where all values lie between 0 and 1
 # 	pose = p.pose()
 # 	# vehicle corners
-# 	corner1 = pose.transform_from(Point2(vehsize[0]/2, vehsize[1]/2))
-# 	corner2 = pose.transform_from(Point2(-vehsize[1]/2, vehsize[2]/2))
-# 	corner3 = pose.transform_from(Point2(-vehsize[1]/2, -vehsiz[2]/2))
-# 	corner4 = pose.transform_from(Point2(vehsize[1]/2, -vehsize[2]/2))
+# 	corner1 = pose.transformFrom(Point2(vehsize[0]/2, vehsize[1]/2))
+# 	corner2 = pose.transformFrom(Point2(-vehsize[1]/2, vehsize[2]/2))
+# 	corner3 = pose.transformFrom(Point2(-vehsize[1]/2, -vehsiz[2]/2))
+# 	corner4 = pose.transformFrom(Point2(vehsize[1]/2, -vehsize[2]/2))
 
 # 	# vehicle base black lines
 # 	x_corners = [corner1.x(), corner2.x(), corner3.x(), corner4.x(), corner1.x()]
@@ -185,10 +189,10 @@ def plotPlannarMobileArm(figure, axis, marm, p, vehsize, color, width):
 
     pose = p.pose()
     # vehicle corners
-    corner1 = pose.transform_from(Point2(vehsize[0] / 2, vehsize[1] / 2))
-    corner2 = pose.transform_from(Point2(-vehsize[0] / 2, vehsize[1] / 2))
-    corner3 = pose.transform_from(Point2(-vehsize[0] / 2, -vehsize[1] / 2))
-    corner4 = pose.transform_from(Point2(vehsize[0] / 2, -vehsize[1] / 2))
+    corner1 = pose.transformFrom(Point2(vehsize[0] / 2, vehsize[1] / 2))
+    corner2 = pose.transformFrom(Point2(-vehsize[0] / 2, vehsize[1] / 2))
+    corner3 = pose.transformFrom(Point2(-vehsize[0] / 2, -vehsize[1] / 2))
+    corner4 = pose.transformFrom(Point2(vehsize[0] / 2, -vehsize[1] / 2))
 
     # vehicle base black lines
     x_corners = [
@@ -213,7 +217,7 @@ def plotPlannarMobileArm(figure, axis, marm, p, vehsize, color, width):
 
     axis.plot(position[0, :], position[1, :], color=color, linewidth=width)
 
-    axis.plot(position[0, 0:end], position[1, 0:end], "k.", markersize=5)
+    axis.plot(position[0, 0:], position[1, 0:], "k.", markersize=5)
 
 
 def plotPlanarMobileBase(figure, axis, robot, pose, vehsize, color, width):
@@ -221,10 +225,10 @@ def plotPlanarMobileBase(figure, axis, robot, pose, vehsize, color, width):
     #   Detailed explanation goes here
 
     # vehicle corners
-    corner1 = pose.transform_from(Point2(vehsize[0] / 2, vehsize[1] / 2))
-    corner2 = pose.transform_from(Point2(-vehsize[0] / 2, vehsize[1] / 2))
-    corner3 = pose.transform_from(Point2(-vehsize[0] / 2, -vehsize[1] / 2))
-    corner4 = pose.transform_from(Point2(vehsize[0] / 2, -vehsize[1] / 2))
+    corner1 = pose.transformFrom(Point2(vehsize[0] / 2, vehsize[1] / 2))
+    corner2 = pose.transformFrom(Point2(-vehsize[0] / 2, vehsize[1] / 2))
+    corner3 = pose.transformFrom(Point2(-vehsize[0] / 2, -vehsize[1] / 2))
+    corner4 = pose.transformFrom(Point2(vehsize[0] / 2, -vehsize[1] / 2))
 
     # vehicle base black lines
     x_corners = [
@@ -406,7 +410,7 @@ def plotSignedDistanceField3D(figure,
     grid_Y = np.linspace(origin[1], grid_corner_y, num=grid_rows)
     grid_Z = np.linspace(origin[2], grid_corner_z, num=grid_z)
 
-    indexes = np.nonzero(filed < epsilon_dist)
+    indexes = np.nonzero(field < epsilon_dist)
     x, y, z = indexes[0, :], indexes[1, :], indexes[2, :]
 
     # Todo: Test this

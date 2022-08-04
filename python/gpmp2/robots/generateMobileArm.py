@@ -44,7 +44,7 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
@@ -89,7 +89,7 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(spheres_data[i, 0], spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
@@ -120,7 +120,7 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(spheres_data[i, 0], spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
@@ -231,7 +231,7 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(spheres_data[i, 0], spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)
@@ -323,7 +323,7 @@ def generateMobileArm(inp_str, base_T_arm=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         model = Pose2MobileArmModel(marm, sphere_vec)

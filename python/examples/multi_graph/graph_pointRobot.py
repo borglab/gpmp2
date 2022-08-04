@@ -1,12 +1,20 @@
+"""Script for obstacle avoidance with a point robot."""
+
 import matplotlib.pyplot as plt
 import numpy as np
-from gpmp2 import *
+from gpmp2 import (BodySphere, BodySphereVector, GaussianProcessPriorLinear,
+                   ObstaclePlanarSDFFactorGPPointRobot,
+                   ObstaclePlanarSDFFactorPointRobot, PlanarSDF, PointRobot,
+                   PointRobotModel)
 from gpmp2.datasets.generate2Ddataset import generate2Ddataset
-from gpmp2.utils.plot_utils import *
+from gpmp2.utils.plot_utils import plotEvidenceMap2D, plotPointRobot2D
 from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
-from gtsam import *
+from gtsam import (DoglegOptimizer, DoglegParams, GaussNewtonOptimizer,
+                   GaussNewtonParams, Point2, Point3, noiseModel)
 
-from graph_utils import *
+from graph_utils import (Planner, Problem, get_gtsam_graph,
+                         get_initializations, get_planner_graph,
+                         update_planner_graph)
 
 if __name__ == "__main__":
 
@@ -38,7 +46,7 @@ if __name__ == "__main__":
     spheres_data = np.asarray([0.0, 0.0, 0.0, 0.0, 1.5])
     nr_body = spheres_data.shape[0]
     sphere_vec = BodySphereVector()
-    sphere_vec.append(
+    sphere_vec.push_back(
         BodySphere(int(spheres_data[0]), spheres_data[4],
                    Point3(spheres_data[1:4])))
     problem.gpmp_robot = PointRobotModel(pR, sphere_vec)
@@ -88,12 +96,12 @@ if __name__ == "__main__":
         # parameters.setVerbosity('ERROR')
         optimizer = GaussNewtonOptimizer(gtsam_graph, init_values, parameters)
 
-    print("Initial Error = %d\n", gtsam_graph.error(init_values))
+    print(f"Initial Error = {gtsam_graph.error(init_values)}\n")
 
     optimizer.optimizeSafely()
     result = optimizer.values()
 
-    print("Final Error = %d\n", gtsam_graph.error(result))
+    print(f"Final Error = {gtsam_graph.error(result)}\n")
 
     update_planner_graph(result, planner_graph)
 
