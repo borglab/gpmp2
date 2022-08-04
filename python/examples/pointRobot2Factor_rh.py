@@ -1,15 +1,21 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from gpmp2 import *
+from gpmp2 import (BodySphere, BodySphereVector, GaussianProcessPriorLinear,
+                   ObstaclePlanarSDFFactorGPPointRobot,
+                   ObstaclePlanarSDFFactorPointRobot, PlanarSDF, PointRobot,
+                   PointRobotModel)
 from gpmp2.datasets.generate2Ddataset import generate2Ddataset
-from gpmp2.robots.generateArm import generateArm
-from gpmp2.utils.plot_utils import *
+from gpmp2.utils.plot_utils import (plotEvidenceMap2D, plotPointRobot2D,
+                                    plotSignedDistanceField2D)
 from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
-from gtsam import *
+from gtsam import (DoglegOptimizer, DoglegParams, GaussNewtonOptimizer,
+                   GaussNewtonParams, NonlinearFactorGraph, Point2, Point3,
+                   PriorFactorVector, Values, noiseModel)
 from gtsam.symbol_shorthand import V, X
 
 
 def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
+    """"""
 
     start_conf = start_conf_val
     end_conf = end_conf_val
@@ -111,8 +117,9 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
     return result, res_flag
 
 
-def get_sdf(occ_grid_topic
-            ):  # TODO this will change to ros occupancy grid processonr
+def get_sdf(occ_grid_topic):
+    """"""
+    #TODO occ_grid_topic will change to ros occupancy grid processor
     dataset = generate2Ddataset("MultiObstacleDataset")
     rows = dataset.rows
     cols = dataset.cols
@@ -131,7 +138,12 @@ def get_sdf(occ_grid_topic
     return sdf, dataset
 
 
-class Parameters(object):  # TODO: read from yaml file or rosparams
+class Parameters(object):
+    """
+    Parameters for point robot script.
+
+    #TODO: read from yaml file or rosparams
+    """
     # settings
     total_time_sec = 5.0
     total_time_step = 20
@@ -147,7 +159,7 @@ class Parameters(object):  # TODO: read from yaml file or rosparams
     spheres_data = np.asarray([0.0, 0.0, 0.0, 0.0, 1.5])
     nr_body = spheres_data.shape[0]
     sphere_vec = BodySphereVector()
-    sphere_vec.append(
+    sphere_vec.push_back(
         BodySphere(int(spheres_data[0]), spheres_data[4],
                    Point3(spheres_data[1:4])))
     pR_model = PointRobotModel(pR, sphere_vec)
@@ -174,22 +186,22 @@ class Parameters(object):  # TODO: read from yaml file or rosparams
     sigma_goal = 4
 
 
-def get_robot_state(result):  # todo: this will change to ros subscriber.
-
+def get_robot_state(result):
+    #TODO: this will change to ros subscriber.
     conf = result.atVector(X(1))
     vel = result.atVector(V(1))
     return conf, vel
 
 
-def get_robot_action(
-        result):  # TODO: Get action from result and command therobot
+def get_robot_action(result):
+    #TODO: Get action from result and command therobot
     action_vel = None
     action_vel_traj = None
     return action_vel, action_vel_traj
 
 
-def command_robot(action_vel,
-                  action_vel_traj):  # TODO: this should be non-blocking
+def command_robot(action_vel, action_vel_traj):
+    # TODO: this should be non-blocking
     pass
 
 

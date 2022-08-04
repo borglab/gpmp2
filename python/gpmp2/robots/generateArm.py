@@ -45,7 +45,7 @@ def generateArm(arm_str, base_pose=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         arm_model = ArmModel(arm, sphere_vec)
@@ -81,7 +81,7 @@ def generateArm(arm_str, base_pose=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         arm_model = ArmModel(arm, sphere_vec)
@@ -123,7 +123,7 @@ def generateArm(arm_str, base_pose=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         arm_model = ArmModel(abs_arm, sphere_vec)
@@ -172,7 +172,7 @@ def generateArm(arm_str, base_pose=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         arm_model = ArmModel(abs_arm, sphere_vec)
@@ -218,7 +218,7 @@ def generateArm(arm_str, base_pose=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         arm_model = ArmModel(abs_arm, sphere_vec)
@@ -275,7 +275,7 @@ def generateArm(arm_str, base_pose=None):
         nr_body = spheres_data.shape[0]
         sphere_vec = BodySphereVector()
         for i in range(nr_body):
-            sphere_vec.append(
+            sphere_vec.push_back(
                 BodySphere(int(spheres_data[i, 0]), spheres_data[i, 4],
                            Point3(spheres_data[i, 1:4])))
         arm_model = ArmModel(abs_arm, sphere_vec)

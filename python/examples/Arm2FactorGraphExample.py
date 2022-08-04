@@ -167,14 +167,14 @@ else:
     parameters.setVerbosity("ERROR")
     optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-print("Initial Error = %d\n", graph.error(init_values))
-print("Initial Collision Cost: %d\n", graph_obs.error(init_values))
+print("Initial Error = {}\n".format(graph.error(init_values)))
+print("Initial Collision Cost: {}\n".format(graph_obs.error(init_values)))
 
 optimizer.optimizeSafely()
 result = optimizer.values()
 
-print("Final Error = %d\n", graph.error(result))
-print("Final Collision Cost: %d\n", graph_obs.error(result))
+print("Final Error = {}\n".format(graph.error(result)))
+print("Final Collision Cost: {}\n".format(graph_obs.error(result)))
 
 # plot final values
 figure3 = plt.figure(2)

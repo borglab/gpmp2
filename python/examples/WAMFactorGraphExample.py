@@ -5,7 +5,9 @@ from gpmp2.datasets.generate3Ddataset import generate3Ddataset
 from gpmp2.robots.generateArm import generateArm
 from gpmp2.utils.plot_utils import *
 from gpmp2.utils.signedDistanceField3D import signedDistanceField3D
-from gtsam import *
+from gtsam import (DoglegOptimizer, DoglegParams, GaussNewtonOptimizer,
+                   GaussNewtonParams, NonlinearFactorGraph, Point3,
+                   PriorFactorVector, noiseModel, symbol)
 from mpl_toolkits.mplot3d import Axes3D, axes3d
 
 # dataset
@@ -41,7 +43,7 @@ total_time_sec = 2.0
 total_time_step = 10
 total_check_step = 100
 delta_t = total_time_sec / total_time_step
-check_inter = total_check_step / total_time_step - 1
+check_inter = total_check_step // total_time_step - 1
 
 # GP
 Qc = np.identity(7)
@@ -90,7 +92,7 @@ axis1.set_title("Initial Values")
 plotMap3D(figure1, axis1, dataset.corner_idx, origin, cell_size)
 set3DPlotRange(figure1, axis1, dataset)
 for i in range(total_plot_step):
-    conf = plot_values.atVector(symbol(ord("x"), i))
+    conf = plot_values.atVector(symbol("x", i))
     plotArm(figure1, axis1, arm.fk_model(), conf, "b", 2)
     plt.pause(pause_time)
 
@@ -99,8 +101,8 @@ graph = NonlinearFactorGraph()
 graph_obs = NonlinearFactorGraph()
 
 for i in range(total_time_step + 1):
-    key_pos = symbol(ord("x"), i)
-    key_vel = symbol(ord("v"), i)
+    key_pos = symbol("x", i)
+    key_vel = symbol("v", i)
 
     # priors
     if i == 0:
@@ -112,10 +114,10 @@ for i in range(total_time_step + 1):
 
     # GP priors and cost factor
     if i > 0:
-        key_pos1 = symbol(ord("x"), i - 1)
-        key_pos2 = symbol(ord("x"), i)
-        key_vel1 = symbol(ord("v"), i - 1)
-        key_vel2 = symbol(ord("v"), i)
+        key_pos1 = symbol("x", i - 1)
+        key_pos2 = symbol("x", i)
+        key_vel1 = symbol("v", i - 1)
+        key_vel2 = symbol("v", i)
         graph.push_back(
             GaussianProcessPriorLinear(key_pos1, key_vel1, key_pos2, key_vel2,
                                        delta_t, Qc_model))
@@ -178,14 +180,14 @@ else:
     parameters.setVerbosity("ERROR")
     optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-print("Initial Error = %d\n", graph.error(init_values))
-print("Initial Collision Cost: %d\n", graph_obs.error(init_values))
+print("Initial Error = {}\n".format(graph.error(init_values)))
+print("Initial Collision Cost: {}\n".format(graph_obs.error(init_values)))
 
 optimizer.optimizeSafely()
 result = optimizer.values()
 
-print("Error = %d\n", graph.error(result))
-print("Collision Cost End: %d\n", graph_obs.error(result))
+print("Error = {}\n".format(graph.error(result)))
+print("Collision Cost End: {}\n".format(graph_obs.error(result)))
 
 # plot results
 if plot_inter_traj:
@@ -200,7 +202,7 @@ axis2.set_title("Result Values")
 plotMap3D(figure2, axis2, dataset.corner_idx, origin, cell_size)
 set3DPlotRange(figure2, axis2, dataset)
 for i in range(total_plot_step):
-    conf = plot_values.atVector(symbol(ord("x"), i))
+    conf = plot_values.atVector(symbol("x", i))
     plotArm(figure2, axis2, arm.fk_model(), conf, "b", 2)
     plt.pause(pause_time)
 
@@ -211,7 +213,7 @@ axis3.set_title("Result Values")
 plotMap3D(figure3, axis3, dataset.corner_idx, origin, cell_size)
 set3DPlotRange(figure3, axis3, dataset)
 for i in range(total_plot_step):
-    conf = plot_values.atVector(symbol(ord("x"), i))
+    conf = plot_values.atVector(symbol("x", i))
     plotRobotModel(figure3, axis3, arm, conf)
     plt.pause(pause_time)
 

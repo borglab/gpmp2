@@ -38,7 +38,7 @@ if __name__ == "__main__":
     spheres_data = np.asarray([0.0, 0.0, 0.0, 0.0, 1.5])
     nr_body = spheres_data.shape[0]
     sphere_vec = BodySphereVector()
-    sphere_vec.append(
+    sphere_vec.push_back(
         BodySphere(int(spheres_data[0]), spheres_data[4],
                    Point3(spheres_data[1:4])))
     problem.gpmp_robot = PointRobotModel(pR, sphere_vec)
@@ -88,12 +88,12 @@ if __name__ == "__main__":
         # parameters.setVerbosity('ERROR')
         optimizer = GaussNewtonOptimizer(gtsam_graph, init_values, parameters)
 
-    print("Initial Error = %d\n", gtsam_graph.error(init_values))
+    print("Initial Error = {}\n".format(gtsam_graph.error(init_values)))
 
     optimizer.optimizeSafely()
     result = optimizer.values()
 
-    print("Final Error = %d\n", gtsam_graph.error(result))
+    print("Final Error = {}\n".format(gtsam_graph.error(result)))
 
     update_planner_graph(result, planner_graph)
 
