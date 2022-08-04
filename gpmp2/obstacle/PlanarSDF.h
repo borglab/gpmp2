@@ -35,8 +35,8 @@ class GPMP2_EXPORT PlanarSDF {
   gtsam::Matrix data_;
 
  public:
-  /// constructor
-  PlanarSDF() : field_rows_(0), field_cols_(0), cell_size_(0.0) {}
+  /// Default constructor
+  PlanarSDF() {}
 
   /// constructor with data
   PlanarSDF(const gtsam::Point2& origin, double cell_size,

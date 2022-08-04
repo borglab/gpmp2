@@ -32,7 +32,7 @@ class VehicleDynamicsFactorVector
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
-  /* Default constructor do nothing */
+  /* Default constructor */
   VehicleDynamicsFactorVector() {}
 
   /**

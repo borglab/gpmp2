@@ -47,8 +47,8 @@ class RobotModel {
   BodySphereVector body_spheres_;  // body spheres
 
  public:
-  /// default contructor do nothing, for serialization
-  RobotModel() : fk_model_(), body_spheres_() {}
+  /// default contructor for serialization
+  RobotModel() {}
 
   /// Contructor take a fk model
   RobotModel(const FKModel& fk_model, const BodySphereVector& body_spheres)

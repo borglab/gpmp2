@@ -30,8 +30,8 @@ class ForwardKinematics {
   typedef POSE Pose;
   typedef VELOCITY Velocity;
 
-  /// default contructor do nothing, for serialization
-  ForwardKinematics() : dof_(0), nr_links_(0) {}
+  /// default contructor, for serialization
+  ForwardKinematics() {}
 
   /// Contructor take system DOF and number of links
   /// and the base pose (default zero pose)

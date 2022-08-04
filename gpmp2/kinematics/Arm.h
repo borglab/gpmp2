@@ -40,7 +40,7 @@ class GPMP2_EXPORT Arm
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  /// default contructor do nothing
+  /// default contructor
   Arm() {}
 
   /// Contructor take in number of joints for the arm, its DH parameters

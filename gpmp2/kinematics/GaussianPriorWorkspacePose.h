@@ -37,7 +37,7 @@ class GaussianPriorWorkspacePose
   gtsam::Pose3 des_pose_;  // desired workspace pose for joint
 
  public:
-  /* Default constructor do nothing */
+  /* Default constructor */
   GaussianPriorWorkspacePose() {}
 
   /// Constructor
