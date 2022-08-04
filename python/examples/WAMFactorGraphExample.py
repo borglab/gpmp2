@@ -1,14 +1,20 @@
+"""WAM Arm Factor Graph Example"""
+
 import matplotlib.pyplot as plt
 import numpy as np
-from gpmp2 import *
+from gpmp2 import (GaussianProcessPriorLinear, ObstacleSDFFactorArm,
+                   ObstacleSDFFactorGPArm, SignedDistanceField,
+                   initArmTrajStraightLine, interpolateArmTraj)
 from gpmp2.datasets.generate3Ddataset import generate3Ddataset
 from gpmp2.robots.generateArm import generateArm
-from gpmp2.utils.plot_utils import *
+from gpmp2.utils.plot_utils import (plotArm, plotMap3D, plotRobotModel,
+                                    set3DPlotRange)
 from gpmp2.utils.signedDistanceField3D import signedDistanceField3D
 from gtsam import (DoglegOptimizer, DoglegParams, GaussNewtonOptimizer,
-                   GaussNewtonParams, NonlinearFactorGraph, Point3,
+                   GaussNewtonParams, LevenbergMarquardtOptimizer,
+                   LevenbergMarquardtParams, NonlinearFactorGraph, Point3,
                    PriorFactorVector, noiseModel, symbol)
-from mpl_toolkits.mplot3d import Axes3D, axes3d
+from mpl_toolkits.mplot3d import Axes3D
 
 # dataset
 dataset = generate3Ddataset("WAMDeskDataset")
@@ -166,7 +172,7 @@ use_LM = False
 use_trustregion_opt = True
 
 if use_LM:
-    parameters = LevenbergMarquardtParams()  # Todo: check why this fails
+    parameters = LevenbergMarquardtParams()  #TODO: check why this fails
     parameters.setVerbosity("ERROR")
     # parameters.setVerbosityLM('LAMBDA');
     parameters.setlambdaInitial(1000.0)
@@ -180,14 +186,14 @@ else:
     parameters.setVerbosity("ERROR")
     optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-print("Initial Error = {}\n".format(graph.error(init_values)))
-print("Initial Collision Cost: {}\n".format(graph_obs.error(init_values)))
+print(f"Initial Error = {graph.error(init_values)}\n")
+print(f"Initial Collision Cost: {graph_obs.error(init_values)}\n")
 
 optimizer.optimizeSafely()
 result = optimizer.values()
 
-print("Error = {}\n".format(graph.error(result)))
-print("Collision Cost End: {}\n".format(graph_obs.error(result)))
+print(f"Error = {graph.error(result)}\n")
+print(f"Collision Cost End: {graph_obs.error(result)}\n")
 
 # plot results
 if plot_inter_traj:

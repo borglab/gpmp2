@@ -1,16 +1,23 @@
+"""pointRobot3FactorExample_rh"""
+
 import matplotlib.pyplot as plt
 import numpy as np
-from gpmp2 import *
+from gpmp2 import (BodySphere, BodySphereVector, GaussianProcessPriorLinear,
+                   ObstaclePlanarSDFFactorGPPointRobot,
+                   ObstaclePlanarSDFFactorPointRobot, PlanarSDF, PointRobot,
+                   PointRobotModel, VehicleDynamicsFactorVector)
 from gpmp2.datasets.generate2Ddataset import generate2Ddataset
-from gpmp2.robots.generateArm import generateArm
-from gpmp2.utils.plot_utils import *
+from gpmp2.utils.plot_utils import (plotEvidenceMap2D, plotPointRobot2D_theta,
+                                    plotSignedDistanceField2D)
 from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
-from gtsam import *
+from gtsam import (DoglegOptimizer, DoglegParams, GaussNewtonOptimizer,
+                   GaussNewtonParams, NonlinearFactorGraph, Point2, Point3,
+                   PriorFactorVector, Values, noiseModel)
 from gtsam.symbol_shorthand import V, X
 
 
 def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
-
+    """Get robot plan given start and end states."""
     start_conf = start_conf_val
     end_conf = end_conf_val
 
@@ -28,7 +35,6 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
         key_vel = V(i)
 
         #% initialize as straight line in conf space
-        # pose = Pose2(start_conf_val * float(params.total_time_step-i)/float(params.total_time_step) + end_conf_val * i/float(params.total_time_step))
         pose = start_conf_val
         vel = avg_vel
 
@@ -98,12 +104,12 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
         # parameters.setVerbosity('ERROR')
         optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-    print("Initial Error = {}".format(graph.error(init_values)))
+    print(f"Initial Error = {graph.error(init_values)}")
 
     optimizer.optimizeSafely()
     result = optimizer.values()
 
-    print("Final Error = {}".format(graph.error(result)))
+    print(f"Final Error = {graph.error(result)}")
 
     res_flag = True
     if graph.error(result) > params.acceptable_error_threshold:
@@ -111,11 +117,9 @@ def get_plan(start_conf_val, start_vel, end_conf_val, end_vel, sdf, params):
     return result, res_flag
 
 
-def get_sdf(occ_grid_topic
-            ):  # TODO this will change to ros occupancy grid processonr
+def get_sdf():
+    """Get the signed distance field for `MultiObstacleDataset`"""
     dataset = generate2Ddataset("MultiObstacleDataset")
-    rows = dataset.rows
-    cols = dataset.cols
     cell_size = dataset.cell_size
     origin_point2 = Point2(dataset.origin_x, dataset.origin_y)
 
@@ -131,7 +135,11 @@ def get_sdf(occ_grid_topic
     return sdf, dataset
 
 
-class Parameters(object):  # TODO: read from yaml file or rosparams
+class Parameters:
+    """Parameters for the robot and planner.
+
+    #TODO: read from yaml file or rosparams
+    """
     # settings
     total_time_sec = 2.5
     total_time_step = 5
@@ -175,26 +183,15 @@ class Parameters(object):  # TODO: read from yaml file or rosparams
     sigma_goal = 1
 
 
-def get_robot_state(result):  # todo: this will change to ros subscriber.
-
+def get_robot_state(result):
+    """Get the configuration and velocity from the result."""
     conf = result.atVector(X(1))
     vel = result.atVector(V(1))
     return conf, vel
 
 
-def get_robot_action(
-        result):  # TODO: Get action from result and command therobot
-    action_vel = None
-    action_vel_traj = None
-    return action_vel, action_vel_traj
-
-
-def command_robot(action_vel,
-                  action_vel_traj):  # TODO: this should be non-blocking
-    pass
-
-
 def plot_path(result, axis, params):
+    """Plot robot path"""
     x = []
     y = []
     for i in range(params.total_time_step + 1):
@@ -206,13 +203,13 @@ def plot_path(result, axis, params):
 
 
 def main():
-
+    """Main runner"""
     sdf, dataset = get_sdf(occ_grid_topic=None)
     params = Parameters()
 
     # start and end conf
-    start_conf_val = curstate_val = np.asarray([0, 0, 0])
-    start_vel = curstate_vel = np.asarray([0, 0, 0])
+    curstate_val = np.asarray([0, 0, 0])
+    curstate_vel = np.asarray([0, 0, 0])
     end_conf_val = np.asarray([17, 14, 0.1])
     end_vel = np.asarray([0, 0, 0])
 
@@ -238,14 +235,11 @@ def main():
             init_distance,
         )
 
-        result, res_flag = get_plan(curstate_val, curstate_vel, end_conf_val,
-                                    end_vel, sdf, params)
+        result, _ = get_plan(curstate_val, curstate_vel, end_conf_val, end_vel,
+                             sdf, params)
         graph_handle = plot_path(result, axis, params)
 
-        action_vel, action_vel_traj = get_robot_action(result)
-        command_robot(action_vel, action_vel_traj)
-
-        curstate_val, blah = get_robot_state(result)
+        curstate_val, _ = get_robot_state(result)
         print(curstate_val, curstate_vel)
 
         ## Plots

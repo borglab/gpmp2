@@ -1,11 +1,20 @@
+"""Point Robot 3 Factor Example"""
+
 import matplotlib.pyplot as plt
 import numpy as np
-from gpmp2 import *
+from gpmp2 import (BodySphere, BodySphereVector, GaussianProcessPriorPose2,
+                   ObstaclePlanarSDFFactorGPPose2MobileBase,
+                   ObstaclePlanarSDFFactorPose2MobileBase, PlanarSDF,
+                   PointRobot, Pose2MobileBase, Pose2MobileBaseModel,
+                   VehicleDynamicsFactorPose2)
 from gpmp2.datasets.generate2Ddataset import generate2Ddataset
-from gpmp2.robots.generateArm import generateArm
-from gpmp2.utils.plot_utils import *
+from gpmp2.utils.plot_utils import (plotEvidenceMap2D, plotPointRobot2D_theta,
+                                    plotSignedDistanceField2D)
 from gpmp2.utils.signedDistanceField2D import signedDistanceField2D
-from gtsam import *
+from gtsam import (DoglegOptimizer, DoglegParams, GaussNewtonOptimizer,
+                   GaussNewtonParams, NonlinearFactorGraph, Point2, Point3,
+                   Pose2, PriorFactorPose2, PriorFactorVector, Values,
+                   noiseModel)
 from gtsam.symbol_shorthand import V, X
 
 dataset = generate2Ddataset("MultiObstacleDataset")
@@ -141,12 +150,12 @@ else:
     # parameters.setVerbosity('ERROR')
     optimizer = GaussNewtonOptimizer(graph, init_values, parameters)
 
-print("Initial Error = {}\n".format(graph.error(init_values)))
+print(f"Initial Error = {graph.error(init_values)}\n")
 
 optimizer.optimizeSafely()
 result = optimizer.values()
 
-print("Final Error = {}\n".format(graph.error(result)))
+print("Final Error = {graph.error(result)}\n")
 
 #%% plot final values
 figure = plt.figure(1)

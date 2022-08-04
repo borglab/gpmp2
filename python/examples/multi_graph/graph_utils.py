@@ -1,8 +1,11 @@
+"""Various utils for the robot graph."""
+
+from queue import PriorityQueue
 from random import random, seed
 
 import numpy as np
-from gpmp2 import *
-from gtsam import *
+from gtsam import (GaussNewtonOptimizer, GaussNewtonParams, KeyVector,
+                   Marginals, NonlinearFactorGraph, PriorFactorVector, Values)
 from gtsam.symbol_shorthand import V, X
 
 
@@ -72,22 +75,25 @@ class Node(object):
         self.neighbours = {}
 
     def add_neighbour(self, node_key):
+        """Add `node_key` as a neighbor to this node."""
         if node_key in self.neighbours:
             print("The specified node is already a neighbour")
             return
         self.neighbours[node_key] = []
 
     def remove_neighbour(self, node_key):
+        """Remove `node_key` as neighbor."""
         if node_key not in self.neighbours:
             print("The specified node is not a neighbour")
             return
         del self.neighbours[node_key]
 
     def __str__(self):
-        return self.planner_id, self.neighbours.keys()
+        return f"{self.planner_id} {self.neighbours.keys()}"
 
 
 def get_initializations(nr_chains, problem):
+    """Get robot initialization"""
     mean_chain = []
     pos_keys = []
     # init optimization
@@ -147,7 +153,6 @@ def get_initializations(nr_chains, problem):
     result = optimizer.values()
 
     pos_keys = np.asarray(pos_keys)
-    # TODO: check with mustafa if to include start and goal
     pos_key_vect = KeyVector(pos_keys)
     marginals = Marginals(graph, result)
     joint_marginal = marginals.jointMarginalCovariance(pos_key_vect)
@@ -167,147 +172,8 @@ def get_initializations(nr_chains, problem):
     return initializations
 
 
-def get_parabolic_initialization(nr_chains, problem):
-
-    mean_chain = []
-
-    for i in range(0, problem.window_size + 1):
-        # initialize as straight line in conf space
-        pose = problem.start_conf * float(problem.window_size - i) / float(
-            problem.window_size) + problem.end_conf * (
-                problem.init_fraction_length * i) / float(problem.window_size)
-        mean_chain.append(pose)
-
-        local_chain = []
-
-        theta = math.atan2(
-            problem.end_conf[1] - problem.start_conf[1],
-            problem.end_conf[0] - problem.start_conf[0],
-        )
-
-    for pose in mean_chain:
-
-        temp = pose - problem.start_conf
-
-        temp2 = np.asarray([0.0, 0.0])
-
-        # global frame to local frame
-        temp2[0] = np.cos(theta) * temp[0] + np.sin(theta) * temp[1]
-        # temp2[1]  = np.cos(angle)*temp[1] - np.sin(angle)*temp[0]
-        temp2[1] = math.sqrt(temp2[0])
-        local_chain.append(temp2)
-
-    # translation
-    trans = problem.start_conf
-
-    problem.parabola_factor = 1
-
-    co_effs = np.linspace(-1 * problem.parabola_factor,
-                          problem.parabola_factor,
-                          num=nr_chains)
-
-    global_chains = []
-    for i in range(co_effs.shape[0]):
-        temp_chain = []
-        for pose in local_chain:
-            temp = np.asarray([0.0, 0.0])
-            temp[0] = pose[0]
-            temp[1] = co_effs[i] * pose[1]
-
-            # local to global
-            temp2 = np.asarray([0.0, 0.0])
-            temp2[0] = np.cos(theta) * temp[0] - np.sin(theta) * temp[1]
-            temp2[1] = np.sin(theta) * temp[0] + np.cos(theta) * temp[1]
-            temp_chain.append(temp2 + problem.start_conf)
-        global_chains.append(temp_chain)
-
-    return np.asarray(global_chains)
-
-
-def get_parabolic_planner_graph(inits, problem):
-
-    # we have total_time_step+1 points in each trajectory
-    total_time_step = inits[0].shape[0]
-    nr_chains = len(inits)
-
-    # if nr_chains==1:
-    #   print("Single chain passed. Please pass multiple chains")
-    #   return
-
-    if total_time_step < 3:
-        print("total_time_step cannot be less than 3")
-        return
-
-    # planner id is same as idx in nodes
-    nodes = {}  # contains all nodes.
-
-    map_ = {}  # key is (chain_number, timestamp)
-
-    planner_id = 0
-    map_[(0, 0)] = 0
-    start_node = Node(planner_id, inits[0][0, :], problem.avg_vel)
-
-    # planner_id += 1
-    # map_[(0,total_time_step)] = 1
-    # goal_node = Node(planner_id, inits[0][-1,:], problem.avg_vel)
-
-    nodes[planner_id] = start_node
-    # nodes.append(goal_node)
-
-    terminal_node_ids = []
-
-    # create all nodes
-    for i in range(nr_chains):  # go through each chain
-        for j in range(1, total_time_step):  # go through each time point
-
-            planner_id = len(nodes)
-            if j == total_time_step - 1:
-                terminal_node_ids.append(planner_id)
-            nodes[planner_id] = Node(planner_id, inits[i][j, :],
-                                     problem.avg_vel)
-            map_[(i, j)] = planner_id
-
-    for i in range(nr_chains):  # go through each chain
-        for j in range(0, total_time_step - 1):  # go through each time point
-            # connect to start node
-            if j == 0:
-                first_idx = map_[(0, 0)]
-                second_idx = map_[(i, j + 1)]
-                # connect to goal node
-                # elif j == total_time_step-1:
-                #   first_idx = map_[(i,j)]
-                #   second_idx = map_[(0,total_time_step)]
-            else:
-                first_idx = map_[(i, j)]
-                second_idx = map_[(i, j + 1)]
-            nodes[first_idx].add_neighbour(second_idx)
-
-    # add random inter connections
-    if problem.seed_val is not None:
-        seed(problem.seed_val)
-    for i in range(nr_chains):  # go through each chain
-        for j in range(1, total_time_step - 2):  # go through each time point
-            for k in range(nr_chains):  # choose a branch to connect to
-                if i == k:
-                    continue
-
-                # print("yoooo",i,j,k)
-                rand_num = random()
-                if rand_num < problem.dropout_prob:
-                    first_idx = map_[(i, j)]
-                    second_idx = map_[(k, j + 1)]
-                    nodes[first_idx].add_neighbour(second_idx)
-
-    # primary chains is a list of lists of plannerid's
-    return nodes, terminal_node_ids, primary_chains
-
-
-def get_initializations_simple(problem):
-
-    return (problem.window_size + 1) * [problem.start_conf]
-
-
 def get_planner_graph(inits, problem):
+    """Get planner factor graph given initialization and the optimization problem."""
 
     # we have total_time_step+1 points in each trajectory
     total_time_step = inits[0].shape[0] - 1
@@ -380,32 +246,31 @@ def get_planner_graph(inits, problem):
 
 
 def get_gtsam_graph(node_list, problem):
+    """Get factor graph given list of nodes and the optimization problem."""
 
     # init optimization
     graph = NonlinearFactorGraph()
     init_values = Values()
 
     # add all nodes
-    for i in range(len(node_list)):
+    for i, node in enumerate(node_list):
         key_pos = X(i)
         key_vel = V(i)
 
         #% initialize as straight line in conf space
-        init_values.insert(key_pos, node_list[i].pose)
-        init_values.insert(key_vel, node_list[i].vel)
+        init_values.insert(key_pos, node.pose)
+        init_values.insert(key_vel, node.vel)
 
         #% start/end priors
         if i == 0:
             graph.push_back(
-                PriorFactorVector(key_pos, node_list[i].pose,
-                                  problem.pose_fix_model))
+                PriorFactorVector(key_pos, node.pose, problem.pose_fix_model))
             graph.push_back(
                 PriorFactorVector(key_vel, problem.start_vel,
                                   problem.vel_fix_model))
         elif i == 1:
             graph.push_back(
-                PriorFactorVector(key_pos, node_list[i].pose,
-                                  problem.pose_fix_model))
+                PriorFactorVector(key_pos, node.pose, problem.pose_fix_model))
             graph.push_back(
                 PriorFactorVector(key_vel, problem.end_vel,
                                   problem.vel_fix_model))
@@ -421,11 +286,11 @@ def get_gtsam_graph(node_list, problem):
                     problem.epsilon_dist,
                 ))
 
-            node_list[i].gt_graph_ob_id = graph.size() - 1
+            node.gt_graph_ob_id = graph.size() - 1
 
         # add edges for each node
 
-        for neigh_id in node_list[i].neighbours:
+        for neigh_id in node.neighbours:
             key_pos1 = X(i)
             key_pos2 = X(neigh_id)
             key_vel1 = V(i)
@@ -440,7 +305,7 @@ def get_gtsam_graph(node_list, problem):
                     problem.delta_t,
                     problem.Qc_model,
                 ))
-            node_list[i].neighbours[neigh_id].append(graph.size() - 1)
+            node.neighbours[neigh_id].append(graph.size() - 1)
 
             #% GP cost factor
             if problem.use_GP_inter and problem.check_inter > 0:
@@ -466,10 +331,6 @@ def get_gtsam_graph(node_list, problem):
 
 
 #### Dijkstra specific stuff
-
-from queue import PriorityQueue
-
-
 class Planner(object):
     """docstring for Graph"""
 
@@ -479,10 +340,11 @@ class Planner(object):
         self.planner_graph = planner_graph
 
     def get_factor_error(self, gt_factor_id):
-
+        """Return error of factor `gt_factor_id`."""
         return self.gtsam_graph.at(gt_factor_id).error(self.result)
 
     def get_edge_cost(self, first_idx, second_idx):
+        """Get the cost for the edge between `first_idx` and `second_idx`."""
         cost = 0
         # add cost of gp and obstacle interpolation factors
         for gt_factor_id in self.planner_graph[first_idx].neighbours[
@@ -495,7 +357,7 @@ class Planner(object):
         return cost
 
     def get_shortest_path(self):
-
+        """Compute shortest path between nodes using Dijkstra's algorithm."""
         cur_id = 0
         priority_q = PriorityQueue()
         priority_q.put((0, cur_id))
@@ -507,7 +369,7 @@ class Planner(object):
                 break
 
             for neigh_id in self.planner_graph[cur_id].neighbours:
-                if self.planner_graph[neigh_id].visited == True:
+                if self.planner_graph[neigh_id].visited:
                     continue
                 cost = self.get_edge_cost(cur_id, neigh_id)
                 priority_q.put((cur_cost + cost, neigh_id))
@@ -528,6 +390,7 @@ class Planner(object):
 
 
 def update_planner_graph(result, planner_graph):
+    """Update the planner graph with the values in `result`."""
     for i in range(len(planner_graph)):
         planner_graph[i].pose = result.atVector(X(i))
         planner_graph[i].vel = result.atVector(V(i))
