@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Setup Compiler
         run: |
-          sudo xcode-select -switch /Applications/Xcode_${{ matrix.version }}.app
+          sudo xcode-select -switch /Applications/Xcode.app
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
 
