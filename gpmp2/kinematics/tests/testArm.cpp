@@ -12,6 +12,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace std::placeholders;
 using namespace gtsam;
 using namespace gpmp2;
 
