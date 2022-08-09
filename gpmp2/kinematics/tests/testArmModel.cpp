@@ -12,7 +12,6 @@
 #include <iostream>
 
 using namespace std;
-using namespace std::placeholders;
 using namespace gtsam;
 using namespace gpmp2;
 
@@ -63,16 +62,16 @@ TEST(ArmModel, 2linkPlanarExamples) {
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
-    Jcq_exp =
-        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
-                                  &sph_pos_wrapper_batch, arm, _1, i)),
-                              q, 1e-6);
+    Jcq_exp = numericalDerivative11(
+        std::function<Point3(const Vector2&)>(
+            boost::bind(&sph_pos_wrapper_batch, arm, std::placeholders::_1, i)),
+        q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
     EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, Jcq_act)));
-    Jcq_exp =
-        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
-                                  &sph_pos_wrapper_single, arm, _1, i)),
-                              q, 1e-6);
+    Jcq_exp = numericalDerivative11(
+        std::function<Point3(const Vector2&)>(boost::bind(
+            &sph_pos_wrapper_single, arm, std::placeholders::_1, i)),
+        q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, Jcq_act, 1e-9));
   }
 
@@ -89,16 +88,16 @@ TEST(ArmModel, 2linkPlanarExamples) {
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
-    Jcq_exp =
-        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
-                                  &sph_pos_wrapper_batch, arm, _1, i)),
-                              q, 1e-6);
+    Jcq_exp = numericalDerivative11(
+        std::function<Point3(const Vector2&)>(
+            boost::bind(&sph_pos_wrapper_batch, arm, std::placeholders::_1, i)),
+        q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
     EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, Jcq_act)));
-    Jcq_exp =
-        numericalDerivative11(std::function<Point3(const Vector2&)>(boost::bind(
-                                  &sph_pos_wrapper_single, arm, _1, i)),
-                              q, 1e-6);
+    Jcq_exp = numericalDerivative11(
+        std::function<Point3(const Vector2&)>(boost::bind(
+            &sph_pos_wrapper_single, arm, std::placeholders::_1, i)),
+        q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, Jcq_act, 1e-9));
   }
 }

@@ -13,7 +13,6 @@
 #include <iostream>
 
 using namespace std;
-using namespace std::placeholders;
 using namespace gtsam;
 using namespace gpmp2;
 
@@ -29,12 +28,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsPose2) {
   v = Vector3::Zero();
   cexp = 0;
   Hpexp = numericalDerivative11(
-      std::function<double(const Pose2&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, _1, v, boost::none, boost::none)),
+      std::function<double(const Pose2&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsPose2(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -46,12 +47,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsPose2) {
   v = (Vector3() << 0, 0, 1.2).finished();
   cexp = 0;
   Hpexp = numericalDerivative11(
-      std::function<double(const Pose2&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, _1, v, boost::none, boost::none)),
+      std::function<double(const Pose2&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsPose2(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -63,12 +66,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsPose2) {
   v = (Vector3() << -1, 1, 1.2).finished();
   cexp = 1;
   Hpexp = numericalDerivative11(
-      std::function<double(const Pose2&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, _1, v, boost::none, boost::none)),
+      std::function<double(const Pose2&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsPose2(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -80,12 +85,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsPose2) {
   v = (Vector3() << 0, 1, 1.2).finished();
   cexp = 1;
   Hpexp = numericalDerivative11(
-      std::function<double(const Pose2&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, _1, v, boost::none, boost::none)),
+      std::function<double(const Pose2&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsPose2(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -97,12 +104,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsPose2) {
   v = (Vector3() << 14.3, 6.7, 22.2).finished();
   cexp = 6.7;
   Hpexp = numericalDerivative11(
-      std::function<double(const Pose2&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, _1, v, boost::none, boost::none)),
+      std::function<double(const Pose2&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsPose2, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsPose2, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsPose2(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -121,12 +130,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsVector3) {
   v = Vector3::Zero();
   cexp = 0;
   Hpexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, _1, v, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsVector3(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -138,12 +149,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsVector3) {
   v = (Vector3() << 0, 0, 1.2).finished();
   cexp = 0;
   Hpexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, _1, v, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsVector3(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -155,12 +168,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsVector3) {
   v = (Vector3() << -1, 1, 1.2).finished();
   cexp = 0;
   Hpexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, _1, v, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsVector3(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -172,12 +187,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsVector3) {
   v = (Vector3() << 0, 1, 1.2).finished();
   cexp = -0.707106781186548;
   Hpexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, _1, v, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsVector3(p, v, Hpact, Hvact);
   EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);
@@ -188,12 +205,14 @@ TEST(VehicleDynamics, simple2DVehicleDynamicsVector3) {
   p = (Vector3() << 34.6, -31.2, 1.75).finished();
   v = (Vector3() << 14.3, 6.7, 22.2).finished();
   Hpexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, _1, v, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, std::placeholders::_1, v,
+                      boost::none, boost::none)),
       p);
   Hvexp = numericalDerivative11(
-      std::function<double(const Vector3&)>(boost::bind(
-          simple2DVehicleDynamicsVector3, p, _1, boost::none, boost::none)),
+      std::function<double(const Vector3&)>(
+          boost::bind(simple2DVehicleDynamicsVector3, p, std::placeholders::_1,
+                      boost::none, boost::none)),
       v);
   cact = simple2DVehicleDynamicsVector3(p, v, Hpact, Hvact);
   // EXPECT_DOUBLES_EQUAL(cexp, cact, 1e-9);

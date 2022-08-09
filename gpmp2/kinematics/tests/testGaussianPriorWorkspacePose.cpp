@@ -17,7 +17,6 @@
 #include <iostream>
 
 using namespace std;
-using namespace std::placeholders;
 using namespace gtsam;
 using namespace gpmp2;
 
@@ -42,7 +41,7 @@ TEST(GaussianPriorWorkspacePoseArm, error) {
   H_exp =
       numericalDerivative11(std::function<Vector(const Vector2&)>(boost::bind(
                                 &GaussianPriorWorkspacePoseArm::evaluateError,
-                                factor, _1, boost::none)),
+                                factor, std::placeholders::_1, boost::none)),
                             q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
