@@ -100,19 +100,19 @@ TEST_UNSAFE(ObstaclePlanarSDFFactorGPArm, error) {
   sdf_exp = (Vector(4) << 1.662575, 0.60355, 0, 0).finished();
   err_exp = convertSDFtoErr(sdf_exp, obs_eps + r);
   H1_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, std::placeholders::_1, qdot1, q2, qdot2)),
       q1, 1e-6);
   H2_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, q1, std::placeholders::_1, q2, qdot2)),
       qdot1, 1e-6);
   H3_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, q1, qdot1, std::placeholders::_1, qdot2)),
       q2, 1e-6);
   H4_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, q1, qdot1, q2, std::placeholders::_1)),
       qdot2, 1e-6);
   EXPECT(assert_equal(err_exp, err_act, 1e-6));
@@ -133,19 +133,19 @@ TEST_UNSAFE(ObstaclePlanarSDFFactorGPArm, error) {
                 .finished();
   err_exp = convertSDFtoErr(sdf_exp, obs_eps + r);
   H1_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, std::placeholders::_1, qdot1, q2, qdot2)),
       q1, 1e-6);
   H2_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, q1, std::placeholders::_1, q2, qdot2)),
       qdot1, 1e-6);
   H3_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, q1, qdot1, std::placeholders::_1, qdot2)),
       q2, 1e-6);
   H4_exp = numericalDerivative11(
-      std::function<Vector(const Vector2&)>(boost::bind(
+      std::function<Vector(const Vector2&)>(std::bind(
           &errorWrapper, factor, q1, qdot1, q2, std::placeholders::_1)),
       qdot2, 1e-6);
   EXPECT(assert_equal(err_exp, err_act, 1e-6));

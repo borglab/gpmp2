@@ -69,9 +69,9 @@ TEST(ProductDynamicLieGroup, compose) {
   Matrix actH1, actH2;
   state1.compose(state2, actH1, actH2);
   Matrix numericH1 = numericalDerivativeDynamic<Product, Product>(
-      boost::bind(compose_proxy, _1, state2), state1);
+      std::bind(compose_proxy, std::placeholders::_1, state2), state1);
   Matrix numericH2 = numericalDerivativeDynamic<Product, Product>(
-      boost::bind(compose_proxy, state1, _1), state2);
+      std::bind(compose_proxy, state1, std::placeholders::_1), state2);
   EXPECT(assert_equal(numericH1, actH1, tol));
   EXPECT(assert_equal(numericH2, actH2, tol));
 }
@@ -86,9 +86,9 @@ TEST(ProductDynamicLieGroup, between) {
   Matrix actH1, actH2;
   state1.between(state2, actH1, actH2);
   Matrix numericH1 = numericalDerivativeDynamic<Product, Product>(
-      boost::bind(between_proxy, _1, state2), state1);
+      std::bind(between_proxy, std::placeholders::_1, state2), state1);
   Matrix numericH2 = numericalDerivativeDynamic<Product, Product>(
-      boost::bind(between_proxy, state1, _1), state2);
+      std::bind(between_proxy, state1, std::placeholders::_1), state2);
   EXPECT(assert_equal(numericH1, actH1, tol));
   EXPECT(assert_equal(numericH2, actH2, tol));
 }
@@ -101,7 +101,7 @@ TEST(ProductDynamicLieGroup, inverse) {
   Matrix actH1;
   state1.inverse(actH1);
   Matrix numericH1 = numericalDerivativeDynamic<Product, Product>(
-      boost::bind(inverse_proxy, _1), state1);
+      std::bind(inverse_proxy, std::placeholders::_1), state1);
   EXPECT(assert_equal(numericH1, actH1, tol));
 }
 
@@ -114,7 +114,7 @@ TEST(ProductDynamicLieGroup, Expmap) {
   Matrix actH;
   Product::Expmap(vec, actH);
   Matrix numericH = numericalDerivativeDynamic<Product, Vector5>(
-      boost::bind(expmap_proxy, _1), vec);
+      std::bind(expmap_proxy, std::placeholders::_1), vec);
   EXPECT(assert_equal(numericH, actH, tol));
 }
 
@@ -126,7 +126,7 @@ TEST(ProductDynamicLieGroup, Logmap) {
   Matrix actH;
   Product::Logmap(state, actH);
   Matrix numericH = numericalDerivativeDynamic<Vector5, Product>(
-      boost::bind(logmap_proxy, _1), state);
+      std::bind(logmap_proxy, std::placeholders::_1), state);
   EXPECT(assert_equal(numericH, actH, tol));
 }
 

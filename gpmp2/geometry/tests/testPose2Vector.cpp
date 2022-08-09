@@ -63,9 +63,9 @@ TEST(Pose2Vector, compose) {
   Matrix actH1, actH2;
   actcomp = state1.compose(state2, actH1, actH2);
   Matrix numericH1 = numericalDerivativeDynamic<Pose2Vector, Pose2Vector>(
-      boost::bind(compose_proxy, _1, state2), state1);
+      std::bind(compose_proxy, std::placeholders::_1, state2), state1);
   Matrix numericH2 = numericalDerivativeDynamic<Pose2Vector, Pose2Vector>(
-      boost::bind(compose_proxy, state1, _1), state2);
+      std::bind(compose_proxy, state1, std::placeholders::_1), state2);
 
   EXPECT(assert_equal(expcomp, actcomp, 1e-9));
   EXPECT(assert_equal(numericH1, actH1, 1e-6));
@@ -84,9 +84,9 @@ TEST(Pose2Vector, between) {
   Matrix actH1, actH2;
   actbtw = state1.between(state2, actH1, actH2);
   Matrix numericH1 = numericalDerivativeDynamic<Pose2Vector, Pose2Vector>(
-      boost::bind(between_proxy, _1, state2), state1);
+      std::bind(between_proxy, std::placeholders::_1, state2), state1);
   Matrix numericH2 = numericalDerivativeDynamic<Pose2Vector, Pose2Vector>(
-      boost::bind(between_proxy, state1, _1), state2);
+      std::bind(between_proxy, state1, std::placeholders::_1), state2);
 
   EXPECT(assert_equal(expbtw, actbtw, 1e-9));
   EXPECT(assert_equal(numericH1, actH1, 1e-6));
@@ -102,7 +102,7 @@ TEST(Pose2Vector, inverse) {
   Matrix actH1;
   actinv = state1.inverse(actH1);
   Matrix numericH1 = numericalDerivativeDynamic<Pose2Vector, Pose2Vector>(
-      boost::bind(inverse_proxy, _1), state1);
+      std::bind(inverse_proxy, std::placeholders::_1), state1);
 
   EXPECT(assert_equal(expinv, actinv, 1e-9));
   EXPECT(assert_equal(numericH1, actH1, 1e-6));

@@ -7,6 +7,7 @@
 #include <gpmp2/gp/GaussianProcessInterpolatorLinear.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Testable.h>
+#include <gtsam/base/TestableAssertions.h>
 #include <gtsam/base/numericalDerivative.h>
 
 #include <iostream>
@@ -31,15 +32,15 @@ TEST(GaussianProcessInterpolatorLinear, equals) {
   noiseModel::Gaussian::shared_ptr Qc2_model =
       noiseModel::Gaussian::Covariance(Qc2);
   GPBase base3(Qc2_model, dt, tau);
-  EXPECT(!assert_equal(base1, base3, 1e-9));
+  EXPECT(assert_inequal(base1, base3, 1e-9));
 
   dt = 0.2, tau = 0.03;
   GPBase base4(Qc_model, dt, tau);
-  EXPECT(!assert_equal(base1, base4, 1e-9));
+  EXPECT(assert_inequal(base1, base4, 1e-9));
 
   dt = 0.1, tau = 0.06;
   GPBase base5(Qc_model, dt, tau);
-  EXPECT(!assert_equal(base1, base5, 1e-9));
+  EXPECT(assert_inequal(base1, base5, 1e-9));
 }
 
 /* ************************************************************************** */
@@ -63,22 +64,22 @@ TEST(GaussianProcessInterpolatorLinear, interpolatePose) {
                                 actualH4);
   expect = (Vector3() << 0, 0, 0).finished();
   expectH1 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, std::placeholders::_1, v1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, std::placeholders::_1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, std::placeholders::_1, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, p2, std::placeholders::_1,
           boost::none, boost::none, boost::none, boost::none)),
       v2, 1e-6);
@@ -97,22 +98,22 @@ TEST(GaussianProcessInterpolatorLinear, interpolatePose) {
                                 actualH4);
   expect = (Vector3() << 0.3, 0, 0).finished();
   expectH1 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, std::placeholders::_1, v1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, std::placeholders::_1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, std::placeholders::_1, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, p2, std::placeholders::_1,
           boost::none, boost::none, boost::none, boost::none)),
       v2, 1e-6);
@@ -131,22 +132,22 @@ TEST(GaussianProcessInterpolatorLinear, interpolatePose) {
                                 actualH4);
   expect = (Vector3() << 0, 0, 0.09).finished();
   expectH1 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, std::placeholders::_1, v1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, std::placeholders::_1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, std::placeholders::_1, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, p2, std::placeholders::_1,
           boost::none, boost::none, boost::none, boost::none)),
       v2, 1e-6);
@@ -164,22 +165,22 @@ TEST(GaussianProcessInterpolatorLinear, interpolatePose) {
   actual = base.interpolatePose(p1, v1, p2, v2, actualH1, actualH2, actualH3,
                                 actualH4);
   expectH1 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, std::placeholders::_1, v1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, std::placeholders::_1, p2, v2,
           boost::none, boost::none, boost::none, boost::none)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, std::placeholders::_1, v2,
           boost::none, boost::none, boost::none, boost::none)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector3(const Vector3&)>(boost::bind(
+      std::function<Vector3(const Vector3&)>(std::bind(
           &GPBase::interpolatePose, base, p1, v1, p2, std::placeholders::_1,
           boost::none, boost::none, boost::none, boost::none)),
       v2, 1e-6);

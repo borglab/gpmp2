@@ -37,7 +37,7 @@ TEST(JointLimitFactorVector, error) {
   actual = factor.evaluateError(conf, H_act);
   expect = Vector2(0.0, 0.0);
   H_exp =
-      numericalDerivative11(std::function<Vector2(const Vector2&)>(boost::bind(
+      numericalDerivative11(std::function<Vector2(const Vector2&)>(std::bind(
                                 &JointLimitFactorVector::evaluateError, factor,
                                 std::placeholders::_1, boost::none)),
                             conf, 1e-6);
@@ -49,7 +49,7 @@ TEST(JointLimitFactorVector, error) {
   actual = factor.evaluateError(conf, H_act);
   expect = Vector2(7.0, 2.0);
   H_exp =
-      numericalDerivative11(std::function<Vector2(const Vector2&)>(boost::bind(
+      numericalDerivative11(std::function<Vector2(const Vector2&)>(std::bind(
                                 &JointLimitFactorVector::evaluateError, factor,
                                 std::placeholders::_1, boost::none)),
                             conf, 1e-6);
@@ -61,7 +61,7 @@ TEST(JointLimitFactorVector, error) {
   actual = factor.evaluateError(conf, H_act);
   expect = Vector2(7.0, 2.0);
   H_exp =
-      numericalDerivative11(std::function<Vector2(const Vector2&)>(boost::bind(
+      numericalDerivative11(std::function<Vector2(const Vector2&)>(std::bind(
                                 &JointLimitFactorVector::evaluateError, factor,
                                 std::placeholders::_1, boost::none)),
                             conf, 1e-6);
