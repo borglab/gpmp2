@@ -68,33 +68,36 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(0))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(1))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(2))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   /*
     vJp_exp.clear();
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(0))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(0))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(1))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(1))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(2))), q,
-    1e-6)); vJv_exp.clear();
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(2))), q, 1e-6)); vJv_exp.clear();
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(0))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(1))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(2))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(2))), qdot, 1e-6));
   */
   // marm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
@@ -138,33 +141,36 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(0))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(1))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(2))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   /*
     vJp_exp.clear();
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(0))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(0))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(1))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(1))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(2))), q,
-    1e-6)); vJv_exp.clear();
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(2))), q, 1e-6)); vJv_exp.clear();
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(0))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(1))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(2))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(2))), qdot, 1e-6));
   */
   // marm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
@@ -208,33 +214,36 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(0))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(1))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(2))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   /*
     vJp_exp.clear();
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(0))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(0))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(1))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(1))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(2))), q,
-    1e-6)); vJv_exp.clear();
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(2))), q, 1e-6)); vJv_exp.clear();
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(0))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(1))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(2))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(2))), qdot, 1e-6));
   */
   // marm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
@@ -276,33 +285,36 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(0))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(1))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(2))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   /*
     vJp_exp.clear();
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(0))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(0))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(1))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(1))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(2))), q,
-    1e-6)); vJv_exp.clear();
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(2))), q, 1e-6)); vJv_exp.clear();
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(0))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(1))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(2))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(2))), qdot, 1e-6));
   */
   // marm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
@@ -344,33 +356,36 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(0))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(1))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(2))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   /*
     vJp_exp.clear();
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(0))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(0))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(1))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(1))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(2))), q,
-    1e-6)); vJv_exp.clear();
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(2))), q, 1e-6)); vJv_exp.clear();
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(0))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(1))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(2))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(2))), qdot, 1e-6));
   */
   // marm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
@@ -404,33 +419,36 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(0))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(1))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2Vector&)>(
-          boost::bind(&fkpose, marm, _1, qdot, size_t(2))),
+          std::bind(&fkpose, marm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   /*
     vJp_exp.clear();
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(0))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(0))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(1))), q,
-    1e-6));
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(1))), q, 1e-6));
     vJp_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Pose2Vector&)>( boost::bind(&fkvelocity, marm, _1, qdot, size_t(2))), q,
-    1e-6)); vJv_exp.clear();
+    Pose2Vector&)>( std::bind(&fkvelocity, marm, std::placeholders::_1, qdot,
+    size_t(2))), q, 1e-6)); vJv_exp.clear();
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(0))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(1))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( boost::bind(&fkvelocity, marm, q, _1, size_t(2))), qdot, 1e-6));
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    size_t(2))), qdot, 1e-6));
   */
   // marm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);

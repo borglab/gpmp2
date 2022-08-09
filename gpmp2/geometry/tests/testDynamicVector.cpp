@@ -6,6 +6,7 @@
 #include <CppUnitLite/TestHarness.h>
 #include <gpmp2/geometry/DynamicVector.h>
 #include <gtsam/base/Testable.h>
+#include <gtsam/base/TestableAssertions.h>
 #include <gtsam/base/Vector.h>
 #include <gtsam/inference/Symbol.h>
 #include <gtsam/nonlinear/GaussNewtonOptimizer.h>
@@ -58,7 +59,7 @@ TEST_UNSAFE(DynamicVector, equals) {
 
   EXPECT(assert_equal(v1, v2, 1e-9));
   EXPECT(assert_equal(v2, v1, 1e-9));
-  EXPECT(!assert_equal(v1, v3, 1e-9));
+  EXPECT(assert_inequal(v1, v3, 1e-9));
 }
 
 /* ************************************************************************** */

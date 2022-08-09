@@ -37,7 +37,8 @@ class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
-  GoalFactorArm() {} /* Default constructor do nothing */
+  /// Default constructor
+  GoalFactorArm() {}
 
   /**
    * Constructor

@@ -89,7 +89,8 @@ class Timer {
   signed long timer_usec_;  // accumulator
 
  public:
-  Timer() : str_(), timer_usec_(0) {}
+  /// Default constructor
+  Timer() {}
   Timer(std::string str) : str_(str), timer_usec_(0) {}
   virtual ~Timer() {}
 

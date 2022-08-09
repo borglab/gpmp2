@@ -37,7 +37,7 @@ class GaussianPriorWorkspaceOrientation
   gtsam::Rot3 des_orientation_;  // desired workspace orientation for joint
 
  public:
-  /* Default constructor do nothing */
+  /* Default constructor */
   GaussianPriorWorkspaceOrientation() {}
 
   /// Constructor

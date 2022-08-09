@@ -55,8 +55,8 @@ class ObstaclePlanarSDFFactorGP
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
-  /* Default constructor do nothing */
-  ObstaclePlanarSDFFactorGP() : robot_(Robot()), sdf_(PlanarSDF()) {}
+  /* Default constructor */
+  ObstaclePlanarSDFFactorGP() {}
 
   /**
    * Constructor

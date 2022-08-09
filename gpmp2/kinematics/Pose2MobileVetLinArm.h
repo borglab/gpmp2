@@ -37,7 +37,7 @@ class GPMP2_EXPORT Pose2MobileVetLinArm
   Arm arm_;
 
  public:
-  /// default contructor do nothing
+  /// default contructor
   Pose2MobileVetLinArm() {}
 
   /// constructor from Arm

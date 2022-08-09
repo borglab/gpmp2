@@ -1,0 +1,67 @@
+name: macOS CI
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.name }} ${{ matrix.build_type }}
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CTEST_OUTPUT_ON_FAILURE: ON
+      CTEST_PARALLEL_LEVEL: 2
+      CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Github Actions requires a single row to be added to the build matrix.
+        # See https://help.github.com/en/articles/workflow-syntax-for-github-actions.
+        name: [macos-11-xcode-13.4.1]
+
+        build_type: [Debug, Release]
+        build_unstable: [ON]
+        include:
+          - name: macos-11-xcode-13.4.1
+            os: macOS-11
+            compiler: xcode
+            version: "13.4.1"
+
+    steps:
+      - name: Setup Compiler
+        run: |
+          sudo xcode-select -switch /Applications/Xcode.app
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+
+      - name: Dependencies
+        run: |
+          brew install boost
+
+      - name: GTSAM
+        run: |
+          git clone https://github.com/borglab/gtsam.git
+          cd gtsam
+          mkdir build && cd build
+          cmake -D GTSAM_BUILD_EXAMPLES_ALWAYS=OFF ..
+          make -j$(sysctl -n hw.physicalcpu) install
+          cd ../../ # go back to home directory
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build Directory
+        run: mkdir ./build
+
+      - name: Configure
+        run: |
+          cmake -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF ..
+        working-directory: ./build
+
+      - name: Build
+        run: make -j$(sysctl -n hw.physicalcpu)
+        working-directory: ./build
+
+      - name: Test
+        run: make -j$(sysctl -n hw.physicalcpu) check
+        working-directory: ./build

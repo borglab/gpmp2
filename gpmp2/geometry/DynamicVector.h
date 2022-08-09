@@ -30,8 +30,8 @@ class GPMP2_EXPORT DynamicVector {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  // default constructor do nothing
-  DynamicVector() : dim_(0) {}
+  /// Default constructor
+  DynamicVector() {}
 
   // eigen constructor
   // non-explicit conversion enabled

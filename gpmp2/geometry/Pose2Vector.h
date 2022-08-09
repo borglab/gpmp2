@@ -28,7 +28,7 @@ class GPMP2_EXPORT Pose2Vector
   typedef ProductDynamicLieGroup<gtsam::Pose2, DynamicVector> Base;
 
  public:
-  // default constructor do nothing
+  // default constructor
   Pose2Vector() : Base() {}
 
   // constructors

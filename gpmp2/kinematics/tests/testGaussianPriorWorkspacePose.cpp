@@ -39,9 +39,9 @@ TEST(GaussianPriorWorkspacePoseArm, error) {
             0.706727485, -0.547039678)
                .finished();
   H_exp =
-      numericalDerivative11(std::function<Vector(const Vector2&)>(boost::bind(
+      numericalDerivative11(std::function<Vector(const Vector2&)>(std::bind(
                                 &GaussianPriorWorkspacePoseArm::evaluateError,
-                                factor, _1, boost::none)),
+                                factor, std::placeholders::_1, boost::none)),
                             q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));

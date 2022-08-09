@@ -40,10 +40,11 @@ TEST(SelfCollisionArm, error) {
   q = Vector3(0.0, M_PI / 2.0, 0.0);
   actual = factor.evaluateError(q, H_act);
   expect = (Vector(2) << 1.4928932188134527, 4.2).finished();
-  H_exp = numericalDerivative11(
-      std::function<Vector2(const Vector3&)>(boost::bind(
-          &SelfCollisionArm::evaluateError, factor, _1, boost::none)),
-      q, 1e-6);
+  H_exp =
+      numericalDerivative11(std::function<Vector2(const Vector3&)>(std::bind(
+                                &SelfCollisionArm::evaluateError, factor,
+                                std::placeholders::_1, boost::none)),
+                            q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));
 }

@@ -29,7 +29,7 @@ class GPMP2_EXPORT PointRobot
   typedef ForwardKinematics<gtsam::Vector, gtsam::Vector> Base;
 
  public:
-  /// default constructor do nothing
+  /// default constructor
   PointRobot() {}
 
   /// Constructor takes in DOF

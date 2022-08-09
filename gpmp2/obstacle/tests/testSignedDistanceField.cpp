@@ -72,16 +72,18 @@ TEST(SDFutils, test) {
   Point3 p;
   p = Point3(-0.13, -0.14, 0.06);
   field.getSignedDistance(p, grad_act);
-  grad_exp = numericalDerivative11(
-      std::function<double(const Point3&)>(boost::bind(sdf_wrapper, field, _1)),
-      p, 1e-6);
+  grad_exp =
+      numericalDerivative11(std::function<double(const Point3&)>(std::bind(
+                                sdf_wrapper, field, std::placeholders::_1)),
+                            p, 1e-6);
   EXPECT(assert_equal(grad_exp, grad_act, 1e-6));
 
   p = Point3(0.18, 0.12, 0.01);
   field.getSignedDistance(p, grad_act);
-  grad_exp = numericalDerivative11(
-      std::function<double(const Point3&)>(boost::bind(sdf_wrapper, field, _1)),
-      p, 1e-6);
+  grad_exp =
+      numericalDerivative11(std::function<double(const Point3&)>(std::bind(
+                                sdf_wrapper, field, std::placeholders::_1)),
+                            p, 1e-6);
   EXPECT(assert_equal(grad_exp, grad_act, 1e-6));
 }
 

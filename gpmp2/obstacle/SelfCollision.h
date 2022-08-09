@@ -49,8 +49,8 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
-  /* Default constructor do nothing */
-  SelfCollision() : robot_(Robot()) {}
+  /* Default constructor */
+  SelfCollision() {}
 
   SelfCollision(gtsam::Key poseKey, const Robot& robot,
                 const gtsam::Matrix& data)

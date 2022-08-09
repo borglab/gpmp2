@@ -48,8 +48,8 @@ class ObstacleSDFFactor
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
-  /* Default constructor do nothing */
-  ObstacleSDFFactor() : robot_(Robot()), sdf_(SignedDistanceField()) {}
+  /* Default constructor */
+  ObstacleSDFFactor() {}
 
   /**
    * Constructor
