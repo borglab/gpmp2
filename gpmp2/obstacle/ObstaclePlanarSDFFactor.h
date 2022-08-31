@@ -39,21 +39,17 @@ class ObstaclePlanarSDFFactor
   double epsilon_;  // distance from object that start non-zero cost
 
   // arm: planar one, all alpha = 0
-  const Robot& robot_;
+  Robot robot_;
 
   // signed distance field from matlab
-  const PlanarSDF& sdf_;
+  PlanarSDF sdf_;
 
  public:
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
   /** Default constructor */
-  ObstaclePlanarSDFFactor() {
-    // Initialize here to avoid temporary object error
-    robot_ = Robot();
-    sdf_ = PlanarSDF();
-  }
+  ObstaclePlanarSDFFactor() {}
 
   /**
    * Constructor
