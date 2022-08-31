@@ -25,8 +25,8 @@ Pose2Mobile2Arms::Pose2Mobile2Arms(const Arm& arm1, const Arm& arm2,
       arm1_(arm1),
       arm2_(arm2) {
   // check arm base pose, warn if non-zero
-  if (!arm1_.base_pose().equals(Pose3::identity(), 1e-6) ||
-      !arm2_.base_pose().equals(Pose3::identity(), 1e-6))
+  if (!arm1_.base_pose().equals(Pose3::Identity(), 1e-6) ||
+      !arm2_.base_pose().equals(Pose3::Identity(), 1e-6))
     cout << "[Pose2Mobile2Arms] WARNING: Arm has non-zero base pose, this base "
             "pose will be override. "
             "Set the base_T_arm in Pose2MobileArm."

@@ -19,7 +19,7 @@ namespace gpmp2 {
 Pose2MobileArm::Pose2MobileArm(const Arm& arm, const gtsam::Pose3& base_T_arm)
     : Base(arm.dof() + 3, arm.dof() + 1), base_T_arm_(base_T_arm), arm_(arm) {
   // check arm base pose, warn if non-zero
-  if (!arm_.base_pose().equals(Pose3::identity(), 1e-6))
+  if (!arm_.base_pose().equals(Pose3::Identity(), 1e-6))
     cout << "[Pose2MobileArm] WARNING: Arm has non-zero base pose, this base "
             "pose will be override. "
             "Set the base_T_arm in Pose2MobileArm."

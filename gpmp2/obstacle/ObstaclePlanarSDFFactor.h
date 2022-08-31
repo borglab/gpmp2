@@ -27,8 +27,8 @@ class ObstaclePlanarSDFFactor
     : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
  public:
   // typedefs
-  typedef ROBOT Robot;
-  typedef typename Robot::Pose Pose;
+  using Robot = ROBOT;
+  using Pose = typename Robot::Pose;
 
  private:
   // typedefs
@@ -39,16 +39,16 @@ class ObstaclePlanarSDFFactor
   double epsilon_;  // distance from object that start non-zero cost
 
   // arm: planar one, all alpha = 0
-  const Robot& robot_;
+  Robot robot_;
 
   // signed distance field from matlab
-  const PlanarSDF& sdf_;
+  PlanarSDF sdf_;
 
  public:
   /// shorthand for a smart pointer to a factor
   typedef boost::shared_ptr<This> shared_ptr;
 
-  /* Default constructor */
+  /** Default constructor */
   ObstaclePlanarSDFFactor() {}
 
   /**

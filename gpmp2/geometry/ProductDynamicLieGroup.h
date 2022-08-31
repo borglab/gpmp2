@@ -43,7 +43,7 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
 
   /// @name Group
   /// @{
-  static ProductDynamicLieGroup identity() {
+  static ProductDynamicLieGroup Identity() {
     throw std::runtime_error(
         "[ProductDynamicLieGroup] ERROR: no static identity implemented");
     return ProductDynamicLieGroup();
