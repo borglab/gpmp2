@@ -49,7 +49,11 @@ class ObstaclePlanarSDFFactor
   typedef boost::shared_ptr<This> shared_ptr;
 
   /** Default constructor */
-  ObstaclePlanarSDFFactor() : robot_(Robot()), sdf_(PlanarSDF()) {}
+  ObstaclePlanarSDFFactor() {
+    // Initialize here to avoid temporary object error
+    robot_ = Robot();
+    sdf_ = PlanarSDF();
+  }
 
   /**
    * Constructor
