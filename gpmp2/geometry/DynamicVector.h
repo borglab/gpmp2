@@ -51,7 +51,7 @@ class GPMP2_EXPORT DynamicVector {
   size_t dim() const { return dim_; }
 
   // no static identity implemented
-  static DynamicVector identity() {
+  static DynamicVector Identity() {
     throw std::runtime_error(
         "[DynamicVector] ERROR: no static identity implemented");
     return DynamicVector();

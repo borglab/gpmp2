@@ -26,7 +26,7 @@ struct DynamicLieGroupTraits {
   /// @name Group
   /// @{
   typedef multiplicative_group_tag group_flavor;
-  static Class Identity() { return Class::identity(); }
+  static Class Identity() { return Class::Identity(); }
   /// @}
 
   /// @name Manifold
