@@ -26,7 +26,7 @@ Pose2MobileVetLinArm::Pose2MobileVetLinArm(const Arm& arm,
       reverse_linact_(reverse_linact),
       arm_(arm) {
   // check arm base pose, warn if non-zero
-  if (!arm_.base_pose().equals(Pose3::identity(), 1e-6))
+  if (!arm_.base_pose().equals(Pose3::Identity(), 1e-6))
     cout << "[Pose2MobileArm] WARNING: Arm has non-zero base pose, this base "
             "pose will be override. "
             "Set the base_T_torso and torso_T_arm in Pose2MobileArm."
