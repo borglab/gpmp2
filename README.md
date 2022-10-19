@@ -1,6 +1,6 @@
 # GPMP2
 
-This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) algorithm described in [Motion Planning as Probabilistic Inference using Gaussian Processes and Factor Graphs](http://www.cc.gatech.edu/~bboots3/files/GPMP2.pdf) (RSS 2016). The core library is developed in C++ language with an optional Python 2.7 toolbox. GPMP2 was started at the Georgia Tech Robot Learning Lab, see [THANKS](THANKS.md) for contributors.
+This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) algorithm described in [Motion Planning as Probabilistic Inference using Gaussian Processes and Factor Graphs](http://www.cc.gatech.edu/~bboots3/files/GPMP2.pdf) (RSS 2016). The core library is developed in C++ language with optional Python and MATLAB toolboxes. GPMP2 was started at the Georgia Tech Robot Learning Lab, see [THANKS](THANKS.md) for contributors.
 
 
 ## Prerequisites
@@ -18,8 +18,8 @@ This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) a
   git clone https://github.com/borglab/gtsam.git
   cd gtsam
   mkdir build && cd build
-  cmake ..
-  make -j4 check  # optional, run unit tests
+  cmake -DGTSAM_ALLOW_DEPRECATED_SINCE_V42:=OFF .. # disable deprecated functionality for compatibility
+  make -j4 check # optional, run unit tests  
   sudo make install
   ```
 
@@ -32,7 +32,7 @@ This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) a
 
 - Install gpmp2.
   ```bash
-  git clone https://github.com/gtrll/gpmp2.git
+  git clone https://github.com/borglab/gpmp2.git
   cd gpmp2 && mkdir build && cd build
   cmake ..
   make -j4 check  # optional, run unit tests
@@ -43,14 +43,14 @@ This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) a
 
 - [Optional] Setup virtual environment.
   ```bash
-  conda create -n gpmp2 pip python=2.7
+  conda create -n gpmp2 pip python=3.6
   conda activate gpmp2
   pip install cython numpy scipy matplotlib
   ```
 
 - Install gpmp2.
   ```bash
-  git clone https://github.com/gtrll/gpmp2.git
+  git clone https://github.com/borglab/gpmp2.git
   cd gpmp2 && mkdir build && cd build
   cmake -DGPMP2_BUILD_PYTHON_TOOLBOX:=ON ..
   make -j8 # build
@@ -64,14 +64,19 @@ At this point, you should be able to start a Python interpreter and load `gpmp2`
 We clone, build and install `gpmp2` as usual, making sure to set the `GPMP2_BUILD_MATLAB_TOOLBOX` cmake flag.
 
   ```bash
-  git clone https://github.com/gtrll/gpmp2.git
+  git clone https://github.com/borglab/gpmp2.git
   cd gpmp2 && mkdir build && cd build
   cmake -DGPMP2_BUILD_MATLAB_TOOLBOX:=ON ..
   make -j8 # build
   sudo make install
   ```
 
-Start matlab and load the toolbox via `addpath('/usr/local/gpmp2_toolbox')`. You should now be able to run any of the scripts in the `matlab/gpmp2_examples` directory.
+Start matlab and load the toolboxes be entering the following commands window:
+```
+addpath('/usr/local/gtsam_toolbox')
+addpath('/usr/local/gpmp2_toolbox')
+```
+You should now be able to run any of the scripts in the `matlab/gpmp2_examples` directory.
 
 ## Citing
 
