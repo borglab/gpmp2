@@ -113,7 +113,7 @@ class GaussianProcessPriorLie
   void print(const std::string& s = "",
              const gtsam::KeyFormatter& keyFormatter =
                  gtsam::DefaultKeyFormatter) const {
-    std::cout << s << "4-way Gaussian Process Facto on Lie<" << dof_ << ">"
+    std::cout << s << "4-way Gaussian Process Factor on Lie<" << dof_ << ">"
               << std::endl;
     Base::print("", keyFormatter);
   }

@@ -93,7 +93,7 @@ class GaussianProcessPriorLinear
     return calcPhi(dof_, delta_t_) * x1 - x2;
   }
 
-  /** demensions */
+  /** dimensions */
   size_t dim() const { return dof_; }
 
   /** number of variables attached to this factor */

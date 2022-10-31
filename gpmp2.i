@@ -72,6 +72,40 @@ class GaussianProcessPriorLinear : gtsam::NoiseModelFactor {
   void serialize() const;
 };
 
+#include <gpmp2/gp/GPPriorLTI.h>
+// template<gtsam::Vector, gtsam::Vector, gtsam::Vector, gtsam::Vector>
+class GPPriorLTI : gtsam::NoiseModelFactor {
+  GPPriorLTI(size_t key1, size_t key2, size_t key3, size_t key4, size_t key5,
+                             double delta,
+                             const gtsam::noiseModel::Base* Qc_model);
+  // Vector evaluateError(Vector pose) const;
+  Vector evaluateError(const Pose2& pose1, const Vector& vel1,
+                       const Pose2& pose2, const Vector& vel2, const Vector& control);
+  // enabling serialization functionality
+  void serialize() const;
+};
+
+#include <gpmp2/gp/GPPriorLTILinear.h>
+// template<gtsam::Vector, gtsam::Vector, gtsam::Vector, gtsam::Vector>
+class GPPriorLTILinear : gtsam::NoiseModelFactor {
+  GPPriorLTILinear(size_t key1, size_t key2, size_t key3, size_t key4, size_t key5,
+                             double delta,
+                             const gtsam::noiseModel::Base* Qc_model);
+  // Vector evaluateError(Vector pose) const;
+  Vector evaluateError(const Vector& pose1, const Vector& vel1,
+                       const Vector& pose2, const Vector& vel2, const Vector& control);
+  // enabling serialization functionality
+  void serialize() const;
+};
+
+#include <gpmp2/gp/GaussianProcessPriorLieLTIPose2.h>
+
+class GaussianProcessPriorLieLTIPose2 : gtsam::NoiseModelFactor {
+  GaussianProcessPriorLieLTIPose2(size_t key1, size_t key2, size_t key3, size_t key4, size_t key5, 
+                            double delta,
+                            const gtsam::noiseModel::Base* Qc_model);
+};
+
 #include <gpmp2/gp/GaussianProcessPriorPose2.h>
 
 class GaussianProcessPriorPose2 : gtsam::NoiseModelFactor {
@@ -415,6 +449,13 @@ virtual class GaussianPriorWorkspacePoseArm : gtsam::NoiseModelFactor {
 ////////////////////////////////////////////////////////////////////////////////
 // dynamics
 ////////////////////////////////////////////////////////////////////////////////
+
+// dynamics factor Pose2
+#include <gpmp2/dynamics/SE3PlanarFactorPose3nPose2.h>
+
+virtual class SE3PlanarFactorPose3nPose2 : gtsam::NoiseModelFactor {
+  SE3PlanarFactorPose3nPose2(size_t pose3Key, size_t pose2Key, double cost_sigma);
+};
 
 // dynamics factor Pose2
 #include <gpmp2/dynamics/VehicleDynamicsFactorPose2.h>
