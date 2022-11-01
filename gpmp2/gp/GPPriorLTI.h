@@ -66,7 +66,7 @@ public:
     const gtsam::Rot2& R1 = pose1.rotation();
     const gtsam::Rot2& R2 = pose2.rotation();
 
-    // state vector
+    // state vectors
     gtsam::Vector x1 = gtsam::Vector(2 * dof_);
     x1(0) = pose1.x();
     x1(1) = pose1.y();
@@ -74,10 +74,7 @@ public:
     x1(3) = vel1(0);
     x1(4) = vel1(1);
     x1(5) = vel1(2);
-    // std::cout << pose1.x()<< pose1.y()<<pose1.theta()<<vel1 << std::endl;
-    // std::cout << "pose1: "<< pose1.x()<<", "<< pose1.y()<<", "<<
-    // pose1.theta() << std::endl; std::cout << "vel1: " << vel1 << std::endl;
-    // std::cout << "x1: "<< x1 << std::endl;
+
     gtsam::Vector x2 = gtsam::Vector(2 * dof_);
     x2(0) = pose2.x();
     x2(1) = pose2.y();
@@ -85,7 +82,6 @@ public:
     x2(3) = vel2(0);
     x2(4) = vel2(1);
     x2(5) = vel2(2);
-    // std::cout << "x2: "<< x2 << std::endl;
 
     // Control matrix
     gtsam::Matrix B =
