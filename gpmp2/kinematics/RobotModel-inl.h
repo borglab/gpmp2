@@ -12,14 +12,14 @@ namespace gpmp2 {
 template <class FK>
 void RobotModel<FK>::sphereCenters(
     const Pose& jp, std::vector<gtsam::Point3>& sph_centers,
-    std::optional<std::vector<gtsam::Matrix>> J_point_conf) const {
+    gtsam::OptionalMatrixVecType J_point_conf) const {
   // apply fk
   std::vector<gtsam::Pose3> link_poses;
   std::vector<gtsam::Matrix> J_pose_jp;
   if (J_point_conf)
-    fk_model_.forwardKinematics(jp, {}, link_poses, {}, J_pose_jp);
+    fk_model_.forwardKinematics(jp, {}, link_poses, nullptr, &J_pose_jp);
   else
-    fk_model_.forwardKinematics(jp, {}, link_poses, {});
+    fk_model_.forwardKinematics(jp, {}, link_poses, nullptr);
 
   // convert to sphere centers
   sph_centers.resize(nr_body_spheres());
@@ -46,14 +46,14 @@ void RobotModel<FK>::sphereCenters(
 template <class FK>
 gtsam::Point3 RobotModel<FK>::sphereCenter(
     size_t sph_idx, const Pose& jp,
-    std::optional<gtsam::Matrix> J_point_conf) const {
+    gtsam::OptionalMatrixType J_point_conf) const {
   // apply fk
   std::vector<gtsam::Pose3> link_poses;
   std::vector<gtsam::Matrix> J_pose_jp;
   if (J_point_conf)
-    fk_model_.forwardKinematics(jp, {}, link_poses, {}, J_pose_jp);
+    fk_model_.forwardKinematics(jp, {}, link_poses, nullptr, &J_pose_jp);
   else
-    fk_model_.forwardKinematics(jp, {}, link_poses, {});
+    fk_model_.forwardKinematics(jp, {}, link_poses, nullptr);
 
   gtsam::Point3 sph_center;
   if (J_point_conf) {

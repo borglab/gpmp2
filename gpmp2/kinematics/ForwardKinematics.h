@@ -10,6 +10,7 @@
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Vector.h>
 #include <gtsam/geometry/Pose3.h>
+#include <gtsam/nonlinear/NonlinearFactor.h>
 
 #include <vector>
 
@@ -56,10 +57,10 @@ class ForwardKinematics {
   virtual void forwardKinematics(
       const Pose& jp, std::optional<const Velocity> jv,
       std::vector<gtsam::Pose3>& jpx,
-      std::optional<std::vector<gtsam::Vector3>> jvx,
-      std::optional<std::vector<gtsam::Matrix>> J_jpx_jp = {},
-      std::optional<std::vector<gtsam::Matrix>> J_jvx_jp = {},
-      std::optional<std::vector<gtsam::Matrix>> J_jvx_jv = {}) const = 0;
+      std::vector<gtsam::Vector3>* jvx = nullptr,
+      gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+      gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const = 0;
 
   /**
    * Matrix wrapper for forwardKinematics, mainly used by matlab

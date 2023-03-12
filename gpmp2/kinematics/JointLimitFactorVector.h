@@ -20,11 +20,11 @@ namespace gpmp2 {
 /**
  * unary factor to apply joint limit cost to vector configuration space
  */
-class JointLimitFactorVector : public gtsam::NoiseModelFactor1<gtsam::Vector> {
+class JointLimitFactorVector : public gtsam::NoiseModelFactorN<gtsam::Vector> {
  private:
   // typedefs
   typedef JointLimitFactorVector This;
-  typedef gtsam::NoiseModelFactor1<gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gtsam::Vector> Base;
 
   // joint limit value
   gtsam::Vector down_limit_, up_limit_;
@@ -58,11 +58,12 @@ class JointLimitFactorVector : public gtsam::NoiseModelFactor1<gtsam::Vector> {
           "[JointLimitFactorVector] ERROR: limit vector dim does not fit.");
   }
 
-  virtual ~JointLimitFactorVector() {}
+  ~JointLimitFactorVector() {}
 
   /// error function
-  gtsam::Vector evaluateError(const gtsam::Vector& conf,
-                              std::optional<gtsam::Matrix> H1 = {}) const {
+  gtsam::Vector evaluateError(
+      const gtsam::Vector& conf,
+      gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
     if (H1) *H1 = Matrix::Zero(conf.size(), conf.size());
     Vector err(conf.size());
@@ -70,7 +71,7 @@ class JointLimitFactorVector : public gtsam::NoiseModelFactor1<gtsam::Vector> {
       if (H1) {
         double Hp;
         err(i) = hingeLossJointLimitCost(conf(i), down_limit_(i), up_limit_(i),
-                                         limit_thresh_(i), Hp);
+                                         limit_thresh_(i), &Hp);
         (*H1)(i, i) = Hp;
       } else {
         err(i) = hingeLossJointLimitCost(conf(i), down_limit_(i), up_limit_(i),
@@ -81,7 +82,7 @@ class JointLimitFactorVector : public gtsam::NoiseModelFactor1<gtsam::Vector> {
   }
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
     return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }

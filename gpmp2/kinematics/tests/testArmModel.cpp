@@ -58,7 +58,7 @@ TEST(ArmModel, 2linkPlanarExamples) {
   sph_centers_exp.push_back(Point3(3.5, 1, -1));
   sph_centers_exp.push_back(Point3(4, 1, -1));
 
-  arm.sphereCenters(q, sph_centers_act, J_center_q_act);
+  arm.sphereCenters(q, sph_centers_act, &J_center_q_act);
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
@@ -67,7 +67,7 @@ TEST(ArmModel, 2linkPlanarExamples) {
             std::bind(&sph_pos_wrapper_batch, arm, std::placeholders::_1, i)),
         q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
-    EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, Jcq_act)));
+    EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, &Jcq_act)));
     Jcq_exp = numericalDerivative11(
         std::function<Point3(const Vector2&)>(
             std::bind(&sph_pos_wrapper_single, arm, std::placeholders::_1, i)),
@@ -84,7 +84,7 @@ TEST(ArmModel, 2linkPlanarExamples) {
   sph_centers_exp.push_back(Point3(2.707106781186548, 2.207106781186548, -1));
   sph_centers_exp.push_back(Point3(2.707106781186548, 2.707106781186548, -1));
 
-  arm.sphereCenters(q, sph_centers_act, J_center_q_act);
+  arm.sphereCenters(q, sph_centers_act, &J_center_q_act);
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
@@ -93,7 +93,7 @@ TEST(ArmModel, 2linkPlanarExamples) {
             std::bind(&sph_pos_wrapper_batch, arm, std::placeholders::_1, i)),
         q, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
-    EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, Jcq_act)));
+    EXPECT(assert_equal(sph_centers_exp[i], arm.sphereCenter(i, q, &Jcq_act)));
     Jcq_exp = numericalDerivative11(
         std::function<Point3(const Vector2&)>(
             std::bind(&sph_pos_wrapper_single, arm, std::placeholders::_1, i)),

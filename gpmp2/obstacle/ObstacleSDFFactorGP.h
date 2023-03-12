@@ -24,7 +24,7 @@ namespace gpmp2 {
  */
 template <class ROBOT, class GPINTER>
 class ObstacleSDFFactorGP
-    : public gtsam::NoiseModelFactor4<
+    : public gtsam::NoiseModelFactorN<
           typename ROBOT::Pose, typename ROBOT::Velocity, typename ROBOT::Pose,
           typename ROBOT::Velocity> {
  public:
@@ -36,7 +36,7 @@ class ObstacleSDFFactorGP
  private:
   // typedefs
   typedef ObstacleSDFFactorGP This;
-  typedef gtsam::NoiseModelFactor4<Pose, Velocity, Pose, Velocity> Base;
+  typedef gtsam::NoiseModelFactorN<Pose, Velocity, Pose, Velocity> Base;
   typedef GPINTER GPBase;
 
   // GP interpolator
@@ -82,21 +82,20 @@ class ObstacleSDFFactorGP
         robot_(robot),
         sdf_(sdf) {}
 
-  virtual ~ObstacleSDFFactorGP() {}
+  ~ObstacleSDFFactorGP() {}
 
   /// error function
   /// numerical jacobians / analytic jacobians from cost function
-  gtsam::Vector evaluateError(const typename Robot::Pose& conf1,
-                              const typename Robot::Velocity& vel1,
-                              const typename Robot::Pose& conf2,
-                              const typename Robot::Velocity& vel2,
-                              std::optional<gtsam::Matrix> H1 = {},
-                              std::optional<gtsam::Matrix> H2 = {},
-                              std::optional<gtsam::Matrix> H3 = {},
-                              std::optional<gtsam::Matrix> H4 = {}) const;
+  gtsam::Vector evaluateError(
+      const typename Robot::Pose& conf1, const typename Robot::Velocity& vel1,
+      const typename Robot::Pose& conf2, const typename Robot::Velocity& vel2,
+      gtsam::OptionalMatrixType H1 = nullptr,
+      gtsam::OptionalMatrixType H2 = nullptr,
+      gtsam::OptionalMatrixType H3 = nullptr,
+      gtsam::OptionalMatrixType H4 = nullptr) const override;
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
     return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }

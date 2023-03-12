@@ -12,6 +12,7 @@
 #include <gtsam/nonlinear/NonlinearFactor.h>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/serialization/base_object.hpp>
 
 namespace gpmp2 {
 
@@ -19,17 +20,18 @@ namespace gpmp2 {
  * 4-way factor for Gaussian Process prior factor, linear version
  */
 class GaussianProcessPriorLinear
-    : public gtsam::NoiseModelFactor4<gtsam::Vector, gtsam::Vector,
+    : public gtsam::NoiseModelFactorN<gtsam::Vector, gtsam::Vector,
                                       gtsam::Vector, gtsam::Vector> {
  private:
   size_t dof_;
   double delta_t_;
 
- public:
-  typedef GaussianProcessPriorLinear This;
   typedef gtsam::NoiseModelFactorN<gtsam::Vector, gtsam::Vector, gtsam::Vector,
                                    gtsam::Vector>
       Base;
+
+ public:
+  typedef GaussianProcessPriorLinear This;
 
   /* Default constructor only for serialization */
   GaussianProcessPriorLinear() {}
@@ -46,23 +48,22 @@ class GaussianProcessPriorLinear
         dof_(Qc_model->dim()),
         delta_t_(delta_t) {}
 
-  virtual ~GaussianProcessPriorLinear() {}
+  ~GaussianProcessPriorLinear() {}
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
     return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
   /// factor error function
-  gtsam::Vector evaluateError(const gtsam::Vector& pose1,
-                              const gtsam::Vector& vel1,
-                              const gtsam::Vector& pose2,
-                              const gtsam::Vector& vel2,
-                              std::optional<gtsam::Matrix> H1 = {},
-                              std::optional<gtsam::Matrix> H2 = {},
-                              std::optional<gtsam::Matrix> H3 = {},
-                              std::optional<gtsam::Matrix> H4 = {}) const {
+  gtsam::Vector evaluateError(
+      const gtsam::Vector& pose1, const gtsam::Vector& vel1,
+      const gtsam::Vector& pose2, const gtsam::Vector& vel2,
+      gtsam::OptionalMatrixType H1 = nullptr,
+      gtsam::OptionalMatrixType H2 = nullptr,
+      gtsam::OptionalMatrixType H3 = nullptr,
+      gtsam::OptionalMatrixType H4 = nullptr) const override {
     // using namespace gtsam;
 
     // state vector
@@ -101,8 +102,8 @@ class GaussianProcessPriorLinear
   size_t size() const { return 4; }
 
   /** equals specialized to this factor */
-  virtual bool equals(const gtsam::NonlinearFactor& expected,
-                      double tol = 1e-9) const {
+  bool equals(const gtsam::NonlinearFactor& expected,
+              double tol = 1e-9) const override {
     const This* e = dynamic_cast<const This*>(&expected);
     return e != NULL && Base::equals(*e, tol) &&
            fabs(this->delta_t_ - e->delta_t_) < tol;

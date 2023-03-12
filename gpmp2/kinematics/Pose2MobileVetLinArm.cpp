@@ -37,10 +37,9 @@ Pose2MobileVetLinArm::Pose2MobileVetLinArm(const Arm& arm,
 void Pose2MobileVetLinArm::forwardKinematics(
     const Pose2Vector& p, std::optional<const gtsam::Vector> v,
     std::vector<gtsam::Pose3>& px,
-    std::optional<std::vector<gtsam::Vector3>> vx,
-    std::optional<std::vector<gtsam::Matrix>> J_px_p,
-    std::optional<std::vector<gtsam::Matrix>> J_vx_p,
-    std::optional<std::vector<gtsam::Matrix>> J_vx_v) const {
+    std::vector<gtsam::Vector3>* vx,
+    gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
+    gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v) throw runtime_error("[Pose2MobileArm] TODO: velocity not implemented");
 
   if (!v && (vx || J_vx_p || J_vx_v))
@@ -88,9 +87,8 @@ void Pose2MobileVetLinArm::forwardKinematics(
   vector<Matrix> Jarm_jpx_jp;
 
   arm_.updateBasePose(arm_base);
-  arm_.forwardKinematics(
-      p.configuration().tail(arm_.dof()), {}, armjpx, {},
-      J_px_p ? std::optional<vector<Matrix>>(Jarm_jpx_jp) : std::nullopt);
+  arm_.forwardKinematics(p.configuration().tail(arm_.dof()), {}, armjpx, {},
+                         J_px_p ? &Jarm_jpx_jp : nullptr);
 
   for (size_t i = 0; i < arm_.dof(); i++) {
     px[i + 2] = armjpx[i];

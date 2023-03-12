@@ -13,6 +13,7 @@
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/MatrixSerialization.h>
 #include <gtsam/base/Vector.h>
+#include <gtsam/nonlinear/NonlinearFactor.h>
 
 #include <iostream>
 
@@ -55,8 +56,8 @@ class GaussianProcessInterpolatorLie {
     Psi_ = calcPsi(Qc_, delta_t_, tau_);
   }
 
-  /** Virtual destructor */
-  virtual ~GaussianProcessInterpolatorLie() {}
+  /** Destructor */
+  ~GaussianProcessInterpolatorLie() {}
 
   /// interpolate pose with Jacobians
   T interpolatePose(
@@ -106,12 +107,15 @@ class GaussianProcessInterpolatorLie {
   }
 
   /// update jacobian based on interpolated jacobians
-  static void updatePoseJacobians(
-      const gtsam::Matrix& Hpose, const gtsam::Matrix& Hint1,
-      const gtsam::Matrix& Hint2, const gtsam::Matrix& Hint3,
-      const gtsam::Matrix& Hint4, std::optional<gtsam::Matrix> H1,
-      std::optional<gtsam::Matrix> H2, std::optional<gtsam::Matrix> H3,
-      std::optional<gtsam::Matrix> H4) {
+  static void updatePoseJacobians(const gtsam::Matrix& Hpose,
+                                  const gtsam::Matrix& Hint1,
+                                  const gtsam::Matrix& Hint2,
+                                  const gtsam::Matrix& Hint3,
+                                  const gtsam::Matrix& Hint4,
+                                  gtsam::OptionalMatrixType H1 = nullptr,
+                                  gtsam::OptionalMatrixType H2 = nullptr,
+                                  gtsam::OptionalMatrixType H3 = nullptr,
+                                  gtsam::OptionalMatrixType H4 = nullptr) {
     if (H1) *H1 = Hpose * Hint1;
     if (H2) *H2 = Hpose * Hint2;
     if (H3) *H3 = Hpose * Hint3;
@@ -161,7 +165,7 @@ class GaussianProcessInterpolatorLie {
    */
 
   /** equals specialized to this factor */
-  virtual bool equals(const This& expected, double tol = 1e-9) const {
+  bool equals(const This& expected, double tol = 1e-9) const {
     return fabs(this->delta_t_ - expected.delta_t_) < tol &&
            fabs(this->tau_ - expected.tau_) < tol &&
            gtsam::equal_with_abs_tol(this->Qc_, expected.Qc_, tol) &&

@@ -24,11 +24,11 @@ namespace gpmp2 {
  */
 template <typename T>
 class GaussianProcessPriorLie
-    : public gtsam::NoiseModelFactor4<T, gtsam::Vector, T, gtsam::Vector> {
+    : public gtsam::NoiseModelFactorN<T, gtsam::Vector, T, gtsam::Vector> {
  private:
   GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
   typedef GaussianProcessPriorLie<T> This;
-  typedef gtsam::NoiseModelFactor4<T, gtsam::Vector, T, gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<T, gtsam::Vector, T, gtsam::Vector> Base;
 
   size_t dof_;
   double delta_t_;
@@ -48,21 +48,21 @@ class GaussianProcessPriorLie
         dof_(Qc_model->dim()),
         delta_t_(delta_t) {}
 
-  virtual ~GaussianProcessPriorLie() {}
+  ~GaussianProcessPriorLie() {}
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
     return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
   /// factor error function
-  gtsam::Vector evaluateError(const T& pose1, const gtsam::Vector& vel1,
-                              const T& pose2, const gtsam::Vector& vel2,
-                              std::optional<gtsam::Matrix> H1 = {},
-                              std::optional<gtsam::Matrix> H2 = {},
-                              std::optional<gtsam::Matrix> H3 = {},
-                              std::optional<gtsam::Matrix> H4 = {}) const {
+  gtsam::Vector evaluateError(
+      const T& pose1, const gtsam::Vector& vel1, const T& pose2,
+      const gtsam::Vector& vel2, gtsam::OptionalMatrixType H1 = nullptr,
+      gtsam::OptionalMatrixType H2 = nullptr,
+      gtsam::OptionalMatrixType H3 = nullptr,
+      gtsam::OptionalMatrixType H4 = nullptr) const override {
     using namespace gtsam;
 
     Matrix Hinv, Hcomp1, Hcomp2, Hlogmap;
@@ -101,8 +101,8 @@ class GaussianProcessPriorLie
   size_t size() const { return 4; }
 
   /** equals specialized to this factor */
-  virtual bool equals(const gtsam::NonlinearFactor& expected,
-                      double tol = 1e-9) const {
+  bool equals(const gtsam::NonlinearFactor& expected,
+              double tol = 1e-9) const override {
     const This* e = dynamic_cast<const This*>(&expected);
     return e != NULL && Base::equals(*e, tol) &&
            fabs(this->delta_t_ - e->delta_t_) < tol;

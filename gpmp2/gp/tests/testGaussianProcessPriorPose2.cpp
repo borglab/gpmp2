@@ -41,8 +41,8 @@ TEST(GaussianProcessPriorPose2, Factor) {
   p2 = Pose2(0, 0, 0);
   v1 = (Vector3() << 0, 0, 0).finished();
   v2 = (Vector3() << 0, 0, 0).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(6) << 0, 0, 0, 0, 0, 0).finished();
   expectH1 =
       numericalDerivative11(std::function<Vector(const Pose2&)>(std::bind(
@@ -76,8 +76,8 @@ TEST(GaussianProcessPriorPose2, Factor) {
   p2 = Pose2(0.1, 0, 0);
   v1 = (Vector3() << 1, 0, 0).finished();
   v2 = (Vector3() << 1, 0, 0).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(6) << 0, 0, 0, 0, 0, 0).finished();
   expectH1 =
       numericalDerivative11(std::function<Vector(const Pose2&)>(std::bind(
@@ -111,8 +111,8 @@ TEST(GaussianProcessPriorPose2, Factor) {
   p2 = Pose2(0, 0, 0.1);
   v1 = (Vector3() << 0, 0, 1).finished();
   v2 = (Vector3() << 0, 0, 1).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(6) << 0, 0, 0, 0, 0, 0).finished();
   expectH1 =
       numericalDerivative11(std::function<Vector(const Pose2&)>(std::bind(
@@ -146,8 +146,8 @@ TEST(GaussianProcessPriorPose2, Factor) {
   p2 = Pose2(2.4, -2.5, 3.7);
   v1 = (Vector3() << 5, 4, 9).finished();
   v2 = (Vector3() << 0, 6, 4).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expectH1 =
       numericalDerivative11(std::function<Vector(const Pose2&)>(std::bind(
                                 &GaussianProcessPriorPose2::evaluateError,

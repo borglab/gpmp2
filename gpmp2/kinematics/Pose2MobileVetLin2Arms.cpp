@@ -42,10 +42,9 @@ Pose2MobileVetLin2Arms::Pose2MobileVetLin2Arms(const Arm& arm1, const Arm& arm2,
 void Pose2MobileVetLin2Arms::forwardKinematics(
     const Pose2Vector& p, std::optional<const gtsam::Vector> v,
     std::vector<gtsam::Pose3>& px,
-    std::optional<std::vector<gtsam::Vector3>> vx,
-    std::optional<std::vector<gtsam::Matrix>> J_px_p,
-    std::optional<std::vector<gtsam::Matrix>> J_vx_p,
-    std::optional<std::vector<gtsam::Matrix>> J_vx_v) const {
+    std::vector<gtsam::Vector3>* vx,
+    gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
+    gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v)
     throw runtime_error(
         "[Pose2MobileVetLin2Arms] TODO: velocity not implemented");
@@ -100,13 +99,12 @@ void Pose2MobileVetLin2Arms::forwardKinematics(
   // linear actuator use first, arm1 uses next arm1.dof, then arm2 uses last
   // arm2.dof
   arm1_.updateBasePose(arm1_base);
-  arm1_.forwardKinematics(
-      p.configuration().segment(1, arm1_.dof()), {}, arm1jpx, {},
-      J_px_p ? std::optional<vector<Matrix>>(Jarm1_jpx_jp) : std::nullopt);
+  arm1_.forwardKinematics(p.configuration().segment(1, arm1_.dof()), {},
+                          arm1jpx, {}, J_px_p ? &Jarm1_jpx_jp : nullptr);
   arm2_.updateBasePose(arm2_base);
   arm2_.forwardKinematics(
       p.configuration().segment(1 + arm1_.dof(), arm2_.dof()), {}, arm2jpx, {},
-      J_px_p ? std::optional<vector<Matrix>>(Jarm2_jpx_jp) : std::nullopt);
+      J_px_p ? &Jarm2_jpx_jp : nullptr);
 
   for (size_t i = 0; i < arm1_.dof(); i++) {
     px[i + 2] = arm1jpx[i];

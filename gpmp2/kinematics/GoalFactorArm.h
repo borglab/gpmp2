@@ -21,11 +21,11 @@ namespace gpmp2 {
 /**
  * unary factor connect to the last pose in arm configuration space
  */
-class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
+class GoalFactorArm : public gtsam::NoiseModelFactorN<gtsam::Vector> {
  private:
   // typedefs
   typedef GoalFactorArm This;
-  typedef gtsam::NoiseModelFactor1<gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gtsam::Vector> Base;
 
   // arm
   Arm arm_;
@@ -48,17 +48,18 @@ class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
                 const Arm& arm, const gtsam::Point3& dest_point)
       : Base(cost_model, poseKey), arm_(arm), dest_point_(dest_point) {}
 
-  virtual ~GoalFactorArm() {}
+  ~GoalFactorArm() {}
 
   /// error function
-  gtsam::Vector evaluateError(const gtsam::Vector& conf,
-                              std::optional<gtsam::Matrix> H1 = {}) const {
+  gtsam::Vector evaluateError(
+      const gtsam::Vector& conf,
+      gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
 
     // fk
     std::vector<Pose3> joint_pos;
     std::vector<Matrix> J_jpx_jp;
-    arm_.forwardKinematics(conf, {}, joint_pos, {}, J_jpx_jp);
+    arm_.forwardKinematics(conf, {}, joint_pos, {}, &J_jpx_jp);
 
     if (H1) {
       Matrix36 Hpp;
@@ -72,7 +73,7 @@ class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
   }
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
     return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }

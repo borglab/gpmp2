@@ -39,7 +39,7 @@ TEST(GoalFactorArm, error) {
   q = Vector2(0, 0);
   goal = Point3(2, 0, 0);
   factor = GoalFactorArm(0, cost_model, arm, goal);
-  actual = factor.evaluateError(q, H_act);
+  actual = factor.evaluateError(q, &H_act);
   expect = Vector3(0, 0, 0);
   H_exp =
       numericalDerivative11(std::function<Vector3(const Vector2&)>(
@@ -53,7 +53,7 @@ TEST(GoalFactorArm, error) {
   q = Vector2(M_PI / 4.0, 0);
   goal = Point3(1.414213562373095, 1.414213562373095, 0);
   factor = GoalFactorArm(0, cost_model, arm, goal);
-  actual = factor.evaluateError(q, H_act);
+  actual = factor.evaluateError(q, &H_act);
   expect = Vector3(0, 0, 0);
   H_exp =
       numericalDerivative11(std::function<Vector3(const Vector2&)>(
@@ -67,7 +67,7 @@ TEST(GoalFactorArm, error) {
   q = Vector2(M_PI / 4.0, 0);
   goal = Point3(2, 0, 0);
   factor = GoalFactorArm(0, cost_model, arm, goal);
-  actual = factor.evaluateError(q, H_act);
+  actual = factor.evaluateError(q, &H_act);
   expect = Vector3(-0.585786437626905, 1.414213562373095, 0);
   H_exp =
       numericalDerivative11(std::function<Vector3(const Vector2&)>(

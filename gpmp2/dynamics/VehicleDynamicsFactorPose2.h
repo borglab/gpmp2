@@ -22,11 +22,11 @@ namespace gpmp2 {
  * unary factor for vehicle dynamics
  */
 class VehicleDynamicsFactorPose2
-    : public gtsam::NoiseModelFactor2<gtsam::Pose2, gtsam::Vector> {
+    : public gtsam::NoiseModelFactorN<gtsam::Pose2, gtsam::Vector> {
  private:
   // typedefs
   typedef VehicleDynamicsFactorPose2 This;
-  typedef gtsam::NoiseModelFactor2<gtsam::Pose2, gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gtsam::Pose2, gtsam::Vector> Base;
 
  public:
   /// shorthand for a smart pointer to a factor
@@ -48,10 +48,10 @@ class VehicleDynamicsFactorPose2
 
   /// error function
   /// numerical/analytic Jacobians from cost function
-  gtsam::Vector evaluateError(const gtsam::Pose2& pose,
-                              const gtsam::Vector& vel,
-                              std::optional<gtsam::Matrix> H1 = nullptr,
-                              std::optional<gtsam::Matrix> H2 = nullptr) const {
+  gtsam::Vector evaluateError(
+      const gtsam::Pose2& pose, const gtsam::Vector& vel,
+      gtsam::OptionalMatrixType H1 = nullptr,
+      gtsam::OptionalMatrixType H2 = nullptr) const override {
     using namespace gtsam;
 
     if (H1 || H2) {

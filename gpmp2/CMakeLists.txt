@@ -3,7 +3,7 @@
 # The following variable is the master list of subdirs to add
 set(gpmp2_subdirs 
     geometry
-    gp 
+    gp
     kinematics
     dynamics
     obstacle

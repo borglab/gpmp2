@@ -24,7 +24,7 @@ namespace gpmp2 {
  */
 template <class ROBOT>
 class ObstacleSDFFactor
-    : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
+    : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
  public:
   // typedefs
   typedef ROBOT Robot;
@@ -33,7 +33,7 @@ class ObstacleSDFFactor
  private:
   // typedefs
   typedef ObstacleSDFFactor This;
-  typedef gtsam::NoiseModelFactor1<Pose> Base;
+  typedef gtsam::NoiseModelFactorN<Pose> Base;
 
   // obstacle cost settings
   double epsilon_;  // distance from object that start non-zero cost
@@ -71,8 +71,9 @@ class ObstacleSDFFactor
 
   /// error function
   /// numerical jacobians / analytic jacobians from cost function
-  gtsam::Vector evaluateError(const typename Robot::Pose& conf,
-                              std::optional<gtsam::Matrix> H1 = {}) const;
+  gtsam::Vector evaluateError(
+      const typename Robot::Pose& conf,
+      gtsam::OptionalMatrixType H1 = nullptr) const override;
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {

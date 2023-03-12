@@ -19,16 +19,16 @@ using namespace gpmp2;
 Pose3 fkpose(const Arm& arm, const Vector& jp, const Vector& jv, size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
-  arm.forwardKinematics(jp, jv, pos, vel);
-  return pos[i];
+  arm.forwardKinematics(jp, jv, pos, &vel);
+  return pos.at(i);
 }
 
 Vector3 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
                    size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
-  arm.forwardKinematics(jp, jv, pos, vel);
-  return vel[i];
+  arm.forwardKinematics(jp, jv, pos, &vel);
+  return vel.at(i);
 }
 
 /* ************************************************************************** */
@@ -85,8 +85,8 @@ TEST(Arm, 2linkPlanarExamples) {
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
-  arm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
-                        vJv_act);
+  arm.forwardKinematics(q, qdymc, pvec_act, &vvec_act, &pJp_act, &vJp_act,
+                        &vJv_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
@@ -139,8 +139,8 @@ TEST(Arm, 2linkPlanarExamples) {
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
-  arm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
-                        vJv_act);
+  arm.forwardKinematics(q, qdymc, pvec_act, &vvec_act, &pJp_act, &vJp_act,
+                        &vJv_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
@@ -193,8 +193,8 @@ TEST(Arm, 2linkPlanarExamples) {
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
-  arm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
-                        vJv_act);
+  arm.forwardKinematics(q, qdymc, pvec_act, &vvec_act, &pJp_act, &vJp_act,
+                        &vJv_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
@@ -248,8 +248,8 @@ TEST(Arm, 2linkPlanarExamples) {
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
-  arm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
-                        vJv_act);
+  arm.forwardKinematics(q, qdymc, pvec_act, &vvec_act, &pJp_act, &vJp_act,
+                        &vJv_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
@@ -331,8 +331,8 @@ TEST(Arm, 3link3Dexample) {
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(2))),
       qdot, 1e-6));
 
-  arm.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
-                        vJv_act);
+  arm.forwardKinematics(q, qdymc, pvec_act, &vvec_act, &pJp_act, &vJp_act,
+                        &vJv_act);
   EXPECT(assert_equal(pointvec_exp[0], pvec_act[0].translation(), 1e-3));
   EXPECT(assert_equal(pointvec_exp[1], pvec_act[1].translation(), 1e-3));
   EXPECT(assert_equal(pointvec_exp[2], pvec_act[2].translation(), 1e-3));
@@ -481,10 +481,10 @@ TEST(Arm, WAMexample) {
       qdot, 1e-6));
 
   // full fk with velocity
-  arm.forwardKinematics(q, qdymc, pvec_act1, vvec_act, pJp_act1, vJp_act,
-                        vJv_act);
+  arm.forwardKinematics(q, qdymc, pvec_act1, &vvec_act, &pJp_act1, &vJp_act,
+                        &vJv_act);
   // fk no velocity
-  arm.forwardKinematics(q, {}, pvec_act2, {}, pJp_act2);
+  arm.forwardKinematics(q, {}, pvec_act2, nullptr, &pJp_act2);
 
   EXPECT(assert_equal(pvec_exp[0], pvec_act1[0].translation(), 1e-3));
   EXPECT(assert_equal(pvec_exp[1], pvec_act1[1].translation(), 1e-3));

@@ -49,13 +49,13 @@ class GPMP2_EXPORT PointRobot
    *  @param jvx  robot velocity in work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  void forwardKinematics(
-      const gtsam::Vector& jp, std::optional<const gtsam::Vector> jv,
-      std::vector<gtsam::Pose3>& jpx,
-      std::optional<std::vector<gtsam::Vector3>> jvx,
-      std::optional<std::vector<gtsam::Matrix>> J_jpx_jp = {},
-      std::optional<std::vector<gtsam::Matrix>> J_jvx_jp = {},
-      std::optional<std::vector<gtsam::Matrix>> J_jvx_jv = {}) const;
+  void forwardKinematics(const gtsam::Vector& jp,
+                         std::optional<const gtsam::Vector> jv,
+                         std::vector<gtsam::Pose3>& jpx,
+                         std::vector<gtsam::Vector3>* jvx = nullptr,
+                         gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+                         gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+                         gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
 
 };  // PointRobot
 

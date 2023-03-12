@@ -21,7 +21,7 @@ using namespace gpmp2;
 // fk wrapper
 Pose3 fkpose(const Pose2Mobile2Arms& r, const Pose2Vector& p, size_t i) {
   vector<Pose3> pos;
-  r.forwardKinematics(p, {}, pos, {});
+  r.forwardKinematics(p, {}, pos);
   return pos[i];
 }
 
@@ -75,7 +75,7 @@ TEST(Pose2Mobile2Arms, 2linkPlanarExamples) {
       std::function<Pose3(const Pose2Vector&)>(
           std::bind(&fkpose, marm, std::placeholders::_1, size_t(4))),
       q, 1e-6));
-  marm.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
+  marm.forwardKinematics(q, {}, pvec_act, nullptr, &pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(pvec_exp[2], pvec_act[2], 1e-9));
@@ -121,7 +121,7 @@ TEST(Pose2Mobile2Arms, 2linkPlanarExamples) {
       std::function<Pose3(const Pose2Vector&)>(
           std::bind(&fkpose, marm, std::placeholders::_1, size_t(4))),
       q, 1e-6));
-  marm.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
+  marm.forwardKinematics(q, {}, pvec_act, nullptr, &pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(pvec_exp[2], pvec_act[2], 1e-9));
@@ -162,7 +162,7 @@ TEST(Pose2Mobile2Arms, 2linkPlanarExamples) {
       std::function<Pose3(const Pose2Vector&)>(
           std::bind(&fkpose, marm, std::placeholders::_1, size_t(4))),
       q, 1e-6));
-  marm.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
+  marm.forwardKinematics(q, {}, pvec_act, nullptr, &pJp_act);
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
   EXPECT(assert_equal(pJp_exp[1], pJp_act[1], 1e-6));
   EXPECT(assert_equal(pJp_exp[2], pJp_act[2], 1e-6));

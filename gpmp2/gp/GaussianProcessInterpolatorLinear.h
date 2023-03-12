@@ -10,6 +10,7 @@
 #include <gpmp2/gp/GPutils.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/OptionalJacobian.h>
+#include <gtsam/nonlinear/NonlinearFactor.h>
 
 #include <boost/serialization/array.hpp>
 
@@ -81,12 +82,15 @@ class GaussianProcessInterpolatorLinear {
   }
 
   /// update jacobian based on interpolated jacobians
-  static void updatePoseJacobians(
-      const gtsam::Matrix& Hpose, const gtsam::Matrix& Hint1,
-      const gtsam::Matrix& Hint2, const gtsam::Matrix& Hint3,
-      const gtsam::Matrix& Hint4, std::optional<gtsam::Matrix> H1,
-      std::optional<gtsam::Matrix> H2, std::optional<gtsam::Matrix> H3,
-      std::optional<gtsam::Matrix> H4) {
+  static void updatePoseJacobians(const gtsam::Matrix& Hpose,
+                                  const gtsam::Matrix& Hint1,
+                                  const gtsam::Matrix& Hint2,
+                                  const gtsam::Matrix& Hint3,
+                                  const gtsam::Matrix& Hint4,
+                                  gtsam::OptionalMatrixType H1 = nullptr,
+                                  gtsam::OptionalMatrixType H2 = nullptr,
+                                  gtsam::OptionalMatrixType H3 = nullptr,
+                                  gtsam::OptionalMatrixType H4 = nullptr) {
     if (H1) *H1 = Hpose * Hint1;
     if (H2) *H2 = Hpose * Hint2;
     if (H3) *H3 = Hpose * Hint3;

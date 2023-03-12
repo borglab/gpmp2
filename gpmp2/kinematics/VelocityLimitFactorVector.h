@@ -21,11 +21,11 @@ namespace gpmp2 {
  * unary factor to apply joint limit cost to vector configuration space
  */
 class VelocityLimitFactorVector
-    : public gtsam::NoiseModelFactor1<gtsam::Vector> {
+    : public gtsam::NoiseModelFactorN<gtsam::Vector> {
  private:
   // typedefs
   typedef VelocityLimitFactorVector This;
-  typedef gtsam::NoiseModelFactor1<gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gtsam::Vector> Base;
 
   // joint velocity limit value for each joint
   gtsam::Vector vel_limit_;
@@ -63,8 +63,9 @@ class VelocityLimitFactorVector
   virtual ~VelocityLimitFactorVector() {}
 
   /// error function
-  gtsam::Vector evaluateError(const gtsam::Vector& conf,
-                              std::optional<gtsam::Matrix> H1 = {}) const {
+  gtsam::Vector evaluateError(
+      const gtsam::Vector& conf,
+      gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
     if (H1) *H1 = Matrix::Zero(conf.size(), conf.size());
     Vector err(conf.size());
@@ -72,7 +73,7 @@ class VelocityLimitFactorVector
       if (H1) {
         double Hp;
         err(i) = hingeLossJointLimitCost(conf(i), -vel_limit_(i), vel_limit_(i),
-                                         limit_thresh_(i), Hp);
+                                         limit_thresh_(i), &Hp);
         (*H1)(i, i) = Hp;
       } else {
         err(i) = hingeLossJointLimitCost(conf(i), -vel_limit_(i), vel_limit_(i),

@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace gpmp2 {
 
 /// hinge loss joint limit cost function
 inline double hingeLossJointLimitCost(double p, double down_limit,
                                       double up_limit, double thresh,
-                                      std::optional<double> H_p = {}) {
+                                      double* H_p = nullptr) {
   if (p < down_limit + thresh) {
     if (H_p) *H_p = -1.0;
     return down_limit + thresh - p;

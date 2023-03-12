@@ -22,7 +22,7 @@ namespace gpmp2 {
  * template robot model version
  */
 template <class ROBOT>
-class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
+class SelfCollision : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
  public:
   // typedefs
   typedef ROBOT Robot;
@@ -31,7 +31,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
  private:
   // typedefs
   typedef SelfCollision This;
-  typedef gtsam::NoiseModelFactor1<Pose> Base;
+  typedef gtsam::NoiseModelFactorN<Pose> Base;
 
   /** (N x 4) matrix of parameters
    * rows N : number of self collision checks
@@ -61,8 +61,9 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
   virtual ~SelfCollision() {}
 
   /// error function
-  gtsam::Vector evaluateError(const typename Robot::Pose& conf,
-                              std::optional<gtsam::Matrix> H = {}) const {
+  gtsam::Vector evaluateError(
+      const typename Robot::Pose& conf,
+      gtsam::OptionalMatrixType H = nullptr) const override {
     gtsam::Vector error(data_.rows());
     if (H) {
       *H = gtsam::Matrix::Zero(data_.rows(), robot_.dof());
@@ -72,7 +73,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
     std::vector<gtsam::Point3> sph_centers;
     std::vector<gtsam::Matrix> Hs_sph_conf;
     if (H) {
-      robot_.sphereCenters(conf, sph_centers, Hs_sph_conf);
+      robot_.sphereCenters(conf, sph_centers, &Hs_sph_conf);
     } else {
       robot_.sphereCenters(conf, sph_centers);
     }

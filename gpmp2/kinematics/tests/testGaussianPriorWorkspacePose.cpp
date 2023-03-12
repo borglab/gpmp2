@@ -34,14 +34,14 @@ TEST(GaussianPriorWorkspacePoseArm, error) {
   q = Vector2(M_PI / 4.0, -M_PI / 2);
   des = Pose3();
   GaussianPriorWorkspacePoseArm factor(0, arm, 1, des, cost_model);
-  actual = factor.evaluateError(q, H_act);
+  actual = factor.evaluateError(q, &H_act);
   expect = (Vector(6) << 0.613943126, 1.48218982, -0.613943126, 1.1609828,
             0.706727485, -0.547039678)
                .finished();
   H_exp =
       numericalDerivative11(std::function<Vector(const Vector2&)>(std::bind(
                                 &GaussianPriorWorkspacePoseArm::evaluateError,
-                                factor, std::placeholders::_1, {})),
+                                factor, std::placeholders::_1, nullptr)),
                             q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));

@@ -21,7 +21,7 @@ namespace gpmp2 {
  */
 template <class ROBOT>
 class GaussianPriorWorkspacePose
-    : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
+    : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
  public:
   // typedefs
   typedef ROBOT Robot;
@@ -30,7 +30,7 @@ class GaussianPriorWorkspacePose
  private:
   // typedefs
   typedef GaussianPriorWorkspacePose This;
-  typedef gtsam::NoiseModelFactor1<Pose> Base;
+  typedef gtsam::NoiseModelFactorN<Pose> Base;
 
   const Robot& robot_;     // Robot
   int joint_;              // joint on the robot to be constrained
@@ -52,13 +52,13 @@ class GaussianPriorWorkspacePose
   virtual ~GaussianPriorWorkspacePose() {}
 
   /// factor error function
-  gtsam::Vector evaluateError(const Pose& pose,
-                              std::optional<gtsam::Matrix> H1 = {}) const {
+  gtsam::Vector evaluateError(
+      const Pose& pose, gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
 
     std::vector<Pose3> joint_pos;
     std::vector<Matrix> J_jpx_jp;
-    robot_.fk_model().forwardKinematics(pose, {}, joint_pos, {}, J_jpx_jp);
+    robot_.fk_model().forwardKinematics(pose, {}, joint_pos, {}, &J_jpx_jp);
 
     if (H1) {
       Matrix66 H_ep;

@@ -34,7 +34,7 @@ TEST(JointLimitFactorVector, error) {
 
   // zero
   conf = Vector2(0.0, 0.0);
-  actual = factor.evaluateError(conf, H_act);
+  actual = factor.evaluateError(conf, &H_act);
   expect = Vector2(0.0, 0.0);
   H_exp =
       numericalDerivative11(std::function<Vector2(const Vector2&)>(std::bind(
@@ -46,7 +46,7 @@ TEST(JointLimitFactorVector, error) {
 
   // over down limit
   conf = Vector2(-10.0, -10.0);
-  actual = factor.evaluateError(conf, H_act);
+  actual = factor.evaluateError(conf, &H_act);
   expect = Vector2(7.0, 2.0);
   H_exp =
       numericalDerivative11(std::function<Vector2(const Vector2&)>(std::bind(
@@ -58,7 +58,7 @@ TEST(JointLimitFactorVector, error) {
 
   // over up limit
   conf = Vector2(10.0, 10.0);
-  actual = factor.evaluateError(conf, H_act);
+  actual = factor.evaluateError(conf, &H_act);
   expect = Vector2(7.0, 2.0);
   H_exp =
       numericalDerivative11(std::function<Vector2(const Vector2&)>(std::bind(

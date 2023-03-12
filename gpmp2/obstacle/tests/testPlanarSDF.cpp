@@ -48,8 +48,8 @@ TEST(PlanarSDFutils, test1) {
 
   idx = field.convertPoint2toCell(
       Point2(0.18, -0.17));  // tri-linear interpolation
-  EXPECT_DOUBLES_EQUAL(0.3, std::get<0>(), 1e-9);
-  EXPECT_DOUBLES_EQUAL(3.8, std::get<1>(), 1e-9);
+  EXPECT_DOUBLES_EQUAL(0.3, std::get<0>(idx), 1e-9);
+  EXPECT_DOUBLES_EQUAL(3.8, std::get<1>(idx), 1e-9);
   EXPECT_DOUBLES_EQUAL(1.567372, field.signed_distance(idx), 1e-9)
 
   idx = std::make_tuple(1.0, 2.0);

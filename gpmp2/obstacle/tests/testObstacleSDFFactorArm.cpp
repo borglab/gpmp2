@@ -97,7 +97,7 @@ TEST(ObstacleSDFFactorArm, error) {
 
   // origin zero case
   q = Vector2(0, 0);
-  err_act = factor.evaluateError(q, H1_act);
+  err_act = factor.evaluateError(q, &H1_act);
   sdf_exp = (Vector(4) << 0.1810125, 0.099675, 0.06035, 0.06035).finished();
   err_exp = convertSDFtoErr(sdf_exp, obs_eps + r);
   H1_exp =
@@ -109,7 +109,7 @@ TEST(ObstacleSDFFactorArm, error) {
 
   // 45 deg case
   q = Vector2(M_PI / 4.0, 0);
-  err_act = factor.evaluateError(q, H1_act);
+  err_act = factor.evaluateError(q, &H1_act);
   sdf_exp = (Vector(4) << 0.1810125, 0.095702211510784, 0.01035442302156, 0)
                 .finished();
   err_exp = convertSDFtoErr(sdf_exp, obs_eps + r);

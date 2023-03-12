@@ -30,10 +30,9 @@ Pose2MobileArm::Pose2MobileArm(const Arm& arm, const gtsam::Pose3& base_T_arm)
 void Pose2MobileArm::forwardKinematics(
     const Pose2Vector& p, std::optional<const gtsam::Vector> v,
     std::vector<gtsam::Pose3>& px,
-    std::optional<std::vector<gtsam::Vector3>> vx,
-    std::optional<std::vector<gtsam::Matrix>> J_px_p,
-    std::optional<std::vector<gtsam::Matrix>> J_vx_p,
-    std::optional<std::vector<gtsam::Matrix>> J_vx_v) const {
+    std::vector<gtsam::Vector3>* vx,
+    gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
+    gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v) throw runtime_error("[Pose2MobileArm] TODO: velocity not implemented");
 
   if (!v && (vx || J_vx_p || J_vx_v))
@@ -84,15 +83,12 @@ void Pose2MobileArm::forwardKinematics(
     const Vector varm = v->tail(arm_.dof());
     arm_.forwardKinematics(
         p.configuration(), std::optional<const Vector>(varm), armjpx,
-        vx ? std::optional<vector<Vector3>>(armjvx) : std::nullopt,
-        J_px_p ? std::optional<vector<Matrix>>(Jarm_jpx_jp) : std::nullopt,
-        J_vx_p ? std::optional<vector<Matrix>>(Jarm_jvx_jp) : std::nullopt,
-        J_vx_v ? std::optional<vector<Matrix>>(Jarm_jvx_jv) : std::nullopt);
+        vx ? &armjvx : nullptr, J_px_p ? &Jarm_jpx_jp : nullptr,
+        J_vx_p ? &Jarm_jvx_jp : nullptr, J_vx_v ? &Jarm_jvx_jv : nullptr);
   } else {
-    arm_.forwardKinematics(
-        p.configuration(), {}, armjpx,
-        vx ? std::optional<vector<Vector3>>(armjvx) : std::nullopt,
-        J_px_p ? std::optional<vector<Matrix>>(Jarm_jpx_jp) : std::nullopt);
+    arm_.forwardKinematics(p.configuration(), {}, armjpx,
+                           vx ? &armjvx : nullptr,
+                           J_px_p ? &Jarm_jpx_jp : nullptr);
   }
 
   for (size_t i = 0; i < arm_.dof(); i++) {

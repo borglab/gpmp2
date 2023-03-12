@@ -240,12 +240,12 @@ class GPMP2_EXPORT SignedDistanceField {
   friend class boost::serialization::access;
   template <class Archive>
   void serialize(Archive& ar, const unsigned int /* version */) {
-    // ar& BOOST_SERIALIZATION_NVP(origin_);
-    // ar& BOOST_SERIALIZATION_NVP(field_rows_);
-    // ar& BOOST_SERIALIZATION_NVP(field_cols_);
-    // ar& BOOST_SERIALIZATION_NVP(field_z_);
-    // ar& BOOST_SERIALIZATION_NVP(cell_size_);
-    // ar& BOOST_SERIALIZATION_NVP(data_);
+    ar& BOOST_SERIALIZATION_NVP(origin_);
+    ar& BOOST_SERIALIZATION_NVP(field_rows_);
+    ar& BOOST_SERIALIZATION_NVP(field_cols_);
+    ar& BOOST_SERIALIZATION_NVP(field_z_);
+    ar& BOOST_SERIALIZATION_NVP(cell_size_);
+    ar& BOOST_SERIALIZATION_NVP(data_);
   }
 };
 
