@@ -39,7 +39,7 @@ TEST(GaussianPriorWorkspaceOrientationArm, error) {
   H_exp = numericalDerivative11(
       std::function<Vector3(const Vector2&)>(
           std::bind(&GaussianPriorWorkspaceOrientationArm::evaluateError,
-                    factor, std::placeholders::_1, boost::none)),
+                    factor, std::placeholders::_1, {})),
       q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));

@@ -25,10 +25,10 @@ GTSAM_CONCEPT_LIE_INST(DynamicVector)
 
 /* ************************************************************************** */
 TEST(DynamicVector, Concept) {
-  BOOST_CONCEPT_ASSERT((IsGroup<DynamicVector>));
-  BOOST_CONCEPT_ASSERT((IsManifold<DynamicVector>));
-  BOOST_CONCEPT_ASSERT((IsLieGroup<DynamicVector>));
-  BOOST_CONCEPT_ASSERT((IsVectorSpace<DynamicVector>));
+  GTSAM_CONCEPT_ASSERT((IsGroup<DynamicVector>));
+  GTSAM_CONCEPT_ASSERT((IsManifold<DynamicVector>));
+  GTSAM_CONCEPT_ASSERT((IsLieGroup<DynamicVector>));
+  GTSAM_CONCEPT_ASSERT((IsVectorSpace<DynamicVector>));
 }
 
 /* ************************************************************************** */

@@ -22,9 +22,9 @@ using namespace gpmp2;
 
 /* ************************************************************************** */
 TEST(Pose2Vector, Lie) {
-  BOOST_CONCEPT_ASSERT((IsGroup<Pose2Vector>));
-  BOOST_CONCEPT_ASSERT((IsManifold<Pose2Vector>));
-  BOOST_CONCEPT_ASSERT((IsLieGroup<Pose2Vector>));
+  GTSAM_CONCEPT_ASSERT((IsGroup<Pose2Vector>));
+  GTSAM_CONCEPT_ASSERT((IsManifold<Pose2Vector>));
+  GTSAM_CONCEPT_ASSERT((IsLieGroup<Pose2Vector>));
 }
 
 /* ************************************************************************** */

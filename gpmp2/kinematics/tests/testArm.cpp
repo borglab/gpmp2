@@ -484,7 +484,7 @@ TEST(Arm, WAMexample) {
   arm.forwardKinematics(q, qdymc, pvec_act1, vvec_act, pJp_act1, vJp_act,
                         vJv_act);
   // fk no velocity
-  arm.forwardKinematics(q, boost::none, pvec_act2, boost::none, pJp_act2);
+  arm.forwardKinematics(q, {}, pvec_act2, {}, pJp_act2);
 
   EXPECT(assert_equal(pvec_exp[0], pvec_act1[0].translation(), 1e-3));
   EXPECT(assert_equal(pvec_exp[1], pvec_act1[1].translation(), 1e-3));

@@ -21,7 +21,7 @@ using namespace gpmp2;
 // fk wrapper
 Pose3 fkpose(const Pose2MobileBase& r, const Pose2& p, const Vector& v) {
   vector<Pose3> pos;
-  r.forwardKinematics(p, boost::none, pos, boost::none);
+  r.forwardKinematics(p, {}, pos, {});
   return pos[0];
 }
 
@@ -66,7 +66,7 @@ TEST(Pose2MobileBase, Example) {
   //     std::bind(&fkvelocity, robot, q, std::placeholders::_1)), qdot, 1e-6));
   // robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
-  robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  robot.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   // EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
@@ -96,7 +96,7 @@ TEST(Pose2MobileBase, Example) {
   //     std::bind(&fkvelocity, robot, q, std::placeholders::_1)), qdot, 1e-6));
   // robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
-  robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  robot.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   // EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
@@ -126,7 +126,7 @@ TEST(Pose2MobileBase, Example) {
   //     std::bind(&fkvelocity, robot, q, std::placeholders::_1)), qdot, 1e-6));
   // robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
-  robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  robot.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   // EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
@@ -156,7 +156,7 @@ TEST(Pose2MobileBase, Example) {
   //     std::bind(&fkvelocity, robot, q, std::placeholders::_1)), qdot, 1e-6));
   // robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
-  robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  robot.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   // EXPECT(assert_equal(vvec_exp[0], vvec_act[0], 1e-9));
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
@@ -182,7 +182,7 @@ TEST(Pose2MobileBase, Example) {
   //     std::bind(&fkvelocity, robot, q, std::placeholders::_1)), qdot, 1e-6));
   // robot.forwardKinematics(q, qdymc, pvec_act, vvec_act, pJp_act, vJp_act,
   // vJv_act);
-  robot.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  robot.forwardKinematics(q, {}, pvec_act, {}, pJp_act);
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
   // EXPECT(assert_equal(vJp_exp[0], vJp_act[0], 1e-6));
   // EXPECT(assert_equal(vJv_exp[0], vJv_act[0], 1e-6));

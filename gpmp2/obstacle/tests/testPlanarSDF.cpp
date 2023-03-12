@@ -42,17 +42,17 @@ TEST(PlanarSDFutils, test1) {
   // access
   PlanarSDF::float_index idx;
   idx = field.convertPoint2toCell(Point2(0, 0));
-  EXPECT_DOUBLES_EQUAL(2, idx.get<0>(), 1e-9);
-  EXPECT_DOUBLES_EQUAL(2, idx.get<1>(), 1e-9);
+  EXPECT_DOUBLES_EQUAL(2, std::get<0>(idx), 1e-9);
+  EXPECT_DOUBLES_EQUAL(2, std::get<1>(idx), 1e-9);
   EXPECT_DOUBLES_EQUAL(1, field.signed_distance(idx), 1e-9)
 
   idx = field.convertPoint2toCell(
       Point2(0.18, -0.17));  // tri-linear interpolation
-  EXPECT_DOUBLES_EQUAL(0.3, idx.get<0>(), 1e-9);
-  EXPECT_DOUBLES_EQUAL(3.8, idx.get<1>(), 1e-9);
+  EXPECT_DOUBLES_EQUAL(0.3, std::get<0>(), 1e-9);
+  EXPECT_DOUBLES_EQUAL(3.8, std::get<1>(), 1e-9);
   EXPECT_DOUBLES_EQUAL(1.567372, field.signed_distance(idx), 1e-9)
 
-  idx = boost::make_tuple(1.0, 2.0);
+  idx = std::make_tuple(1.0, 2.0);
   EXPECT(assert_equal(Point2(0.0, -0.1), field.convertCelltoPoint2(idx)));
 
   // gradient
