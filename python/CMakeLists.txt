@@ -42,7 +42,7 @@ pybind_wrap(
   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.tpl
   ${PROJECT_NAME} # libraries to link against
   "${PROJECT_NAME}" # dependencies to build first
-  ON # use boost
+  ON # use boost serialization
 )
 
 set_target_properties(
