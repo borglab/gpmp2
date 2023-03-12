@@ -25,14 +25,14 @@ class GaussianProcessPriorLinear
   size_t dof_;
   double delta_t_;
 
+ public:
   typedef GaussianProcessPriorLinear This;
-  typedef gtsam::NoiseModelFactor4<gtsam::Vector, gtsam::Vector, gtsam::Vector,
+  typedef gtsam::NoiseModelFactorN<gtsam::Vector, gtsam::Vector, gtsam::Vector,
                                    gtsam::Vector>
       Base;
 
- public:
-  GaussianProcessPriorLinear() {
-  } /* Default constructor only for serialization */
+  /* Default constructor only for serialization */
+  GaussianProcessPriorLinear() {}
 
   /// Constructor
   /// @param delta_t is the time between the two states
@@ -50,18 +50,19 @@ class GaussianProcessPriorLinear
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
   /// factor error function
-  gtsam::Vector evaluateError(
-      const gtsam::Vector& pose1, const gtsam::Vector& vel1,
-      const gtsam::Vector& pose2, const gtsam::Vector& vel2,
-      boost::optional<gtsam::Matrix&> H1 = boost::none,
-      boost::optional<gtsam::Matrix&> H2 = boost::none,
-      boost::optional<gtsam::Matrix&> H3 = boost::none,
-      boost::optional<gtsam::Matrix&> H4 = boost::none) const {
+  gtsam::Vector evaluateError(const gtsam::Vector& pose1,
+                              const gtsam::Vector& vel1,
+                              const gtsam::Vector& pose2,
+                              const gtsam::Vector& vel2,
+                              std::optional<gtsam::Matrix> H1 = {},
+                              std::optional<gtsam::Matrix> H2 = {},
+                              std::optional<gtsam::Matrix> H3 = {},
+                              std::optional<gtsam::Matrix> H4 = {}) const {
     // using namespace gtsam;
 
     // state vector

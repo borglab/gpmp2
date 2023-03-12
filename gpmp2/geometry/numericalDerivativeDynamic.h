@@ -23,14 +23,14 @@ template <class Y, class X>
 gtsam::Matrix numericalDerivativeDynamic(const std::function<Y(const X&)> h,
                                          const X& x, double delta = 1e-5) {
   BOOST_STATIC_ASSERT_MSG(
-      (boost::is_base_of<gtsam::manifold_tag,
+      (std::is_base_of<gtsam::manifold_tag,
                          typename gtsam::traits<Y>::structure_category>::value),
       "Template argument Y must be a manifold type.");
   typedef gtsam::traits<Y> TraitsY;
   typedef typename TraitsY::TangentVector TangentY;
 
   BOOST_STATIC_ASSERT_MSG(
-      (boost::is_base_of<gtsam::manifold_tag,
+      (std::is_base_of<gtsam::manifold_tag,
                          typename gtsam::traits<X>::structure_category>::value),
       "Template argument X must be a manifold type.");
   static const int N =

@@ -15,8 +15,7 @@ namespace gpmp2 {
 /* ************************************************************************** */
 template <class ROBOT>
 gtsam::Vector ObstacleSDFFactor<ROBOT>::evaluateError(
-    const typename Robot::Pose& conf,
-    boost::optional<gtsam::Matrix&> H1) const {
+    const typename Robot::Pose& conf, std::optional<gtsam::Matrix> H1) const {
   // if Jacobians used, initialize as zeros
   // size: arm_nr_points_ * DOF
   if (H1) *H1 = Matrix::Zero(robot_.nr_body_spheres(), robot_.dof());

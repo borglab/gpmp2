@@ -46,7 +46,7 @@ class ObstacleSDFFactor
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /* Default constructor */
   ObstacleSDFFactor() {}
@@ -71,13 +71,12 @@ class ObstacleSDFFactor
 
   /// error function
   /// numerical jacobians / analytic jacobians from cost function
-  gtsam::Vector evaluateError(
-      const typename Robot::Pose& conf,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const;
+  gtsam::Vector evaluateError(const typename Robot::Pose& conf,
+                              std::optional<gtsam::Matrix> H1 = {}) const;
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 

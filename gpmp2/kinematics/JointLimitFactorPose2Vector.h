@@ -41,7 +41,7 @@ class JointLimitFactorPose2Vector
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /**
    * Constructor, all limit vector dim = cost_model.dim = pose.configuration.dof
@@ -68,9 +68,8 @@ class JointLimitFactorPose2Vector
   virtual ~JointLimitFactorPose2Vector() {}
 
   /// error function
-  gtsam::Vector evaluateError(
-      const gpmp2::Pose2Vector& pose,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+  gtsam::Vector evaluateError(const gpmp2::Pose2Vector& pose,
+                              std::optional<gtsam::Matrix> H1 = {}) const {
     using namespace gtsam;
     // get configuration
     const gtsam::Vector& conf = pose.configuration();
@@ -97,7 +96,7 @@ class JointLimitFactorPose2Vector
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 

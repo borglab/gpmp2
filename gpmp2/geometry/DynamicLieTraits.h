@@ -39,42 +39,39 @@ struct DynamicLieGroupTraits {
   static int GetDimension(const Class& m) { return m.dim(); }
 
   static TangentVector Local(const Class& origin, const Class& other,
-                             ChartJacobian Horigin = boost::none,
-                             ChartJacobian Hother = boost::none) {
+                             ChartJacobian Horigin = {},
+                             ChartJacobian Hother = {}) {
     return origin.localCoordinates(other, Horigin, Hother);
   }
 
   static Class Retract(const Class& origin, const TangentVector& v,
-                       ChartJacobian Horigin = boost::none,
-                       ChartJacobian Hv = boost::none) {
+                       ChartJacobian Horigin = {}, ChartJacobian Hv = {}) {
     return origin.retract(v, Horigin, Hv);
   }
   /// @}
 
   /// @name Lie Group
   /// @{
-  static TangentVector Logmap(const Class& m, ChartJacobian Hm = boost::none) {
+  static TangentVector Logmap(const Class& m, ChartJacobian Hm = {}) {
     return Class::Logmap(m, Hm);
   }
 
-  static Class Expmap(const TangentVector& v, ChartJacobian Hv = boost::none) {
+  static Class Expmap(const TangentVector& v, ChartJacobian Hv = {}) {
     return Class::Expmap(v, Hv);
   }
 
   static Class Compose(const Class& m1, const Class& m2,  //
-                       ChartJacobian H1 = boost::none,
-                       ChartJacobian H2 = boost::none) {
+                       ChartJacobian H1 = {}, ChartJacobian H2 = {}) {
     return m1.compose(m2, H1, H2);
   }
 
   static Class Between(const Class& m1, const Class& m2,  //
-                       ChartJacobian H1 = boost::none,
-                       ChartJacobian H2 = boost::none) {
+                       ChartJacobian H1 = {}, ChartJacobian H2 = {}) {
     return m1.between(m2, H1, H2);
   }
 
   static Class Inverse(const Class& m,  //
-                       ChartJacobian H = boost::none) {
+                       ChartJacobian H = {}) {
     return m.inverse(H);
   }
   /// @}

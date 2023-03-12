@@ -26,7 +26,7 @@ template <typename T>
 class GaussianProcessPriorLie
     : public gtsam::NoiseModelFactor4<T, gtsam::Vector, T, gtsam::Vector> {
  private:
-  BOOST_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
+  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
   typedef GaussianProcessPriorLie<T> This;
   typedef gtsam::NoiseModelFactor4<T, gtsam::Vector, T, gtsam::Vector> Base;
 
@@ -52,18 +52,17 @@ class GaussianProcessPriorLie
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
   /// factor error function
-  gtsam::Vector evaluateError(
-      const T& pose1, const gtsam::Vector& vel1, const T& pose2,
-      const gtsam::Vector& vel2,
-      boost::optional<gtsam::Matrix&> H1 = boost::none,
-      boost::optional<gtsam::Matrix&> H2 = boost::none,
-      boost::optional<gtsam::Matrix&> H3 = boost::none,
-      boost::optional<gtsam::Matrix&> H4 = boost::none) const {
+  gtsam::Vector evaluateError(const T& pose1, const gtsam::Vector& vel1,
+                              const T& pose2, const gtsam::Vector& vel2,
+                              std::optional<gtsam::Matrix> H1 = {},
+                              std::optional<gtsam::Matrix> H2 = {},
+                              std::optional<gtsam::Matrix> H3 = {},
+                              std::optional<gtsam::Matrix> H4 = {}) const {
     using namespace gtsam;
 
     Matrix Hinv, Hcomp1, Hcomp2, Hlogmap;

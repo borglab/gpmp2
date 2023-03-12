@@ -15,7 +15,7 @@ namespace gpmp2 {
 
 /* ************************************************************************** */
 gtsam::Pose3 computeBasePose3(const gtsam::Pose2& base_pose2,
-                              gtsam::OptionalJacobian<6, 3> J = boost::none) {
+                              gtsam::OptionalJacobian<6, 3> J = {}) {
   if (J) {
     J->setZero();
     const gtsam::Matrix3 Hzrot3 =
@@ -29,9 +29,9 @@ gtsam::Pose3 computeBasePose3(const gtsam::Pose2& base_pose2,
 }
 
 /* ************************************************************************** */
-gtsam::Pose3 computeBaseTransPose3(
-    const gtsam::Pose2& base_pose2, const gtsam::Pose3& base_T_trans,
-    gtsam::OptionalJacobian<6, 3> J = boost::none) {
+gtsam::Pose3 computeBaseTransPose3(const gtsam::Pose2& base_pose2,
+                                   const gtsam::Pose3& base_T_trans,
+                                   gtsam::OptionalJacobian<6, 3> J = {}) {
   if (J) {
     gtsam::Matrix63 Hbasep3;
     const gtsam::Pose3 base_pose3 = computeBasePose3(base_pose2, Hbasep3);
@@ -48,7 +48,7 @@ gtsam::Pose3 computeBaseTransPose3(
 gtsam::Pose3 liftBasePose3(const gtsam::Pose2& base_pose2, double lift,
                            const gtsam::Pose3& base_T_trans,
                            bool reverse_linact,
-                           gtsam::OptionalJacobian<6, 4> J = boost::none) {
+                           gtsam::OptionalJacobian<6, 4> J = {}) {
   // a const pose to lift base
   Pose3 lift_base_pose;
   // Matrix63 Jliftbase_z;

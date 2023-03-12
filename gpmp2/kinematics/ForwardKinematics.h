@@ -54,13 +54,12 @@ class ForwardKinematics {
    *  @param J_jpx_jp et al. optional Jacobians
    **/
   virtual void forwardKinematics(
-      const Pose& jp, boost::optional<const Velocity&> jv,
+      const Pose& jp, std::optional<const Velocity> jv,
       std::vector<gtsam::Pose3>& jpx,
-      boost::optional<std::vector<gtsam::Vector3>&> jvx,
-      boost::optional<std::vector<gtsam::Matrix>&> J_jpx_jp = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_jvx_jp = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_jvx_jv =
-          boost::none) const = 0;
+      std::optional<std::vector<gtsam::Vector3>> jvx,
+      std::optional<std::vector<gtsam::Matrix>> J_jpx_jp = {},
+      std::optional<std::vector<gtsam::Matrix>> J_jvx_jp = {},
+      std::optional<std::vector<gtsam::Matrix>> J_jvx_jv = {}) const = 0;
 
   /**
    * Matrix wrapper for forwardKinematics, mainly used by matlab

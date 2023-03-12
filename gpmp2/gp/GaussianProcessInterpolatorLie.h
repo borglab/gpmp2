@@ -25,7 +25,7 @@ namespace gpmp2 {
 template <typename T>
 class GaussianProcessInterpolatorLie {
  private:
-  BOOST_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
+  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
   typedef GaussianProcessInterpolatorLie<T> This;
 
   size_t dof_;
@@ -62,11 +62,10 @@ class GaussianProcessInterpolatorLie {
   T interpolatePose(
       const T& pose1, const gtsam::Vector& vel1, const T& pose2,
       const gtsam::Vector& vel2,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 =
-          boost::none) const {
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 = {}) const {
     using namespace gtsam;
 
     const Vector r1 = (Vector(2 * dof_) << Vector::Zero(dof_), vel1).finished();
@@ -110,9 +109,9 @@ class GaussianProcessInterpolatorLie {
   static void updatePoseJacobians(
       const gtsam::Matrix& Hpose, const gtsam::Matrix& Hint1,
       const gtsam::Matrix& Hint2, const gtsam::Matrix& Hint3,
-      const gtsam::Matrix& Hint4, boost::optional<gtsam::Matrix&> H1,
-      boost::optional<gtsam::Matrix&> H2, boost::optional<gtsam::Matrix&> H3,
-      boost::optional<gtsam::Matrix&> H4) {
+      const gtsam::Matrix& Hint4, std::optional<gtsam::Matrix> H1,
+      std::optional<gtsam::Matrix> H2, std::optional<gtsam::Matrix> H3,
+      std::optional<gtsam::Matrix> H4) {
     if (H1) *H1 = Hpose * Hint1;
     if (H2) *H2 = Hpose * Hint2;
     if (H3) *H3 = Hpose * Hint3;
@@ -123,11 +122,10 @@ class GaussianProcessInterpolatorLie {
   gtsam::Vector interpolateVelocity(
       const T& pose1, const gtsam::Vector& vel1, const T& pose2,
       const gtsam::Vector& vel2,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 =
-          boost::none) const {
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 = {}) const {
     using namespace gtsam;
 
     const Vector r1 = (Vector(2 * dof_) << Vector::Zero(dof_), vel1).finished();

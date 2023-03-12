@@ -34,7 +34,7 @@ class JointLimitFactorVector : public gtsam::NoiseModelFactor1<gtsam::Vector> {
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /**
    * Constructor
@@ -61,9 +61,8 @@ class JointLimitFactorVector : public gtsam::NoiseModelFactor1<gtsam::Vector> {
   virtual ~JointLimitFactorVector() {}
 
   /// error function
-  gtsam::Vector evaluateError(
-      const gtsam::Vector& conf,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+  gtsam::Vector evaluateError(const gtsam::Vector& conf,
+                              std::optional<gtsam::Matrix> H1 = {}) const {
     using namespace gtsam;
     if (H1) *H1 = Matrix::Zero(conf.size(), conf.size());
     Vector err(conf.size());
@@ -83,7 +82,7 @@ class JointLimitFactorVector : public gtsam::NoiseModelFactor1<gtsam::Vector> {
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 

@@ -28,12 +28,12 @@ Pose2MobileArm::Pose2MobileArm(const Arm& arm, const gtsam::Pose3& base_T_arm)
 
 /* ************************************************************************** */
 void Pose2MobileArm::forwardKinematics(
-    const Pose2Vector& p, boost::optional<const gtsam::Vector&> v,
+    const Pose2Vector& p, std::optional<const gtsam::Vector> v,
     std::vector<gtsam::Pose3>& px,
-    boost::optional<std::vector<gtsam::Vector3>&> vx,
-    boost::optional<std::vector<gtsam::Matrix>&> J_px_p,
-    boost::optional<std::vector<gtsam::Matrix>&> J_vx_p,
-    boost::optional<std::vector<gtsam::Matrix>&> J_vx_v) const {
+    std::optional<std::vector<gtsam::Vector3>> vx,
+    std::optional<std::vector<gtsam::Matrix>> J_px_p,
+    std::optional<std::vector<gtsam::Matrix>> J_vx_p,
+    std::optional<std::vector<gtsam::Matrix>> J_vx_v) const {
   if (v) throw runtime_error("[Pose2MobileArm] TODO: velocity not implemented");
 
   if (!v && (vx || J_vx_p || J_vx_v))
@@ -83,16 +83,16 @@ void Pose2MobileArm::forwardKinematics(
   if (v) {
     const Vector varm = v->tail(arm_.dof());
     arm_.forwardKinematics(
-        p.configuration(), boost::optional<const Vector&>(varm), armjpx,
-        vx ? boost::optional<vector<Vector3>&>(armjvx) : boost::none,
-        J_px_p ? boost::optional<vector<Matrix>&>(Jarm_jpx_jp) : boost::none,
-        J_vx_p ? boost::optional<vector<Matrix>&>(Jarm_jvx_jp) : boost::none,
-        J_vx_v ? boost::optional<vector<Matrix>&>(Jarm_jvx_jv) : boost::none);
+        p.configuration(), std::optional<const Vector>(varm), armjpx,
+        vx ? std::optional<vector<Vector3>>(armjvx) : std::nullopt,
+        J_px_p ? std::optional<vector<Matrix>>(Jarm_jpx_jp) : std::nullopt,
+        J_vx_p ? std::optional<vector<Matrix>>(Jarm_jvx_jp) : std::nullopt,
+        J_vx_v ? std::optional<vector<Matrix>>(Jarm_jvx_jv) : std::nullopt);
   } else {
     arm_.forwardKinematics(
-        p.configuration(), boost::none, armjpx,
-        vx ? boost::optional<vector<Vector3>&>(armjvx) : boost::none,
-        J_px_p ? boost::optional<vector<Matrix>&>(Jarm_jpx_jp) : boost::none);
+        p.configuration(), {}, armjpx,
+        vx ? std::optional<vector<Vector3>>(armjvx) : std::nullopt,
+        J_px_p ? std::optional<vector<Matrix>>(Jarm_jpx_jp) : std::nullopt);
   }
 
   for (size_t i = 0; i < arm_.dof(); i++) {

@@ -18,9 +18,9 @@ namespace gpmp2 {
 template <class ROBOT, class GPINTER>
 gtsam::Vector ObstaclePlanarSDFFactorGP<ROBOT, GPINTER>::evaluateError(
     const Pose& conf1, const Velocity& vel1, const Pose& conf2,
-    const Velocity& vel2, boost::optional<gtsam::Matrix&> H1,
-    boost::optional<gtsam::Matrix&> H2, boost::optional<gtsam::Matrix&> H3,
-    boost::optional<gtsam::Matrix&> H4) const {
+    const Velocity& vel2, std::optional<gtsam::Matrix> H1,
+    std::optional<gtsam::Matrix> H2, std::optional<gtsam::Matrix> H3,
+    std::optional<gtsam::Matrix> H4) const {
   const bool use_H = (H1 || H2 || H3 || H4);
 
   // if Jacobians used, initialize Jerr_conf as zeros

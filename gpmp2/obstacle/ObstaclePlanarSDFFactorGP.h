@@ -53,7 +53,7 @@ class ObstaclePlanarSDFFactorGP
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /* Default constructor */
   ObstaclePlanarSDFFactorGP() {}
@@ -89,16 +89,16 @@ class ObstaclePlanarSDFFactorGP
 
   /// error function
   /// numerical jacobians / analytic jacobians from cost function
-  gtsam::Vector evaluateError(
-      const Pose& conf1, const Velocity& vel1, const Pose& conf2,
-      const Velocity& vel2, boost::optional<gtsam::Matrix&> H1 = boost::none,
-      boost::optional<gtsam::Matrix&> H2 = boost::none,
-      boost::optional<gtsam::Matrix&> H3 = boost::none,
-      boost::optional<gtsam::Matrix&> H4 = boost::none) const;
+  gtsam::Vector evaluateError(const Pose& conf1, const Velocity& vel1,
+                              const Pose& conf2, const Velocity& vel2,
+                              std::optional<gtsam::Matrix> H1 = {},
+                              std::optional<gtsam::Matrix> H2 = {},
+                              std::optional<gtsam::Matrix> H3 = {},
+                              std::optional<gtsam::Matrix> H4 = {}) const;
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 

@@ -52,19 +52,17 @@ class GaussianPriorWorkspacePose
   virtual ~GaussianPriorWorkspacePose() {}
 
   /// factor error function
-  gtsam::Vector evaluateError(
-      const Pose& pose,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+  gtsam::Vector evaluateError(const Pose& pose,
+                              std::optional<gtsam::Matrix> H1 = {}) const {
     using namespace gtsam;
 
     std::vector<Pose3> joint_pos;
     std::vector<Matrix> J_jpx_jp;
-    robot_.fk_model().forwardKinematics(pose, boost::none, joint_pos,
-                                        boost::none, J_jpx_jp);
+    robot_.fk_model().forwardKinematics(pose, {}, joint_pos, {}, J_jpx_jp);
 
     if (H1) {
       Matrix66 H_ep;
-      Vector error = des_pose_.logmap(joint_pos[joint_], boost::none, H_ep);
+      Vector error = des_pose_.logmap(joint_pos[joint_], {}, H_ep);
       *H1 = H_ep * J_jpx_jp[joint_];
       return error;
     } else {
@@ -74,7 +72,7 @@ class GaussianPriorWorkspacePose
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 

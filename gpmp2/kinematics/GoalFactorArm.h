@@ -35,7 +35,7 @@ class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /// Default constructor
   GoalFactorArm() {}
@@ -51,15 +51,14 @@ class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
   virtual ~GoalFactorArm() {}
 
   /// error function
-  gtsam::Vector evaluateError(
-      const gtsam::Vector& conf,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+  gtsam::Vector evaluateError(const gtsam::Vector& conf,
+                              std::optional<gtsam::Matrix> H1 = {}) const {
     using namespace gtsam;
 
     // fk
     std::vector<Pose3> joint_pos;
     std::vector<Matrix> J_jpx_jp;
-    arm_.forwardKinematics(conf, boost::none, joint_pos, boost::none, J_jpx_jp);
+    arm_.forwardKinematics(conf, {}, joint_pos, {}, J_jpx_jp);
 
     if (H1) {
       Matrix36 Hpp;
@@ -74,7 +73,7 @@ class GoalFactorArm : public gtsam::NoiseModelFactor1<gtsam::Vector> {
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 

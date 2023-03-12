@@ -30,7 +30,7 @@ class VehicleDynamicsFactorPose2
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /* Default constructor */
   VehicleDynamicsFactorPose2() {}
@@ -48,10 +48,10 @@ class VehicleDynamicsFactorPose2
 
   /// error function
   /// numerical/analytic Jacobians from cost function
-  gtsam::Vector evaluateError(
-      const gtsam::Pose2& pose, const gtsam::Vector& vel,
-      boost::optional<gtsam::Matrix&> H1 = boost::none,
-      boost::optional<gtsam::Matrix&> H2 = boost::none) const {
+  gtsam::Vector evaluateError(const gtsam::Pose2& pose,
+                              const gtsam::Vector& vel,
+                              std::optional<gtsam::Matrix> H1 = nullptr,
+                              std::optional<gtsam::Matrix> H2 = nullptr) const {
     using namespace gtsam;
 
     if (H1 || H2) {
@@ -76,7 +76,7 @@ class VehicleDynamicsFactorPose2
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 

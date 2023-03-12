@@ -45,12 +45,12 @@ class GPMP2_EXPORT Pose2MobileBase
    *  @param J_px_p et al. optional Jacobians
    **/
   void forwardKinematics(
-      const gtsam::Pose2& p, boost::optional<const gtsam::Vector&> v,
+      const gtsam::Pose2& p, std::optional<const gtsam::Vector> v,
       std::vector<gtsam::Pose3>& px,
-      boost::optional<std::vector<gtsam::Vector3>&> vx,
-      boost::optional<std::vector<gtsam::Matrix>&> J_px_p = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_vx_p = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_vx_v = boost::none) const;
+      std::optional<std::vector<gtsam::Vector3>> vx,
+      std::optional<std::vector<gtsam::Matrix>> J_px_p = {},
+      std::optional<std::vector<gtsam::Matrix>> J_vx_p = {},
+      std::optional<std::vector<gtsam::Matrix>> J_vx_v = {}) const;
 };
 
 }  // namespace gpmp2

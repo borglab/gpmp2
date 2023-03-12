@@ -16,8 +16,8 @@ namespace gpmp2 {
 /// direction return sliding velocity for Lie group, lower is better
 inline double simple2DVehicleDynamicsPose2(
     const gtsam::Pose2& p, const gtsam::Vector3& v,
-    gtsam::OptionalJacobian<1, 3> Hp = boost::none,
-    gtsam::OptionalJacobian<1, 3> Hv = boost::none) {
+    gtsam::OptionalJacobian<1, 3> Hp = {},
+    gtsam::OptionalJacobian<1, 3> Hv = {}) {
   if (Hp) *Hp = (gtsam::Matrix13() << 0, 0, 0).finished();
   if (Hv) *Hv = (gtsam::Matrix13() << 0, 1, 0).finished();
 
@@ -28,8 +28,8 @@ inline double simple2DVehicleDynamicsPose2(
 /// direction return sliding velocity for vector space, lower is better
 inline double simple2DVehicleDynamicsVector3(
     const gtsam::Vector3& p, const gtsam::Vector3& v,
-    gtsam::OptionalJacobian<1, 3> Hp = boost::none,
-    gtsam::OptionalJacobian<1, 3> Hv = boost::none) {
+    gtsam::OptionalJacobian<1, 3> Hp = {},
+    gtsam::OptionalJacobian<1, 3> Hv = {}) {
   if (Hp)
     *Hp = (gtsam::Matrix13() << 0, 0, -(v(1) * sin(p(2)) + v(0) * cos(p(2))))
               .finished();

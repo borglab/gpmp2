@@ -36,9 +36,9 @@ namespace gpmp2 {
 class GPMP2_EXPORT SignedDistanceField {
  public:
   // index and float_index is <row, col, z>
-  typedef boost::tuple<size_t, size_t, size_t> index;
-  typedef boost::tuple<double, double, double> float_index;
-  typedef boost::shared_ptr<SignedDistanceField> shared_ptr;
+  typedef std::tuple<size_t, size_t, size_t> index;
+  typedef std::tuple<double, double, double> float_index;
+  typedef std::shared_ptr<SignedDistanceField> shared_ptr;
 
  private:
   gtsam::Point3 origin_;
@@ -122,89 +122,90 @@ class GPMP2_EXPORT SignedDistanceField {
     const double col = (point.x() - origin_.x()) / cell_size_;
     const double row = (point.y() - origin_.y()) / cell_size_;
     const double z = (point.z() - origin_.z()) / cell_size_;
-    return boost::make_tuple(row, col, z);
+    return std::make_tuple(row, col, z);
   }
 
   inline gtsam::Point3 convertCelltoPoint3(const float_index& cell) const {
-    return origin_ + gtsam::Point3(cell.get<1>() * cell_size_,
-                                   cell.get<0>() * cell_size_,
-                                   cell.get<2>() * cell_size_);
+    return origin_ + gtsam::Point3(std::get<1>(cell) * cell_size_,
+                                   std::get<0>(cell) * cell_size_,
+                                   std::get<2>(cell) * cell_size_);
   }
 
   /// tri-linear interpolation
   inline double signed_distance(const float_index& idx) const {
-    const double lr = floor(idx.get<0>()), lc = floor(idx.get<1>()),
-                 lz = floor(idx.get<2>());
+    const double lr = floor(std::get<0>(idx)), lc = floor(std::get<1>(idx)),
+                 lz = floor(std::get<2>(idx));
     const double hr = lr + 1.0, hc = lc + 1.0, hz = lz + 1.0;
     const size_t lri = static_cast<size_t>(lr), lci = static_cast<size_t>(lc),
                  lzi = static_cast<size_t>(lz), hri = static_cast<size_t>(hr),
                  hci = static_cast<size_t>(hc), hzi = static_cast<size_t>(hz);
-    return (hr - idx.get<0>()) * (hc - idx.get<1>()) * (hz - idx.get<2>()) *
-               signed_distance(lri, lci, lzi) +
-           (idx.get<0>() - lr) * (hc - idx.get<1>()) * (hz - idx.get<2>()) *
-               signed_distance(hri, lci, lzi) +
-           (hr - idx.get<0>()) * (idx.get<1>() - lc) * (hz - idx.get<2>()) *
-               signed_distance(lri, hci, lzi) +
-           (idx.get<0>() - lr) * (idx.get<1>() - lc) * (hz - idx.get<2>()) *
-               signed_distance(hri, hci, lzi) +
-           (hr - idx.get<0>()) * (hc - idx.get<1>()) * (idx.get<2>() - lz) *
-               signed_distance(lri, lci, hzi) +
-           (idx.get<0>() - lr) * (hc - idx.get<1>()) * (idx.get<2>() - lz) *
-               signed_distance(hri, lci, hzi) +
-           (hr - idx.get<0>()) * (idx.get<1>() - lc) * (idx.get<2>() - lz) *
-               signed_distance(lri, hci, hzi) +
-           (idx.get<0>() - lr) * (idx.get<1>() - lc) * (idx.get<2>() - lz) *
-               signed_distance(hri, hci, hzi);
+    return (hr - std::get<0>(idx)) * (hc - std::get<1>(idx)) *
+               (hz - std::get<2>(idx)) * signed_distance(lri, lci, lzi) +
+           (std::get<0>(idx) - lr) * (hc - std::get<1>(idx)) *
+               (hz - std::get<2>(idx)) * signed_distance(hri, lci, lzi) +
+           (hr - std::get<0>(idx)) * (std::get<1>(idx) - lc) *
+               (hz - std::get<2>(idx)) * signed_distance(lri, hci, lzi) +
+           (std::get<0>(idx) - lr) * (std::get<1>(idx) - lc) *
+               (hz - std::get<2>(idx)) * signed_distance(hri, hci, lzi) +
+           (hr - std::get<0>(idx)) * (hc - std::get<1>(idx)) *
+               (std::get<2>(idx) - lz) * signed_distance(lri, lci, hzi) +
+           (std::get<0>(idx) - lr) * (hc - std::get<1>(idx)) *
+               (std::get<2>(idx) - lz) * signed_distance(hri, lci, hzi) +
+           (hr - std::get<0>(idx)) * (std::get<1>(idx) - lc) *
+               (std::get<2>(idx) - lz) * signed_distance(lri, hci, hzi) +
+           (std::get<0>(idx) - lr) * (std::get<1>(idx) - lc) *
+               (std::get<2>(idx) - lz) * signed_distance(hri, hci, hzi);
   }
 
   /// gradient operator for tri-linear interpolation
   /// gradient regrads to float_index
   /// not differentiable at index point
   inline gtsam::Vector3 gradient(const float_index& idx) const {
-    const double lr = floor(idx.get<0>()), lc = floor(idx.get<1>()),
-                 lz = floor(idx.get<2>());
+    const double lr = floor(std::get<0>(idx)), lc = floor(std::get<1>(idx)),
+                 lz = floor(std::get<2>(idx));
     const double hr = lr + 1.0, hc = lc + 1.0, hz = lz + 1.0;
     const size_t lri = static_cast<size_t>(lr), lci = static_cast<size_t>(lc),
                  lzi = static_cast<size_t>(lz), hri = static_cast<size_t>(hr),
                  hci = static_cast<size_t>(hc), hzi = static_cast<size_t>(hz);
-    return gtsam::Vector3((hc - idx.get<1>()) * (hz - idx.get<2>()) *
-                                  (signed_distance(hri, lci, lzi) -
-                                   signed_distance(lri, lci, lzi)) +
-                              (idx.get<1>() - lc) * (hz - idx.get<2>()) *
-                                  (signed_distance(hri, hci, lzi) -
-                                   signed_distance(lri, hci, lzi)) +
-                              (hc - idx.get<1>()) * (idx.get<2>() - lz) *
-                                  (signed_distance(hri, lci, hzi) -
-                                   signed_distance(lri, lci, hzi)) +
-                              (idx.get<1>() - lc) * (idx.get<2>() - lz) *
-                                  (signed_distance(hri, hci, hzi) -
-                                   signed_distance(lri, hci, hzi)),
+    return gtsam::Vector3(
+        (hc - std::get<1>(idx)) * (hz - std::get<2>(idx)) *
+                (signed_distance(hri, lci, lzi) -
+                 signed_distance(lri, lci, lzi)) +
+            (std::get<1>(idx) - lc) * (hz - std::get<2>(idx)) *
+                (signed_distance(hri, hci, lzi) -
+                 signed_distance(lri, hci, lzi)) +
+            (hc - std::get<1>(idx)) * (std::get<2>(idx) - lz) *
+                (signed_distance(hri, lci, hzi) -
+                 signed_distance(lri, lci, hzi)) +
+            (std::get<1>(idx) - lc) * (std::get<2>(idx) - lz) *
+                (signed_distance(hri, hci, hzi) -
+                 signed_distance(lri, hci, hzi)),
 
-                          (hr - idx.get<0>()) * (hz - idx.get<2>()) *
-                                  (signed_distance(lri, hci, lzi) -
-                                   signed_distance(lri, lci, lzi)) +
-                              (idx.get<0>() - lr) * (hz - idx.get<2>()) *
-                                  (signed_distance(hri, hci, lzi) -
-                                   signed_distance(hri, lci, lzi)) +
-                              (hr - idx.get<0>()) * (idx.get<2>() - lz) *
-                                  (signed_distance(lri, hci, hzi) -
-                                   signed_distance(lri, lci, hzi)) +
-                              (idx.get<0>() - lr) * (idx.get<2>() - lz) *
-                                  (signed_distance(hri, hci, hzi) -
-                                   signed_distance(hri, lci, hzi)),
+        (hr - std::get<0>(idx)) * (hz - std::get<2>(idx)) *
+                (signed_distance(lri, hci, lzi) -
+                 signed_distance(lri, lci, lzi)) +
+            (std::get<0>(idx) - lr) * (hz - std::get<2>(idx)) *
+                (signed_distance(hri, hci, lzi) -
+                 signed_distance(hri, lci, lzi)) +
+            (hr - std::get<0>(idx)) * (std::get<2>(idx) - lz) *
+                (signed_distance(lri, hci, hzi) -
+                 signed_distance(lri, lci, hzi)) +
+            (std::get<0>(idx) - lr) * (std::get<2>(idx) - lz) *
+                (signed_distance(hri, hci, hzi) -
+                 signed_distance(hri, lci, hzi)),
 
-                          (hr - idx.get<0>()) * (hc - idx.get<1>()) *
-                                  (signed_distance(lri, lci, hzi) -
-                                   signed_distance(lri, lci, lzi)) +
-                              (idx.get<0>() - lr) * (hc - idx.get<1>()) *
-                                  (signed_distance(hri, lci, hzi) -
-                                   signed_distance(hri, lci, lzi)) +
-                              (hr - idx.get<0>()) * (idx.get<1>() - lc) *
-                                  (signed_distance(lri, hci, hzi) -
-                                   signed_distance(lri, hci, lzi)) +
-                              (idx.get<0>() - lr) * (idx.get<1>() - lc) *
-                                  (signed_distance(hri, hci, hzi) -
-                                   signed_distance(hri, hci, lzi)));
+        (hr - std::get<0>(idx)) * (hc - std::get<1>(idx)) *
+                (signed_distance(lri, lci, hzi) -
+                 signed_distance(lri, lci, lzi)) +
+            (std::get<0>(idx) - lr) * (hc - std::get<1>(idx)) *
+                (signed_distance(hri, lci, hzi) -
+                 signed_distance(hri, lci, lzi)) +
+            (hr - std::get<0>(idx)) * (std::get<1>(idx) - lc) *
+                (signed_distance(lri, hci, hzi) -
+                 signed_distance(lri, hci, lzi)) +
+            (std::get<0>(idx) - lr) * (std::get<1>(idx) - lc) *
+                (signed_distance(hri, hci, hzi) -
+                 signed_distance(hri, hci, lzi)));
   }
 
   /// access
@@ -239,12 +240,12 @@ class GPMP2_EXPORT SignedDistanceField {
   friend class boost::serialization::access;
   template <class Archive>
   void serialize(Archive& ar, const unsigned int /* version */) {
-    ar& BOOST_SERIALIZATION_NVP(origin_);
-    ar& BOOST_SERIALIZATION_NVP(field_rows_);
-    ar& BOOST_SERIALIZATION_NVP(field_cols_);
-    ar& BOOST_SERIALIZATION_NVP(field_z_);
-    ar& BOOST_SERIALIZATION_NVP(cell_size_);
-    ar& BOOST_SERIALIZATION_NVP(data_);
+    // ar& BOOST_SERIALIZATION_NVP(origin_);
+    // ar& BOOST_SERIALIZATION_NVP(field_rows_);
+    // ar& BOOST_SERIALIZATION_NVP(field_cols_);
+    // ar& BOOST_SERIALIZATION_NVP(field_z_);
+    // ar& BOOST_SERIALIZATION_NVP(cell_size_);
+    // ar& BOOST_SERIALIZATION_NVP(data_);
   }
 };
 

@@ -18,9 +18,8 @@ template <class ROBOT, class GPINTER>
 gtsam::Vector ObstacleSDFFactorGP<ROBOT, GPINTER>::evaluateError(
     const typename Robot::Pose& conf1, const typename Robot::Velocity& vel1,
     const typename Robot::Pose& conf2, const typename Robot::Velocity& vel2,
-    boost::optional<gtsam::Matrix&> H1, boost::optional<gtsam::Matrix&> H2,
-    boost::optional<gtsam::Matrix&> H3,
-    boost::optional<gtsam::Matrix&> H4) const {
+    std::optional<gtsam::Matrix> H1, std::optional<gtsam::Matrix> H2,
+    std::optional<gtsam::Matrix> H3, std::optional<gtsam::Matrix> H4) const {
   const bool use_H = (H1 || H2 || H3 || H4);
 
   // if Jacobians used, initialize Jerr_conf as zeros
