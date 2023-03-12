@@ -88,6 +88,7 @@ class VehicleDynamicsFactorPose2
     Base::print("", keyFormatter);
   }
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -95,6 +96,7 @@ class VehicleDynamicsFactorPose2
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor2", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

@@ -136,6 +136,7 @@ class SelfCollision : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
     Base::print("", keyFormatter);
   }
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -143,6 +144,7 @@ class SelfCollision : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

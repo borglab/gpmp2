@@ -82,9 +82,9 @@ class JointLimitFactorPose2Vector
     for (size_t i = 0; i < (size_t)conf.size(); i++) {
       if (H1) {
         double Hp;
-        err(i + 3) =
-            hingeLossJointLimitCost(conf(i), down_limit_(i + 3),
-                                    up_limit_(i + 3), limit_thresh_(i + 3), &Hp);
+        err(i + 3) = hingeLossJointLimitCost(conf(i), down_limit_(i + 3),
+                                             up_limit_(i + 3),
+                                             limit_thresh_(i + 3), &Hp);
         (*H1)(i + 3, i + 3) = Hp;
       } else {
         err(i + 3) =
@@ -111,6 +111,7 @@ class JointLimitFactorPose2Vector
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -118,6 +119,7 @@ class JointLimitFactorPose2Vector
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

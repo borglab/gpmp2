@@ -182,6 +182,7 @@ class GaussianProcessInterpolatorLie {
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -193,6 +194,7 @@ class GaussianProcessInterpolatorLie {
     ar& BOOST_SERIALIZATION_NVP(Lambda_);
     ar& BOOST_SERIALIZATION_NVP(Psi_);
   }
+#endif
 };
 
 }  // namespace gpmp2

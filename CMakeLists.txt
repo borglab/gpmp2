@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 enable_testing()
 project(gpmp2
         LANGUAGES CXX C
-        VERSION 0.3.0)
+        VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 
@@ -29,6 +29,13 @@ set(GPMP2_VERSION_STRING gpmp2_VERSION_STRING)
 option(GPMP2_BUILD_STATIC_LIBRARY "whether build static library" OFF)
 option(GPMP2_BUILD_MATLAB_TOOLBOX "whether build matlab toolbox, need shared lib" OFF)
 option(GPMP2_BUILD_PYTHON_TOOLBOX "whether build python toolbox, need shared lib" OFF)
+
+# Enable or disable serialization with GPMP2_ENABLE_BOOST_SERIALIZATION
+option(GPMP2_ENABLE_BOOST_SERIALIZATION "Enable Boost serialization" ON)
+if(GPMP2_ENABLE_BOOST_SERIALIZATION)
+  add_compile_definitions(GTSAM_ENABLE_BOOST_SERIALIZATION)
+  add_compile_definitions(GPMP2_ENABLE_BOOST_SERIALIZATION)
+endif()
 
 if(GPMP2_BUILD_STATIC_LIBRARY AND GPMP2_BUILD_MATLAB_TOOLBOX)
   message(FATAL_ERROR "Matlab toolbox needs static lib to be built")

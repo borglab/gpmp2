@@ -59,7 +59,8 @@ class GaussianPriorWorkspaceOrientation
 
     std::vector<Pose3> joint_pos;
     std::vector<Matrix> J_jpx_jp;
-    robot_.fk_model().forwardKinematics(pose, {}, joint_pos, nullptr, &J_jpx_jp);
+    robot_.fk_model().forwardKinematics(pose, {}, joint_pos, nullptr,
+                                        &J_jpx_jp);
 
     if (H1) {
       Matrix36 H_rp;
@@ -90,12 +91,14 @@ class GaussianPriorWorkspaceOrientation
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
   void serialize(ARCHIVE& ar, const unsigned int version) {
     ar& BOOST_SERIALIZATION_BASE_OBJECT_NVP(Base);
   }
+#endif
 };
 
 }  // namespace gpmp2

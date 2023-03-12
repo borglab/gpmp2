@@ -13,8 +13,6 @@
 #include <gtsam/geometry/concepts.h>
 #include <gtsam/nonlinear/NonlinearFactor.h>
 
-#include <boost/lexical_cast.hpp>
-#include <boost/serialization/export.hpp>
 #include <ostream>
 
 namespace gpmp2 {
@@ -118,6 +116,7 @@ class GaussianProcessPriorLie
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -126,6 +125,7 @@ class GaussianProcessPriorLie
     ar& BOOST_SERIALIZATION_NVP(dof_);
     ar& BOOST_SERIALIZATION_NVP(delta_t_);
   }
+#endif
 
 };  // GaussianProcessPriorLie
 

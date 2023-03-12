@@ -12,7 +12,9 @@
 #include <gtsam/base/OptionalJacobian.h>
 #include <gtsam/nonlinear/NonlinearFactor.h>
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
 #include <boost/serialization/array.hpp>
+#endif
 
 namespace gpmp2 {
 
@@ -148,6 +150,7 @@ class GaussianProcessInterpolatorLinear {
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -160,6 +163,7 @@ class GaussianProcessInterpolatorLinear {
     ar& make_nvp("Lambda", make_array(Lambda_.data(), Lambda_.size()));
     ar& make_nvp("Psi", make_array(Psi_.data(), Psi_.size()));
   }
+#endif
 };
 
 }  // namespace gpmp2

@@ -14,6 +14,7 @@
 #include <gtsam/base/VectorSerialization.h>
 #include <gtsam/geometry/Point3.h>
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -21,7 +22,8 @@
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/tuple/tuple.hpp>
+#endif
+
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -236,6 +238,7 @@ class GPMP2_EXPORT SignedDistanceField {
   void loadSDF(const std::string filename);
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class Archive>
@@ -247,6 +250,7 @@ class GPMP2_EXPORT SignedDistanceField {
     ar& BOOST_SERIALIZATION_NVP(cell_size_);
     ar& BOOST_SERIALIZATION_NVP(data_);
   }
+#endif
 };
 
 }  // namespace gpmp2
