@@ -17,35 +17,32 @@ jobs:
       matrix:
         # Github Actions requires a single row to be added to the build matrix.
         # See https://help.github.com/en/articles/workflow-syntax-for-github-actions.
-        name: [macos-11-xcode-13.4.1]
+        name: [macOS-12-xcode-14.2]
 
         build_type: [Debug, Release]
-        build_unstable: [ON]
         include:
-          - name: macos-11-xcode-13.4.1
-            os: macOS-11
+          - name: macOS-12-xcode-14.2
+            os: macOS-12
             compiler: xcode
-            version: "13.4.1"
+            version: "14.2"
 
     steps:
       - name: Setup Compiler
         run: |
-          sudo xcode-select -switch /Applications/Xcode.app
+          sudo xcode-select -switch /Applications/Xcode_${{ matrix.version }}.app
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
 
       - name: Dependencies
         run: |
           brew install boost
+          brew tap osrf/simulation
+          brew install sdformat12
+          brew tap borglab/core
 
       - name: GTSAM
         run: |
-          git clone https://github.com/borglab/gtsam.git
-          cd gtsam
-          mkdir build && cd build
-          cmake -D GTSAM_BUILD_EXAMPLES_ALWAYS=OFF ..
-          make -j$(sysctl -n hw.physicalcpu) install
-          cd ../../ # go back to home directory
+          run: brew install --HEAD gtsam@latest
 
       - name: Checkout
         uses: actions/checkout@v3
