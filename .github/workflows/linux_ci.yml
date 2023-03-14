@@ -62,7 +62,7 @@ jobs:
           fi
       - name: Install Dependencies
         run: |
-          sudo apt-get -y install cmake build-essential pkg-config libpython-dev python-numpy libicu-dev
+          sudo apt-get -y install cmake build-essential pkg-config libicu-dev
           sudo apt-get -y install libtbb-dev libboost-all-dev
 
           # Install CppUnitLite.
