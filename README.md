@@ -48,7 +48,18 @@ This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) a
   pip install cython numpy scipy matplotlib
   ```
 
-- Install gpmp2.
+- Install the `gtwrap` project.
+  
+  If you compile and install GTSAM with the python wrapper enabled, you will automatically have `gtwrap` and you can continue to the next step.
+  Else, please clone and install the [gtwrap project](https://github.com/borglab/wrap).
+
+  ```sh
+  git clone git@github.com:borglab/wrap.git
+  mkdir build && cd build
+  cmake .. && make install
+  ```
+
+- Install `gpmp2`.
   ```bash
   git clone https://github.com/borglab/gpmp2.git
   cd gpmp2 && mkdir build && cd build
