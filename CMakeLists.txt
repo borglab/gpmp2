@@ -8,10 +8,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 
 add_compile_options(-faligned-new)
 
-# Enforce c++11 standards
-add_compile_options(-std=c++11) # CMake 3.1 and earlier
-set(CMAKE_CXX_STANDARD 11)
+# Enforce c++17 standards
+add_compile_options(-std=c++17) # CMake 3.1 and earlier
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#TODO(Varun) Verify C++17 is enabled on Windows as well
+# Look at GtsamBuildTypes L153
 
 # Mac ONLY. Define Relative Path on Mac OS
 if(NOT DEFINED CMAKE_MACOSX_RPATH)
