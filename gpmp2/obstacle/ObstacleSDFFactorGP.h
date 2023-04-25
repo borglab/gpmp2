@@ -24,7 +24,7 @@ namespace gpmp2 {
  */
 template <class ROBOT, class GPINTER>
 class ObstacleSDFFactorGP
-    : public gtsam::NoiseModelFactor4<
+    : public gtsam::NoiseModelFactorN<
           typename ROBOT::Pose, typename ROBOT::Velocity, typename ROBOT::Pose,
           typename ROBOT::Velocity> {
  public:
@@ -36,7 +36,7 @@ class ObstacleSDFFactorGP
  private:
   // typedefs
   typedef ObstacleSDFFactorGP This;
-  typedef gtsam::NoiseModelFactor4<Pose, Velocity, Pose, Velocity> Base;
+  typedef gtsam::NoiseModelFactorN<Pose, Velocity, Pose, Velocity> Base;
   typedef GPINTER GPBase;
 
   // GP interpolator
@@ -53,7 +53,7 @@ class ObstacleSDFFactorGP
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /* Default constructor */
   ObstacleSDFFactorGP() {}
@@ -82,21 +82,21 @@ class ObstacleSDFFactorGP
         robot_(robot),
         sdf_(sdf) {}
 
-  virtual ~ObstacleSDFFactorGP() {}
+  ~ObstacleSDFFactorGP() {}
 
   /// error function
   /// numerical jacobians / analytic jacobians from cost function
   gtsam::Vector evaluateError(
       const typename Robot::Pose& conf1, const typename Robot::Velocity& vel1,
       const typename Robot::Pose& conf2, const typename Robot::Velocity& vel2,
-      boost::optional<gtsam::Matrix&> H1 = boost::none,
-      boost::optional<gtsam::Matrix&> H2 = boost::none,
-      boost::optional<gtsam::Matrix&> H3 = boost::none,
-      boost::optional<gtsam::Matrix&> H4 = boost::none) const;
+      gtsam::OptionalMatrixType H1 = nullptr,
+      gtsam::OptionalMatrixType H2 = nullptr,
+      gtsam::OptionalMatrixType H3 = nullptr,
+      gtsam::OptionalMatrixType H4 = nullptr) const override;
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -108,6 +108,7 @@ class ObstacleSDFFactorGP
     Base::print("", keyFormatter);
   }
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -115,6 +116,7 @@ class ObstacleSDFFactorGP
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor4", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

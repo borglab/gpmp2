@@ -35,12 +35,10 @@ Pose2Mobile2Arms::Pose2Mobile2Arms(const Arm& arm1, const Arm& arm2,
 
 /* ************************************************************************** */
 void Pose2Mobile2Arms::forwardKinematics(
-    const Pose2Vector& p, boost::optional<const gtsam::Vector&> v,
-    std::vector<gtsam::Pose3>& px,
-    boost::optional<std::vector<gtsam::Vector3>&> vx,
-    boost::optional<std::vector<gtsam::Matrix>&> J_px_p,
-    boost::optional<std::vector<gtsam::Matrix>&> J_vx_p,
-    boost::optional<std::vector<gtsam::Matrix>&> J_vx_v) const {
+    const Pose2Vector& p, std::optional<const gtsam::Vector> v,
+    std::vector<gtsam::Pose3>& px, std::vector<gtsam::Vector3>* vx,
+    gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
+    gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v)
     throw runtime_error("[Pose2Mobile2Arms] TODO: velocity not implemented");
 
@@ -84,13 +82,11 @@ void Pose2Mobile2Arms::forwardKinematics(
   vector<Matrix> Jarm1_jpx_jp, Jarm2_jpx_jp;
 
   arm1_.updateBasePose(arm1_base);
-  arm1_.forwardKinematics(
-      p.configuration().head(arm1_.dof()), boost::none, arm1jpx, boost::none,
-      J_px_p ? boost::optional<vector<Matrix>&>(Jarm1_jpx_jp) : boost::none);
+  arm1_.forwardKinematics(p.configuration().head(arm1_.dof()), {}, arm1jpx, {},
+                          J_px_p ? &Jarm1_jpx_jp : nullptr);
   arm2_.updateBasePose(arm2_base);
-  arm2_.forwardKinematics(
-      p.configuration().tail(arm2_.dof()), boost::none, arm2jpx, boost::none,
-      J_px_p ? boost::optional<vector<Matrix>&>(Jarm2_jpx_jp) : boost::none);
+  arm2_.forwardKinematics(p.configuration().tail(arm2_.dof()), {}, arm2jpx, {},
+                          J_px_p ? &Jarm2_jpx_jp : nullptr);
 
   for (size_t i = 0; i < arm1_.dof(); i++) {
     px[i + 1] = arm1jpx[i];

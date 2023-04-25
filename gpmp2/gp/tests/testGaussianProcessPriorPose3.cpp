@@ -41,32 +41,29 @@ TEST(GaussianProcessPriorPose3Test, Factor) {
   p2 = Pose3(Rot3::Ypr(0.0, 0.0, 0.0), Point3(0.0, 0.0, 0.0));
   v1 = (Vector6() << 0, 0, 0, 0, 0, 0).finished();
   v2 = (Vector6() << 0, 0, 0, 0, 0, 0).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(12) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).finished();
-  expectH1 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor,
-                    std::placeholders::_1, v1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
-      p1, 1e-6);
+  expectH1 =
+      numericalDerivative11(std::function<Vector(const Pose3&)>(std::bind(
+                                &GaussianProcessPriorPose3::evaluateError,
+                                factor, std::placeholders::_1, v1, p2, v2,
+                                nullptr, nullptr, nullptr, nullptr)),
+                            p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1,
-                    std::placeholders::_1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    std::placeholders::_1, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Pose3&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
+          std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    p2, std::placeholders::_1, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1, p2,
+          std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));
@@ -79,32 +76,29 @@ TEST(GaussianProcessPriorPose3Test, Factor) {
   p2 = Pose3(Rot3::Ypr(0.0, 0.0, 0.0), Point3(0.1, 0.0, 0.0));
   v1 = (Vector6() << 0, 0, 0, 1, 0, 0).finished();
   v2 = (Vector6() << 0, 0, 0, 1, 0, 0).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(12) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).finished();
-  expectH1 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor,
-                    std::placeholders::_1, v1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
-      p1, 1e-6);
+  expectH1 =
+      numericalDerivative11(std::function<Vector(const Pose3&)>(std::bind(
+                                &GaussianProcessPriorPose3::evaluateError,
+                                factor, std::placeholders::_1, v1, p2, v2,
+                                nullptr, nullptr, nullptr, nullptr)),
+                            p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1,
-                    std::placeholders::_1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    std::placeholders::_1, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Pose3&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
+          std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    p2, std::placeholders::_1, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1, p2,
+          std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));
@@ -117,32 +111,29 @@ TEST(GaussianProcessPriorPose3Test, Factor) {
   p2 = Pose3(Rot3::Ypr(0.1, 0.0, 0.0), Point3(0.0, 0.0, 0.0));
   v1 = (Vector6() << 0, 0, 1, 0, 0, 0).finished();
   v2 = (Vector6() << 0, 0, 1, 0, 0, 0).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(12) << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).finished();
-  expectH1 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor,
-                    std::placeholders::_1, v1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
-      p1, 1e-6);
+  expectH1 =
+      numericalDerivative11(std::function<Vector(const Pose3&)>(std::bind(
+                                &GaussianProcessPriorPose3::evaluateError,
+                                factor, std::placeholders::_1, v1, p2, v2,
+                                nullptr, nullptr, nullptr, nullptr)),
+                            p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1,
-                    std::placeholders::_1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    std::placeholders::_1, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Pose3&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
+          std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    p2, std::placeholders::_1, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1, p2,
+          std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));
@@ -155,31 +146,28 @@ TEST(GaussianProcessPriorPose3Test, Factor) {
   p2 = Pose3(Rot3::Ypr(2.4, -2.5, 3.7), Point3(9.0, -8.0, -7.0));
   v1 = (Vector6() << 2, 3, 1, 5, 4, 9).finished();
   v2 = (Vector6() << 1, 3, 8, 0, 6, 4).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
-  expectH1 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor,
-                    std::placeholders::_1, v1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
-      p1, 1e-6);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
+  expectH1 =
+      numericalDerivative11(std::function<Vector(const Pose3&)>(std::bind(
+                                &GaussianProcessPriorPose3::evaluateError,
+                                factor, std::placeholders::_1, v1, p2, v2,
+                                nullptr, nullptr, nullptr, nullptr)),
+                            p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1,
-                    std::placeholders::_1, p2, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
-      std::function<Vector(const Pose3&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    std::placeholders::_1, v2, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Pose3&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
+          std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector6&)>(
-          std::bind(&GaussianProcessPriorPose3::evaluateError, factor, p1, v1,
-                    p2, std::placeholders::_1, boost::none, boost::none,
-                    boost::none, boost::none)),
+      std::function<Vector(const Vector6&)>(std::bind(
+          &GaussianProcessPriorPose3::evaluateError, factor, p1, v1, p2,
+          std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expectH1, actualH1, 1e-5));
   EXPECT(assert_equal(expectH2, actualH2, 1e-6));

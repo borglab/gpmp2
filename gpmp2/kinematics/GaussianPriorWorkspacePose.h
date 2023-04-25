@@ -21,7 +21,7 @@ namespace gpmp2 {
  */
 template <class ROBOT>
 class GaussianPriorWorkspacePose
-    : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
+    : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
  public:
   // typedefs
   typedef ROBOT Robot;
@@ -30,7 +30,7 @@ class GaussianPriorWorkspacePose
  private:
   // typedefs
   typedef GaussianPriorWorkspacePose This;
-  typedef gtsam::NoiseModelFactor1<Pose> Base;
+  typedef gtsam::NoiseModelFactorN<Pose> Base;
 
   const Robot& robot_;     // Robot
   int joint_;              // joint on the robot to be constrained
@@ -53,18 +53,16 @@ class GaussianPriorWorkspacePose
 
   /// factor error function
   gtsam::Vector evaluateError(
-      const Pose& pose,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+      const Pose& pose, gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
 
     std::vector<Pose3> joint_pos;
     std::vector<Matrix> J_jpx_jp;
-    robot_.fk_model().forwardKinematics(pose, boost::none, joint_pos,
-                                        boost::none, J_jpx_jp);
+    robot_.fk_model().forwardKinematics(pose, {}, joint_pos, {}, &J_jpx_jp);
 
     if (H1) {
       Matrix66 H_ep;
-      Vector error = des_pose_.logmap(joint_pos[joint_], boost::none, H_ep);
+      Vector error = des_pose_.logmap(joint_pos[joint_], {}, H_ep);
       *H1 = H_ep * J_jpx_jp[joint_];
       return error;
     } else {
@@ -74,7 +72,7 @@ class GaussianPriorWorkspacePose
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -89,12 +87,14 @@ class GaussianPriorWorkspacePose
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
   void serialize(ARCHIVE& ar, const unsigned int version) {
     ar& BOOST_SERIALIZATION_BASE_OBJECT_NVP(Base);
   }
+#endif
 };
 
 }  // namespace gpmp2

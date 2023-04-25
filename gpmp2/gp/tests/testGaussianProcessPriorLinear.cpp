@@ -42,28 +42,28 @@ TEST_UNSAFE(GaussianProcessPriorLinear, Factor) {
   p2 = (Vector(3) << 0, 0, 0).finished();
   v1 = (Vector(3) << 0, 0, 0).finished();
   v2 = (Vector(3) << 0, 0, 0).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(6) << 0, 0, 0, 0, 0, 0).finished();
   expectH1 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, std::placeholders::_1, v1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, std::placeholders::_1, v1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, std::placeholders::_1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, std::placeholders::_1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
       std::function<Vector(const Vector3&)>(std::bind(
           &GPPrior::evaluateError, factor, p1, v1, std::placeholders::_1, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+          nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, v1, p2, std::placeholders::_1,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, v1, p2,
+                    std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));
@@ -76,28 +76,28 @@ TEST_UNSAFE(GaussianProcessPriorLinear, Factor) {
   p2 = (Vector3() << 0.1, 0, 0).finished();
   v1 = (Vector3() << 1, 0, 0).finished();
   v2 = (Vector3() << 1, 0, 0).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(6) << 0, 0, 0, 0, 0, 0).finished();
   expectH1 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, std::placeholders::_1, v1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, std::placeholders::_1, v1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, std::placeholders::_1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, std::placeholders::_1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
       std::function<Vector(const Vector3&)>(std::bind(
           &GPPrior::evaluateError, factor, p1, v1, std::placeholders::_1, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+          nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, v1, p2, std::placeholders::_1,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, v1, p2,
+                    std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));
@@ -110,28 +110,28 @@ TEST_UNSAFE(GaussianProcessPriorLinear, Factor) {
   p2 = (Vector3() << 0, 0, 0.1).finished();
   v1 = (Vector3() << 0, 0, 1).finished();
   v2 = (Vector3() << 0, 0, 1).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expect = (Vector(6) << 0, 0, 0, 0, 0, 0).finished();
   expectH1 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, std::placeholders::_1, v1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, std::placeholders::_1, v1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, std::placeholders::_1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, std::placeholders::_1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
       std::function<Vector(const Vector3&)>(std::bind(
           &GPPrior::evaluateError, factor, p1, v1, std::placeholders::_1, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+          nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, v1, p2, std::placeholders::_1,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, v1, p2,
+                    std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));
@@ -144,27 +144,27 @@ TEST_UNSAFE(GaussianProcessPriorLinear, Factor) {
   p2 = (Vector3() << -8, 4, -8).finished();
   v1 = (Vector3() << -1, 2, -9).finished();
   v2 = (Vector3() << 3, -4, 7).finished();
-  actual = factor.evaluateError(p1, v1, p2, v2, actualH1, actualH2, actualH3,
-                                actualH4);
+  actual = factor.evaluateError(p1, v1, p2, v2, &actualH1, &actualH2, &actualH3,
+                                &actualH4);
   expectH1 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, std::placeholders::_1, v1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, std::placeholders::_1, v1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, std::placeholders::_1, p2, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, std::placeholders::_1,
+                    p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivative11(
       std::function<Vector(const Vector3&)>(std::bind(
           &GPPrior::evaluateError, factor, p1, v1, std::placeholders::_1, v2,
-          boost::none, boost::none, boost::none, boost::none)),
+          nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivative11(
-      std::function<Vector(const Vector3&)>(std::bind(
-          &GPPrior::evaluateError, factor, p1, v1, p2, std::placeholders::_1,
-          boost::none, boost::none, boost::none, boost::none)),
+      std::function<Vector(const Vector3&)>(
+          std::bind(&GPPrior::evaluateError, factor, p1, v1, p2,
+                    std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expectH1, actualH1, 1e-6));
   EXPECT(assert_equal(expectH2, actualH2, 1e-6));

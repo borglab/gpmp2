@@ -20,7 +20,7 @@ Pose3 fkpose(const PointRobot& pR, const Vector& jp, const Vector& jv,
              size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
-  pR.forwardKinematics(jp, jv, pos, vel);
+  pR.forwardKinematics(jp, jv, pos, &vel);
   return pos[i];
 }
 
@@ -28,7 +28,7 @@ Vector3 fkvelocity(const PointRobot& pR, const Vector& jp, const Vector& jv,
                    size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
-  pR.forwardKinematics(jp, jv, pos, vel);
+  pR.forwardKinematics(jp, jv, pos, &vel);
   return vel[i];
 }
 
@@ -59,7 +59,8 @@ TEST(PointRobot, 2DExample) {
   p = Vector2(1.0, 2.0);
   v = Vector2(0.1, 0.2);
   Vector vdymc = Vector(v);
-  pR.forwardKinematics(p, vdymc, pvec_act, vvec_act, pJp_act, vJp_act, vJv_act);
+  pR.forwardKinematics(p, vdymc, pvec_act, &vvec_act, &pJp_act, &vJp_act,
+                       &vJv_act);
 
   pvec_exp.clear();
   pvec_exp.push_back(Pose3(Rot3(), Point3(p(0), p(1), 0)));
@@ -111,7 +112,7 @@ TEST(PointRobotModel, 2DExample) {
   sph_centers_exp.clear();
   sph_centers_exp.push_back(Point3(1, 2, 0));
 
-  pR_model.sphereCenters(p, sph_centers_act, J_center_q_act);
+  pR_model.sphereCenters(p, sph_centers_act, &J_center_q_act);
 
   for (size_t i = 0; i < nr_sph; i++) {
     EXPECT(assert_equal(sph_centers_exp[i], sph_centers_act[i]));
@@ -121,7 +122,7 @@ TEST(PointRobotModel, 2DExample) {
         p, 1e-6);
     EXPECT(assert_equal(Jcq_exp, J_center_q_act[i], 1e-9));
     EXPECT(
-        assert_equal(sph_centers_exp[i], pR_model.sphereCenter(i, p, Jcq_act)));
+        assert_equal(sph_centers_exp[i], pR_model.sphereCenter(i, p, &Jcq_act)));
     Jcq_exp = numericalDerivative11(
         std::function<Point3(const Vector2&)>(std::bind(
             &sph_pos_wrapper_single, pR_model, std::placeholders::_1, i)),

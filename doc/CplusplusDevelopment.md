@@ -52,7 +52,7 @@ class Arm : public ForwardKinematics<gtsam::Vector, gtsam::Vector> {
   /// the base pose (default zero pose), and theta bias (default zero)
   Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha, const gtsam::Vector& d,
       const gtsam::Pose3& base_pose = gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0,0,0)),
-      boost::optional<const gtsam::Vector&> theta_bias = boost::none);
+      std::optional<const gtsam::Vector> theta_bias = {});
   ...
 ```
 

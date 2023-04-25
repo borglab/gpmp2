@@ -95,8 +95,8 @@ TEST_UNSAFE(ObstaclePlanarSDFFactorGPArm, error) {
   q2 = Vector2(0, 0);
   qdot1 = Vector2(0, 0);
   qdot2 = Vector2(0, 0);
-  err_act = factor.evaluateError(q1, qdot1, q2, qdot2, H1_act, H2_act, H3_act,
-                                 H4_act);
+  err_act = factor.evaluateError(q1, qdot1, q2, qdot2, &H1_act, &H2_act,
+                                 &H3_act, &H4_act);
   sdf_exp = (Vector(4) << 1.662575, 0.60355, 0, 0).finished();
   err_exp = convertSDFtoErr(sdf_exp, obs_eps + r);
   H1_exp = numericalDerivative11(
@@ -126,8 +126,8 @@ TEST_UNSAFE(ObstaclePlanarSDFFactorGPArm, error) {
   q2 = Vector2(M_PI, 0);
   qdot1 = Vector2(M_PI * 10, 0);
   qdot2 = Vector2(M_PI * 10, 0);
-  err_act = factor.evaluateError(q1, qdot1, q2, qdot2, H1_act, H2_act, H3_act,
-                                 H4_act);
+  err_act = factor.evaluateError(q1, qdot1, q2, qdot2, &H1_act, &H2_act,
+                                 &H3_act, &H4_act);
   sdf_exp = (Vector(4) << 1.662575, 0.585786437626905, -0.8284271247461900,
              -1.235281374238570)
                 .finished();

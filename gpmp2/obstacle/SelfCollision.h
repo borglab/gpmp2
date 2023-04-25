@@ -22,7 +22,7 @@ namespace gpmp2 {
  * template robot model version
  */
 template <class ROBOT>
-class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
+class SelfCollision : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
  public:
   // typedefs
   typedef ROBOT Robot;
@@ -31,7 +31,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
  private:
   // typedefs
   typedef SelfCollision This;
-  typedef gtsam::NoiseModelFactor1<Pose> Base;
+  typedef gtsam::NoiseModelFactorN<Pose> Base;
 
   /** (N x 4) matrix of parameters
    * rows N : number of self collision checks
@@ -47,7 +47,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /* Default constructor */
   SelfCollision() {}
@@ -63,7 +63,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
   /// error function
   gtsam::Vector evaluateError(
       const typename Robot::Pose& conf,
-      boost::optional<gtsam::Matrix&> H = boost::none) const {
+      gtsam::OptionalMatrixType H = nullptr) const override {
     gtsam::Vector error(data_.rows());
     if (H) {
       *H = gtsam::Matrix::Zero(data_.rows(), robot_.dof());
@@ -73,7 +73,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
     std::vector<gtsam::Point3> sph_centers;
     std::vector<gtsam::Matrix> Hs_sph_conf;
     if (H) {
-      robot_.sphereCenters(conf, sph_centers, Hs_sph_conf);
+      robot_.sphereCenters(conf, sph_centers, &Hs_sph_conf);
     } else {
       robot_.sphereCenters(conf, sph_centers);
     }
@@ -106,8 +106,8 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
 
   double hingeLossSelfCollisionCost(
       const gtsam::Point3& pointA, const gtsam::Point3& pointB, double eps,
-      gtsam::OptionalJacobian<1, 3> H_pointA = boost::none,
-      gtsam::OptionalJacobian<1, 3> H_pointB = boost::none) const {
+      gtsam::OptionalJacobian<1, 3> H_pointA = {},
+      gtsam::OptionalJacobian<1, 3> H_pointB = {}) const {
     gtsam::Matrix H_A, H_B;
     double dist = gtsam::distance3(pointA, pointB, H_A, H_B);
 
@@ -124,7 +124,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -136,6 +136,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
     Base::print("", keyFormatter);
   }
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -143,6 +144,7 @@ class SelfCollision : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

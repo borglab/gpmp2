@@ -21,11 +21,11 @@ namespace gpmp2 {
  * unary factor to apply joint limit cost to vector configuration space
  */
 class VelocityLimitFactorVector
-    : public gtsam::NoiseModelFactor1<gtsam::Vector> {
+    : public gtsam::NoiseModelFactorN<gtsam::Vector> {
  private:
   // typedefs
   typedef VelocityLimitFactorVector This;
-  typedef gtsam::NoiseModelFactor1<gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gtsam::Vector> Base;
 
   // joint velocity limit value for each joint
   gtsam::Vector vel_limit_;
@@ -35,7 +35,7 @@ class VelocityLimitFactorVector
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /**
    * Constructor
@@ -65,7 +65,7 @@ class VelocityLimitFactorVector
   /// error function
   gtsam::Vector evaluateError(
       const gtsam::Vector& conf,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+      gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
     if (H1) *H1 = Matrix::Zero(conf.size(), conf.size());
     Vector err(conf.size());
@@ -73,7 +73,7 @@ class VelocityLimitFactorVector
       if (H1) {
         double Hp;
         err(i) = hingeLossJointLimitCost(conf(i), -vel_limit_(i), vel_limit_(i),
-                                         limit_thresh_(i), Hp);
+                                         limit_thresh_(i), &Hp);
         (*H1)(i, i) = Hp;
       } else {
         err(i) = hingeLossJointLimitCost(conf(i), -vel_limit_(i), vel_limit_(i),
@@ -85,7 +85,7 @@ class VelocityLimitFactorVector
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -99,6 +99,7 @@ class VelocityLimitFactorVector
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -106,6 +107,7 @@ class VelocityLimitFactorVector
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

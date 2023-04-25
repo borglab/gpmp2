@@ -61,13 +61,13 @@ class GPMP2_EXPORT Pose2MobileVetLinArm
    *  @param vx link velocity in work space
    *  @param J_px_p et al. optional Jacobians
    **/
-  void forwardKinematics(
-      const Pose2Vector& p, boost::optional<const gtsam::Vector&> v,
-      std::vector<gtsam::Pose3>& px,
-      boost::optional<std::vector<gtsam::Vector3>&> vx,
-      boost::optional<std::vector<gtsam::Matrix>&> J_px_p = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_vx_p = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_vx_v = boost::none) const;
+  void forwardKinematics(const Pose2Vector& p,
+                         std::optional<const gtsam::Vector> v,
+                         std::vector<gtsam::Pose3>& px,
+                         std::vector<gtsam::Vector3>* vx = nullptr,
+                         gtsam::OptionalMatrixVecType J_px_p = nullptr,
+                         gtsam::OptionalMatrixVecType J_vx_p = nullptr,
+                         gtsam::OptionalMatrixVecType J_vx_v = nullptr) const;
 
   /// accesses
   const gtsam::Pose3& base_T_torso() const { return base_T_torso_; }

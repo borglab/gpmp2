@@ -38,7 +38,7 @@ class GPMP2_EXPORT DynamicVector {
   DynamicVector(const Eigen::VectorXd& vector)
       : dim_(vector.size()), vector_(vector) {}
 
-  virtual ~DynamicVector() {}
+  ~DynamicVector() {}
 
   // access element for convenience
   double operator()(size_t i) const { return vector_(i); }

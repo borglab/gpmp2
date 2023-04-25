@@ -34,12 +34,12 @@ TEST(GaussianPriorWorkspaceOrientationArm, error) {
   q = Vector2(M_PI / 4.0, -M_PI / 2);
   des = Rot3(Rot3::RzRyRx(0, 0, -M_PI / 2));
   GaussianPriorWorkspaceOrientationArm factor(0, arm, 1, des, cost_model);
-  actual = factor.evaluateError(q, H_act);
+  actual = factor.evaluateError(q, &H_act);
   expect = Vector3(-0.613943126, 1.48218982, 0.613943126);
   H_exp = numericalDerivative11(
       std::function<Vector3(const Vector2&)>(
           std::bind(&GaussianPriorWorkspaceOrientationArm::evaluateError,
-                    factor, std::placeholders::_1, boost::none)),
+                    factor, std::placeholders::_1, nullptr)),
       q, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(H_exp, H_act, 1e-6));

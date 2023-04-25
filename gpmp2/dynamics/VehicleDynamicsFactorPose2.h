@@ -22,15 +22,15 @@ namespace gpmp2 {
  * unary factor for vehicle dynamics
  */
 class VehicleDynamicsFactorPose2
-    : public gtsam::NoiseModelFactor2<gtsam::Pose2, gtsam::Vector> {
+    : public gtsam::NoiseModelFactorN<gtsam::Pose2, gtsam::Vector> {
  private:
   // typedefs
   typedef VehicleDynamicsFactorPose2 This;
-  typedef gtsam::NoiseModelFactor2<gtsam::Pose2, gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gtsam::Pose2, gtsam::Vector> Base;
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /* Default constructor */
   VehicleDynamicsFactorPose2() {}
@@ -50,8 +50,8 @@ class VehicleDynamicsFactorPose2
   /// numerical/analytic Jacobians from cost function
   gtsam::Vector evaluateError(
       const gtsam::Pose2& pose, const gtsam::Vector& vel,
-      boost::optional<gtsam::Matrix&> H1 = boost::none,
-      boost::optional<gtsam::Matrix&> H2 = boost::none) const {
+      gtsam::OptionalMatrixType H1 = nullptr,
+      gtsam::OptionalMatrixType H2 = nullptr) const override {
     using namespace gtsam;
 
     if (H1 || H2) {
@@ -76,7 +76,7 @@ class VehicleDynamicsFactorPose2
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -88,6 +88,7 @@ class VehicleDynamicsFactorPose2
     Base::print("", keyFormatter);
   }
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -95,6 +96,7 @@ class VehicleDynamicsFactorPose2
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor2", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

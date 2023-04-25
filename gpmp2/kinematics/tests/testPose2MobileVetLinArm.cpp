@@ -22,7 +22,7 @@ using namespace gpmp2;
 Pose3 fkpose(const Pose2MobileVetLinArm& r, const Pose2Vector& p, size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
-  r.forwardKinematics(p, boost::none, pos, boost::none);
+  r.forwardKinematics(p, {}, pos);
   return pos[i];
 }
 
@@ -68,7 +68,7 @@ TEST(Pose2MobileVetLinArm, TwoLinkPlanarExamples) {
       std::function<Pose3(const Pose2Vector&)>(
           std::bind(&fkpose, marm, std::placeholders::_1, size_t(3))),
       q, 1e-6));
-  marm.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  marm.forwardKinematics(q, {}, pvec_act, nullptr, &pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(pvec_exp[2], pvec_act[2], 1e-9));
@@ -104,7 +104,7 @@ TEST(Pose2MobileVetLinArm, TwoLinkPlanarExamples) {
       std::function<Pose3(const Pose2Vector&)>(
           std::bind(&fkpose, marm, std::placeholders::_1, size_t(3))),
       q, 1e-6));
-  marm.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  marm.forwardKinematics(q, {}, pvec_act, nullptr, &pJp_act);
   EXPECT(assert_equal(pvec_exp[0], pvec_act[0], 1e-9));
   EXPECT(assert_equal(pvec_exp[1], pvec_act[1], 1e-9));
   EXPECT(assert_equal(pvec_exp[2], pvec_act[2], 1e-9));
@@ -139,7 +139,7 @@ TEST(Pose2MobileVetLinArm, TwoLinkPlanarExamples) {
       std::function<Pose3(const Pose2Vector&)>(
           std::bind(&fkpose, marm, std::placeholders::_1, size_t(3))),
       q, 1e-6));
-  marm.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  marm.forwardKinematics(q, {}, pvec_act, nullptr, &pJp_act);
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
   EXPECT(assert_equal(pJp_exp[1], pJp_act[1], 1e-6));
   EXPECT(assert_equal(pJp_exp[2], pJp_act[2], 1e-6));
@@ -166,7 +166,7 @@ TEST(Pose2MobileVetLinArm, TwoLinkPlanarExamples) {
       std::function<Pose3(const Pose2Vector&)>(
           std::bind(&fkpose, marm, std::placeholders::_1, size_t(3))),
       q, 1e-6));
-  marm.forwardKinematics(q, boost::none, pvec_act, boost::none, pJp_act);
+  marm.forwardKinematics(q, {}, pvec_act, nullptr, &pJp_act);
   EXPECT(assert_equal(pJp_exp[0], pJp_act[0], 1e-6));
   EXPECT(assert_equal(pJp_exp[1], pJp_act[1], 1e-6));
   EXPECT(assert_equal(pJp_exp[2], pJp_act[2], 1e-6));

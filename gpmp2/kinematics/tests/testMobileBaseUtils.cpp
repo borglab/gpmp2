@@ -29,22 +29,20 @@ TEST(mobileBaseUtils, computeBaseTransPose3) {
   p2 = Pose2();
   pexp = Pose3();
   pact = computeBaseTransPose3(p2, base_T_arm, Hact);
-  Hexp =
-      numericalDerivative11(std::function<Pose3(const Pose2&)>(std::bind(
-                                &computeBaseTransPose3, std::placeholders::_1,
-                                base_T_arm, boost::none)),
-                            p2, 1e-6);
+  Hexp = numericalDerivative11(
+      std::function<Pose3(const Pose2&)>(std::bind(
+          &computeBaseTransPose3, std::placeholders::_1, base_T_arm, nullptr)),
+      p2, 1e-6);
   EXPECT(assert_equal(pexp, pact, 1e-9));
   EXPECT(assert_equal(Hexp, Hact, 1e-6));
 
   p2 = Pose2(1.3, 4.5, -0.3);
   pexp = Pose3(Rot3::Yaw(-0.3), Point3(1.3, 4.5, 0));
   pact = computeBaseTransPose3(p2, base_T_arm, Hact);
-  Hexp =
-      numericalDerivative11(std::function<Pose3(const Pose2&)>(std::bind(
-                                &computeBaseTransPose3, std::placeholders::_1,
-                                base_T_arm, boost::none)),
-                            p2, 1e-6);
+  Hexp = numericalDerivative11(
+      std::function<Pose3(const Pose2&)>(std::bind(
+          &computeBaseTransPose3, std::placeholders::_1, base_T_arm, nullptr)),
+      p2, 1e-6);
   EXPECT(assert_equal(pexp, pact, 1e-9));
   EXPECT(assert_equal(Hexp, Hact, 1e-6));
 
@@ -54,22 +52,20 @@ TEST(mobileBaseUtils, computeBaseTransPose3) {
   p2 = Pose2();
   pexp = Pose3(Rot3::Yaw(-0.3), Point3(1, 1, 2));
   pact = computeBaseTransPose3(p2, base_T_arm, Hact);
-  Hexp =
-      numericalDerivative11(std::function<Pose3(const Pose2&)>(std::bind(
-                                &computeBaseTransPose3, std::placeholders::_1,
-                                base_T_arm, boost::none)),
-                            p2, 1e-6);
+  Hexp = numericalDerivative11(
+      std::function<Pose3(const Pose2&)>(std::bind(
+          &computeBaseTransPose3, std::placeholders::_1, base_T_arm, nullptr)),
+      p2, 1e-6);
   EXPECT(assert_equal(pexp, pact, 1e-9));
   EXPECT(assert_equal(Hexp, Hact, 1e-6));
 
   p2 = Pose2(2, -2, M_PI_2);
   pexp = Pose3(Rot3::Yaw(M_PI_2 - 0.3), Point3(1, -1, 2));
   pact = computeBaseTransPose3(p2, base_T_arm, Hact);
-  Hexp =
-      numericalDerivative11(std::function<Pose3(const Pose2&)>(std::bind(
-                                &computeBaseTransPose3, std::placeholders::_1,
-                                base_T_arm, boost::none)),
-                            p2, 1e-6);
+  Hexp = numericalDerivative11(
+      std::function<Pose3(const Pose2&)>(std::bind(
+          &computeBaseTransPose3, std::placeholders::_1, base_T_arm, nullptr)),
+      p2, 1e-6);
   EXPECT(assert_equal(pexp, pact, 1e-9));
   EXPECT(assert_equal(Hexp, Hact, 1e-6));
 }

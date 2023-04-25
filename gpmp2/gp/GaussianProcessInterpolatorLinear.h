@@ -10,8 +10,11 @@
 #include <gpmp2/gp/GPutils.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/OptionalJacobian.h>
+#include <gtsam/nonlinear/NonlinearFactor.h>
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
 #include <boost/serialization/array.hpp>
+#endif
 
 namespace gpmp2 {
 
@@ -58,11 +61,10 @@ class GaussianProcessInterpolatorLinear {
   gtsam::Vector interpolatePose(
       const gtsam::Vector& pose1, const gtsam::Vector& vel1,
       const gtsam::Vector& pose2, const gtsam::Vector& vel2,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 =
-          boost::none) const {
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 = {}) const {
     using namespace gtsam;
 
     // state vector
@@ -82,12 +84,15 @@ class GaussianProcessInterpolatorLinear {
   }
 
   /// update jacobian based on interpolated jacobians
-  static void updatePoseJacobians(
-      const gtsam::Matrix& Hpose, const gtsam::Matrix& Hint1,
-      const gtsam::Matrix& Hint2, const gtsam::Matrix& Hint3,
-      const gtsam::Matrix& Hint4, boost::optional<gtsam::Matrix&> H1,
-      boost::optional<gtsam::Matrix&> H2, boost::optional<gtsam::Matrix&> H3,
-      boost::optional<gtsam::Matrix&> H4) {
+  static void updatePoseJacobians(const gtsam::Matrix& Hpose,
+                                  const gtsam::Matrix& Hint1,
+                                  const gtsam::Matrix& Hint2,
+                                  const gtsam::Matrix& Hint3,
+                                  const gtsam::Matrix& Hint4,
+                                  gtsam::OptionalMatrixType H1 = nullptr,
+                                  gtsam::OptionalMatrixType H2 = nullptr,
+                                  gtsam::OptionalMatrixType H3 = nullptr,
+                                  gtsam::OptionalMatrixType H4 = nullptr) {
     if (H1) *H1 = Hpose * Hint1;
     if (H2) *H2 = Hpose * Hint2;
     if (H3) *H3 = Hpose * Hint3;
@@ -98,11 +103,10 @@ class GaussianProcessInterpolatorLinear {
   gtsam::Vector interpolateVelocity(
       const gtsam::Vector& pose1, const gtsam::Vector& vel1,
       const gtsam::Vector& pose2, const gtsam::Vector& vel2,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 =
-          boost::none) const {
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 = {}) const {
     using namespace gtsam;
 
     // state vector
@@ -146,6 +150,7 @@ class GaussianProcessInterpolatorLinear {
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -158,6 +163,7 @@ class GaussianProcessInterpolatorLinear {
     ar& make_nvp("Lambda", make_array(Lambda_.data(), Lambda_.size()));
     ar& make_nvp("Psi", make_array(Psi_.data(), Psi_.size()));
   }
+#endif
 };
 
 }  // namespace gpmp2

@@ -44,13 +44,13 @@ class GPMP2_EXPORT Pose2MobileBase
    *  @param vx link velocity in work space
    *  @param J_px_p et al. optional Jacobians
    **/
-  void forwardKinematics(
-      const gtsam::Pose2& p, boost::optional<const gtsam::Vector&> v,
-      std::vector<gtsam::Pose3>& px,
-      boost::optional<std::vector<gtsam::Vector3>&> vx,
-      boost::optional<std::vector<gtsam::Matrix>&> J_px_p = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_vx_p = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_vx_v = boost::none) const;
+  void forwardKinematics(const gtsam::Pose2& p,
+                         std::optional<const gtsam::Vector> v,
+                         std::vector<gtsam::Pose3>& px,
+                         std::vector<gtsam::Vector3>* vx = nullptr,
+                         gtsam::OptionalMatrixVecType J_px_p = nullptr,
+                         gtsam::OptionalMatrixVecType J_vx_p = nullptr,
+                         gtsam::OptionalMatrixVecType J_vx_v = nullptr) const;
 };
 
 }  // namespace gpmp2

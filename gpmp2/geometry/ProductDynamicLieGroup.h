@@ -20,8 +20,8 @@ namespace gpmp2 {
 template <typename G, typename H>
 class ProductDynamicLieGroup : public std::pair<G, H> {
  private:
-  BOOST_CONCEPT_ASSERT((gtsam::IsLieGroup<G>));
-  BOOST_CONCEPT_ASSERT((gtsam::IsLieGroup<H>));
+  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<G>));
+  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<H>));
   typedef std::pair<G, H> Base;
 
  protected:
@@ -84,8 +84,8 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
   typedef gtsam::OptionalJacobian<dimension, dimension> ChartJacobian;
 
   ProductDynamicLieGroup retract(const TangentVector& v,  //
-                                 ChartJacobian H1 = boost::none,
-                                 ChartJacobian H2 = boost::none) const {
+                                 ChartJacobian H1 = {},
+                                 ChartJacobian H2 = {}) const {
     if (H1 || H2)
       throw std::runtime_error(
           "ProductLieGroup::retract derivatives not implemented yet");
@@ -95,8 +95,8 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
   }
 
   TangentVector localCoordinates(const ProductDynamicLieGroup& g,  //
-                                 ChartJacobian H1 = boost::none,
-                                 ChartJacobian H2 = boost::none) const {
+                                 ChartJacobian H1 = {},
+                                 ChartJacobian H2 = {}) const {
     if (H1 || H2)
       throw std::runtime_error(
           "ProductLieGroup::localCoordinates derivatives not implemented yet");
@@ -120,7 +120,7 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
  public:
   ProductDynamicLieGroup compose(const ProductDynamicLieGroup& other,
                                  ChartJacobian H1,
-                                 ChartJacobian H2 = boost::none) const {
+                                 ChartJacobian H2 = {}) const {
     if (H1 || H2) {
       Jacobian1 D_g_first;
       Jacobian2 D_h_second;
@@ -143,7 +143,7 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
 
   ProductDynamicLieGroup between(const ProductDynamicLieGroup& other,
                                  ChartJacobian H1,
-                                 ChartJacobian H2 = boost::none) const {
+                                 ChartJacobian H2 = {}) const {
     if (H1 || H2) {
       Jacobian1 D_g_first;
       Jacobian2 D_h_second;
@@ -182,7 +182,7 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
   }
 
   static ProductDynamicLieGroup Expmap(const TangentVector& v,
-                                       ChartJacobian Hv = boost::none) {
+                                       ChartJacobian Hv = {}) {
     // figure out total dim from v input
     const size_t dim_v = v.size();
     // figure out dim for 1 and 2
@@ -218,7 +218,7 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
   }
 
   static TangentVector Logmap(const ProductDynamicLieGroup& p,
-                              ChartJacobian Hp = boost::none) {
+                              ChartJacobian Hp = {}) {
     if (Hp) {
       Jacobian1 D_g_first;
       Jacobian2 D_h_second;

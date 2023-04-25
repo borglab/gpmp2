@@ -60,15 +60,14 @@ class RobotModel {
   /// given pose in configuration space, solve sphere center vector in work
   /// space with optional associated jacobian of pose
   void sphereCenters(const Pose& jp, std::vector<gtsam::Point3>& sph_centers,
-                     boost::optional<std::vector<gtsam::Matrix>&> J_point_conf =
-                         boost::none) const;
+                     gtsam::OptionalMatrixVecType J_point_conf = nullptr) const;
 
   /// given pose in configuration space, solve a single sphere center in work
   /// space for fast call of a single sphere with optional associated jacobian
   /// of pose
   gtsam::Point3 sphereCenter(
       size_t sph_idx, const Pose& jp,
-      boost::optional<gtsam::Matrix&> J_point_conf = boost::none) const;
+      gtsam::OptionalMatrixType J_point_conf = nullptr) const;
 
   /// given pose in configuration space, solve sphere center vector in work
   /// space matlab version, no jacobians output matrix 3 * nr_sphere

@@ -73,14 +73,13 @@ class GPMP2_EXPORT Arm
    *  @param jvx joint velocity in work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  void forwardKinematics(
-      const gtsam::Vector& jp, boost::optional<const gtsam::Vector&> jv,
-      std::vector<gtsam::Pose3>& jpx,
-      boost::optional<std::vector<gtsam::Vector3>&> jvx,
-      boost::optional<std::vector<gtsam::Matrix>&> J_jpx_jp = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_jvx_jp = boost::none,
-      boost::optional<std::vector<gtsam::Matrix>&> J_jvx_jv =
-          boost::none) const;
+  void forwardKinematics(const gtsam::Vector& jp,
+                         std::optional<const gtsam::Vector> jv,
+                         std::vector<gtsam::Pose3>& jpx,
+                         std::vector<gtsam::Vector3>* jvx = nullptr,
+                         gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+                         gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+                         gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
 
   /// update base pose in const
   void updateBasePose(const gtsam::Pose3& p) const { base_pose_ = p; }

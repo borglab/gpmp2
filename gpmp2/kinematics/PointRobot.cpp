@@ -13,12 +13,11 @@ namespace gpmp2 {
 
 /* ************************************************************************** */
 void PointRobot::forwardKinematics(
-    const Vector& jp, boost::optional<const Vector&> jv,
-    std::vector<gtsam::Pose3>& jpx,
-    boost::optional<std::vector<gtsam::Vector3>&> jvx,
-    boost::optional<std::vector<Matrix>&> J_jpx_jp,
-    boost::optional<std::vector<Matrix>&> J_jvx_jp,
-    boost::optional<std::vector<Matrix>&> J_jvx_jv) const {
+    const Vector& jp, std::optional<const Vector> jv,
+    std::vector<gtsam::Pose3>& jpx, std::vector<gtsam::Vector3>* jvx,
+    gtsam::OptionalMatrixVecType J_jpx_jp,
+    gtsam::OptionalMatrixVecType J_jvx_jp,
+    gtsam::OptionalMatrixVecType J_jvx_jv) const {
   // space for output
   jpx.resize(nr_links());
   if (jvx) jvx->resize(nr_links());

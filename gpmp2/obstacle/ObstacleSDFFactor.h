@@ -24,7 +24,7 @@ namespace gpmp2 {
  */
 template <class ROBOT>
 class ObstacleSDFFactor
-    : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
+    : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
  public:
   // typedefs
   typedef ROBOT Robot;
@@ -33,7 +33,7 @@ class ObstacleSDFFactor
  private:
   // typedefs
   typedef ObstacleSDFFactor This;
-  typedef gtsam::NoiseModelFactor1<Pose> Base;
+  typedef gtsam::NoiseModelFactorN<Pose> Base;
 
   // obstacle cost settings
   double epsilon_;  // distance from object that start non-zero cost
@@ -46,7 +46,7 @@ class ObstacleSDFFactor
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /* Default constructor */
   ObstacleSDFFactor() {}
@@ -73,11 +73,11 @@ class ObstacleSDFFactor
   /// numerical jacobians / analytic jacobians from cost function
   gtsam::Vector evaluateError(
       const typename Robot::Pose& conf,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const;
+      gtsam::OptionalMatrixType H1 = nullptr) const override;
 
   /// @return a deep copy of this factor
   virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -89,6 +89,7 @@ class ObstacleSDFFactor
     Base::print("", keyFormatter);
   }
 
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -96,6 +97,7 @@ class ObstacleSDFFactor
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

@@ -13,6 +13,7 @@
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/MatrixSerialization.h>
 #include <gtsam/base/Vector.h>
+#include <gtsam/nonlinear/NonlinearFactor.h>
 
 #include <iostream>
 
@@ -25,7 +26,7 @@ namespace gpmp2 {
 template <typename T>
 class GaussianProcessInterpolatorLie {
  private:
-  BOOST_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
+  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
   typedef GaussianProcessInterpolatorLie<T> This;
 
   size_t dof_;
@@ -55,18 +56,17 @@ class GaussianProcessInterpolatorLie {
     Psi_ = calcPsi(Qc_, delta_t_, tau_);
   }
 
-  /** Virtual destructor */
-  virtual ~GaussianProcessInterpolatorLie() {}
+  /** Destructor */
+  ~GaussianProcessInterpolatorLie() {}
 
   /// interpolate pose with Jacobians
   T interpolatePose(
       const T& pose1, const gtsam::Vector& vel1, const T& pose2,
       const gtsam::Vector& vel2,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 =
-          boost::none) const {
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 = {}) const {
     using namespace gtsam;
 
     const Vector r1 = (Vector(2 * dof_) << Vector::Zero(dof_), vel1).finished();
@@ -107,12 +107,15 @@ class GaussianProcessInterpolatorLie {
   }
 
   /// update jacobian based on interpolated jacobians
-  static void updatePoseJacobians(
-      const gtsam::Matrix& Hpose, const gtsam::Matrix& Hint1,
-      const gtsam::Matrix& Hint2, const gtsam::Matrix& Hint3,
-      const gtsam::Matrix& Hint4, boost::optional<gtsam::Matrix&> H1,
-      boost::optional<gtsam::Matrix&> H2, boost::optional<gtsam::Matrix&> H3,
-      boost::optional<gtsam::Matrix&> H4) {
+  static void updatePoseJacobians(const gtsam::Matrix& Hpose,
+                                  const gtsam::Matrix& Hint1,
+                                  const gtsam::Matrix& Hint2,
+                                  const gtsam::Matrix& Hint3,
+                                  const gtsam::Matrix& Hint4,
+                                  gtsam::OptionalMatrixType H1 = nullptr,
+                                  gtsam::OptionalMatrixType H2 = nullptr,
+                                  gtsam::OptionalMatrixType H3 = nullptr,
+                                  gtsam::OptionalMatrixType H4 = nullptr) {
     if (H1) *H1 = Hpose * Hint1;
     if (H2) *H2 = Hpose * Hint2;
     if (H3) *H3 = Hpose * Hint3;
@@ -123,11 +126,10 @@ class GaussianProcessInterpolatorLie {
   gtsam::Vector interpolateVelocity(
       const T& pose1, const gtsam::Vector& vel1, const T& pose2,
       const gtsam::Vector& vel2,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = boost::none,
-      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 =
-          boost::none) const {
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H1 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H2 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H3 = {},
+      gtsam::OptionalJacobian<Eigen::Dynamic, Eigen::Dynamic> H4 = {}) const {
     using namespace gtsam;
 
     const Vector r1 = (Vector(2 * dof_) << Vector::Zero(dof_), vel1).finished();
@@ -163,7 +165,7 @@ class GaussianProcessInterpolatorLie {
    */
 
   /** equals specialized to this factor */
-  virtual bool equals(const This& expected, double tol = 1e-9) const {
+  bool equals(const This& expected, double tol = 1e-9) const {
     return fabs(this->delta_t_ - expected.delta_t_) < tol &&
            fabs(this->tau_ - expected.tau_) < tol &&
            gtsam::equal_with_abs_tol(this->Qc_, expected.Qc_, tol) &&
@@ -180,6 +182,7 @@ class GaussianProcessInterpolatorLie {
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -191,6 +194,7 @@ class GaussianProcessInterpolatorLie {
     ar& BOOST_SERIALIZATION_NVP(Lambda_);
     ar& BOOST_SERIALIZATION_NVP(Psi_);
   }
+#endif
 };
 
 }  // namespace gpmp2

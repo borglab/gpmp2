@@ -14,7 +14,7 @@ template <class POSE, class VELOCITY>
 gtsam::Matrix ForwardKinematics<POSE, VELOCITY>::forwardKinematicsPose(
     const Pose& jp) const {
   std::vector<gtsam::Pose3> jpx;
-  forwardKinematics(jp, boost::none, jpx, boost::none);
+  forwardKinematics(jp, {}, jpx, nullptr);
 
   // convert vector in matrix
   gtsam::Matrix jpx_mat(6, nr_links_);
@@ -32,7 +32,7 @@ template <class POSE, class VELOCITY>
 gtsam::Matrix ForwardKinematics<POSE, VELOCITY>::forwardKinematicsPosition(
     const Pose& jp) const {
   std::vector<gtsam::Pose3> jpx;
-  forwardKinematics(jp, boost::none, jpx, boost::none);
+  forwardKinematics(jp, {}, jpx, nullptr);
 
   // convert vector in matrix
   gtsam::Matrix jpx_mat(3, nr_links_);
@@ -46,7 +46,7 @@ gtsam::Matrix ForwardKinematics<POSE, VELOCITY>::forwardKinematicsVel(
     const Pose& jp, const Velocity& jv) const {
   std::vector<gtsam::Pose3> jpx;
   std::vector<gtsam::Vector3> jvx;
-  forwardKinematics(jp, jv, jpx, jvx);
+  forwardKinematics(jp, jv, jpx, &jvx);
 
   // convert vector in matrix
   gtsam::Matrix jpv_mat(3, nr_links_);

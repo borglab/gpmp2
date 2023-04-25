@@ -11,6 +11,7 @@ namespace gpmp2 {
 
 /* ************************************************************************** */
 void SignedDistanceField::saveSDF(const std::string filename) {
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   std::ofstream ofs(filename.c_str());
   assert(ofs.good());
   std::string fext = filename.substr(filename.find_last_of(".") + 1);
@@ -24,10 +25,15 @@ void SignedDistanceField::saveSDF(const std::string filename) {
     boost::archive::text_oarchive oa(ofs);
     oa << *this;
   }
+#else
+  std::cerr << "Cannot save SDF since Boost serialization is disabled"
+            << std::endl;
+#endif
 }
 
 /* ************************************************************************** */
 void SignedDistanceField::loadSDF(const std::string filename) {
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   std::ifstream ifs(filename.c_str());
   if (!ifs.good())
     std::cout << "File \'" << filename << "\' does not exist!" << std::endl;
@@ -42,6 +48,10 @@ void SignedDistanceField::loadSDF(const std::string filename) {
     boost::archive::text_iarchive ia(ifs);
     ia >> *this;
   }
+#else
+  std::cerr << "Cannot load SDF since Boost serialization is disabled"
+            << std::endl;
+#endif
 }
 
 }  // namespace gpmp2

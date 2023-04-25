@@ -30,12 +30,12 @@ Arm::Arm(size_t dof, const Vector& a, const Vector& alpha, const Vector& d,
 
 /* ************************************************************************** */
 void Arm::forwardKinematics(
-    const Vector& jp, boost::optional<const Vector&> jv,
+    const Vector& jp, std::optional<const Vector> jv,
     std::vector<gtsam::Pose3>& jpx,
-    boost::optional<std::vector<gtsam::Vector3>&> jvx,
-    boost::optional<std::vector<Matrix>&> J_jpx_jp,
-    boost::optional<std::vector<Matrix>&> J_jvx_jp,
-    boost::optional<std::vector<Matrix>&> J_jvx_jv) const {
+    std::vector<gtsam::Vector3>* jvx,
+    gtsam::OptionalMatrixVecType J_jpx_jp,
+    gtsam::OptionalMatrixVecType J_jvx_jp,
+    gtsam::OptionalMatrixVecType J_jvx_jv) const {
   using namespace std;
 
   // space for output
@@ -82,14 +82,18 @@ void Arm::forwardKinematics(
 
   // cache dHoi_dqj (DOF^2 memory), only fill in i >= j since others are all
   // zeros
-  vector<vector<Matrix4> > dHo_dq(dof(), vector<Matrix4>(dof()));
-  if (J_jpx_jp || J_jvx_jp)
-    for (size_t i = 0; i < dof(); i++)
-      for (size_t j = 0; j <= i; j++)
-        if (i > j)
+  vector<vector<Matrix4>> dHo_dq(dof(), vector<Matrix4>(dof()));
+  if (J_jpx_jp || J_jvx_jp) {
+    for (size_t i = 0; i < dof(); i++) {
+      for (size_t j = 0; j <= i; j++) {
+        if (i > j) {
           dHo_dq[i][j] = Ho[j] * dH[j] * Hoinv[j + 1] * Ho[i + 1];
-        else
+        } else {
           dHo_dq[i][j] = Ho[j] * dH[j];
+        }
+      }
+    }
+  }
 
   // start calculating Forward and velocity kinematics / Jacobians
   for (size_t i = 0; i < dof(); i++) {

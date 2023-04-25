@@ -28,12 +28,11 @@ Pose2MobileArm::Pose2MobileArm(const Arm& arm, const gtsam::Pose3& base_T_arm)
 
 /* ************************************************************************** */
 void Pose2MobileArm::forwardKinematics(
-    const Pose2Vector& p, boost::optional<const gtsam::Vector&> v,
+    const Pose2Vector& p, std::optional<const gtsam::Vector> v,
     std::vector<gtsam::Pose3>& px,
-    boost::optional<std::vector<gtsam::Vector3>&> vx,
-    boost::optional<std::vector<gtsam::Matrix>&> J_px_p,
-    boost::optional<std::vector<gtsam::Matrix>&> J_vx_p,
-    boost::optional<std::vector<gtsam::Matrix>&> J_vx_v) const {
+    std::vector<gtsam::Vector3>* vx,
+    gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
+    gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v) throw runtime_error("[Pose2MobileArm] TODO: velocity not implemented");
 
   if (!v && (vx || J_vx_p || J_vx_v))
@@ -83,16 +82,13 @@ void Pose2MobileArm::forwardKinematics(
   if (v) {
     const Vector varm = v->tail(arm_.dof());
     arm_.forwardKinematics(
-        p.configuration(), boost::optional<const Vector&>(varm), armjpx,
-        vx ? boost::optional<vector<Vector3>&>(armjvx) : boost::none,
-        J_px_p ? boost::optional<vector<Matrix>&>(Jarm_jpx_jp) : boost::none,
-        J_vx_p ? boost::optional<vector<Matrix>&>(Jarm_jvx_jp) : boost::none,
-        J_vx_v ? boost::optional<vector<Matrix>&>(Jarm_jvx_jv) : boost::none);
+        p.configuration(), std::optional<const Vector>(varm), armjpx,
+        vx ? &armjvx : nullptr, J_px_p ? &Jarm_jpx_jp : nullptr,
+        J_vx_p ? &Jarm_jvx_jp : nullptr, J_vx_v ? &Jarm_jvx_jv : nullptr);
   } else {
-    arm_.forwardKinematics(
-        p.configuration(), boost::none, armjpx,
-        vx ? boost::optional<vector<Vector3>&>(armjvx) : boost::none,
-        J_px_p ? boost::optional<vector<Matrix>&>(Jarm_jpx_jp) : boost::none);
+    arm_.forwardKinematics(p.configuration(), {}, armjpx,
+                           vx ? &armjvx : nullptr,
+                           J_px_p ? &Jarm_jpx_jp : nullptr);
   }
 
   for (size_t i = 0; i < arm_.dof(); i++) {

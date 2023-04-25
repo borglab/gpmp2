@@ -23,9 +23,9 @@ namespace gpmp2 {
 class GPMP2_EXPORT PlanarSDF {
  public:
   // index and float_index is <row, col>
-  typedef boost::tuple<size_t, size_t> index;
-  typedef boost::tuple<double, double> float_index;
-  typedef boost::shared_ptr<PlanarSDF> shared_ptr;
+  typedef std::tuple<size_t, size_t> index;
+  typedef std::tuple<double, double> float_index;
+  typedef std::shared_ptr<PlanarSDF> shared_ptr;
 
  private:
   gtsam::Point2 origin_;
@@ -77,27 +77,27 @@ class GPMP2_EXPORT PlanarSDF {
 
     const double col = (point.x() - origin_.x()) / cell_size_;
     const double row = (point.y() - origin_.y()) / cell_size_;
-    return boost::make_tuple(row, col);
+    return std::make_tuple(row, col);
   }
 
   inline gtsam::Point2 convertCelltoPoint2(const float_index& cell) const {
-    return origin_ + gtsam::Point2(cell.get<1>() * cell_size_,
-                                   cell.get<0>() * cell_size_);
+    return origin_ + gtsam::Point2(std::get<1>(cell) * cell_size_,
+                                   std::get<0>(cell) * cell_size_);
   }
 
   /// bilinear interpolation
   inline double signed_distance(const float_index& idx) const {
-    const double lr = floor(idx.get<0>()), lc = floor(idx.get<1>());
+    const double lr = floor(std::get<0>(idx)), lc = floor(std::get<1>(idx));
     const double hr = lr + 1.0, hc = lc + 1.0;
     const size_t lri = static_cast<size_t>(lr), lci = static_cast<size_t>(lc),
                  hri = static_cast<size_t>(hr), hci = static_cast<size_t>(hc);
-    return (hr - idx.get<0>()) * (hc - idx.get<1>()) *
+    return (hr - std::get<0>(idx)) * (hc - std::get<1>(idx)) *
                signed_distance(lri, lci) +
-           (idx.get<0>() - lr) * (hc - idx.get<1>()) *
+           (std::get<0>(idx) - lr) * (hc - std::get<1>(idx)) *
                signed_distance(hri, lci) +
-           (hr - idx.get<0>()) * (idx.get<1>() - lc) *
+           (hr - std::get<0>(idx)) * (std::get<1>(idx) - lc) *
                signed_distance(lri, hci) +
-           (idx.get<0>() - lr) * (idx.get<1>() - lc) *
+           (std::get<0>(idx) - lr) * (std::get<1>(idx) - lc) *
                signed_distance(hri, hci);
   }
 
@@ -105,19 +105,19 @@ class GPMP2_EXPORT PlanarSDF {
   /// gradient regrads to float_index
   /// not numerical differentiable at index point
   inline gtsam::Vector2 gradient(const float_index& idx) const {
-    const double lr = floor(idx.get<0>()), lc = floor(idx.get<1>());
+    const double lr = floor(std::get<0>(idx)), lc = floor(std::get<1>(idx));
     const double hr = lr + 1.0, hc = lc + 1.0;
     const size_t lri = static_cast<size_t>(lr), lci = static_cast<size_t>(lc),
                  hri = static_cast<size_t>(hr), hci = static_cast<size_t>(hc);
     return gtsam::Vector2(
-        (hc - idx.get<1>()) *
+        (hc - std::get<1>(idx)) *
                 (signed_distance(hri, lci) - signed_distance(lri, lci)) +
-            (idx.get<1>() - lc) *
+            (std::get<1>(idx) - lc) *
                 (signed_distance(hri, hci) - signed_distance(lri, hci)),
 
-        (hr - idx.get<0>()) *
+        (hr - std::get<0>(idx)) *
                 (signed_distance(lri, hci) - signed_distance(lri, lci)) +
-            (idx.get<0>() - lr) *
+            (std::get<0>(idx) - lr) *
                 (signed_distance(hri, hci) - signed_distance(hri, lci)));
   }
 

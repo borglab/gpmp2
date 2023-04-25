@@ -21,7 +21,7 @@ namespace gpmp2 {
  */
 template <class ROBOT>
 class GaussianPriorWorkspaceOrientation
-    : public gtsam::NoiseModelFactor1<typename ROBOT::Pose> {
+    : public gtsam::NoiseModelFactorN<typename ROBOT::Pose> {
  public:
   // typedefs
   typedef ROBOT Robot;
@@ -30,7 +30,7 @@ class GaussianPriorWorkspaceOrientation
  private:
   // typedefs
   typedef GaussianPriorWorkspaceOrientation This;
-  typedef gtsam::NoiseModelFactor1<Pose> Base;
+  typedef gtsam::NoiseModelFactorN<Pose> Base;
 
   const Robot& robot_;           // Robot
   int joint_;                    // joint on the robot to be constrained
@@ -50,25 +50,23 @@ class GaussianPriorWorkspaceOrientation
         joint_(joint),
         des_orientation_(des_orientation) {}
 
-  virtual ~GaussianPriorWorkspaceOrientation() {}
+  ~GaussianPriorWorkspaceOrientation() {}
 
   /// factor error function
   gtsam::Vector evaluateError(
-      const Pose& pose,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+      const Pose& pose, gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
 
     std::vector<Pose3> joint_pos;
     std::vector<Matrix> J_jpx_jp;
-    robot_.fk_model().forwardKinematics(pose, boost::none, joint_pos,
-                                        boost::none, J_jpx_jp);
+    robot_.fk_model().forwardKinematics(pose, {}, joint_pos, nullptr,
+                                        &J_jpx_jp);
 
     if (H1) {
       Matrix36 H_rp;
       Matrix33 H_er;
       Rot3 curr_orientation = joint_pos[joint_].rotation(H_rp);
-      Vector error =
-          des_orientation_.logmap(curr_orientation, boost::none, H_er);
+      Vector error = des_orientation_.logmap(curr_orientation, {}, H_er);
       *H1 = H_er * H_rp * J_jpx_jp[joint_];
       return error;
     } else {
@@ -77,8 +75,8 @@ class GaussianPriorWorkspaceOrientation
   }
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -93,12 +91,14 @@ class GaussianPriorWorkspaceOrientation
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
   void serialize(ARCHIVE& ar, const unsigned int version) {
     ar& BOOST_SERIALIZATION_BASE_OBJECT_NVP(Base);
   }
+#endif
 };
 
 }  // namespace gpmp2

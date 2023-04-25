@@ -38,26 +38,23 @@ TEST(GaussianProcessInterpolatorPose2Vector, interpolatePose) {
   expectH1 = numericalDerivativeDynamic(
       std::function<Pose2Vector(const Pose2Vector&)>(
           std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, std::placeholders::_1, v1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+                    base, std::placeholders::_1, v1, p2, v2, nullptr, nullptr,
+                    nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, std::placeholders::_1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Pose2Vector&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, std::placeholders::_1, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Pose2Vector&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, p2, std::placeholders::_1, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, p2, std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-8));
@@ -76,26 +73,23 @@ TEST(GaussianProcessInterpolatorPose2Vector, interpolatePose) {
   expectH1 = numericalDerivativeDynamic(
       std::function<Pose2Vector(const Pose2Vector&)>(
           std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, std::placeholders::_1, v1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+                    base, std::placeholders::_1, v1, p2, v2, nullptr, nullptr,
+                    nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, std::placeholders::_1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Pose2Vector&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, std::placeholders::_1, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Pose2Vector&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, p2, std::placeholders::_1, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, p2, std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-4));
@@ -114,26 +108,23 @@ TEST(GaussianProcessInterpolatorPose2Vector, interpolatePose) {
   expectH1 = numericalDerivativeDynamic(
       std::function<Pose2Vector(const Pose2Vector&)>(
           std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, std::placeholders::_1, v1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+                    base, std::placeholders::_1, v1, p2, v2, nullptr, nullptr,
+                    nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, std::placeholders::_1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Pose2Vector&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, std::placeholders::_1, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Pose2Vector&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, p2, std::placeholders::_1, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, p2, std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
   EXPECT(assert_equal(expectH1, actualH1, 1e-8));
@@ -151,26 +142,23 @@ TEST(GaussianProcessInterpolatorPose2Vector, interpolatePose) {
   expectH1 = numericalDerivativeDynamic(
       std::function<Pose2Vector(const Pose2Vector&)>(
           std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, std::placeholders::_1, v1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+                    base, std::placeholders::_1, v1, p2, v2, nullptr, nullptr,
+                    nullptr, nullptr)),
       p1, 1e-6);
   expectH2 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, std::placeholders::_1, p2, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          std::placeholders::_1, p2, v2, nullptr, nullptr, nullptr, nullptr)),
       v1, 1e-6);
   expectH3 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Pose2Vector&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, std::placeholders::_1, v2, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Pose2Vector&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, std::placeholders::_1, v2, nullptr, nullptr, nullptr, nullptr)),
       p2, 1e-6);
   expectH4 = numericalDerivativeDynamic(
-      std::function<Pose2Vector(const Vector6&)>(
-          std::bind(&GaussianProcessInterpolatorPose2Vector::interpolatePose,
-                    base, p1, v1, p2, std::placeholders::_1, boost::none,
-                    boost::none, boost::none, boost::none)),
+      std::function<Pose2Vector(const Vector6&)>(std::bind(
+          &GaussianProcessInterpolatorPose2Vector::interpolatePose, base, p1,
+          v1, p2, std::placeholders::_1, nullptr, nullptr, nullptr, nullptr)),
       v2, 1e-6);
   EXPECT(assert_equal(expectH1, actualH1, 1e-8));
   EXPECT(assert_equal(expectH2, actualH2, 1e-8));

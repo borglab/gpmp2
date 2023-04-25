@@ -27,11 +27,11 @@ namespace gpmp2 {
  * will be used
  */
 class JointLimitFactorPose2Vector
-    : public gtsam::NoiseModelFactor1<gpmp2::Pose2Vector> {
+    : public gtsam::NoiseModelFactorN<gpmp2::Pose2Vector> {
  private:
   // typedefs
   typedef JointLimitFactorPose2Vector This;
-  typedef gtsam::NoiseModelFactor1<gpmp2::Pose2Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gpmp2::Pose2Vector> Base;
 
   // joint limit value
   gtsam::Vector down_limit_, up_limit_;
@@ -41,7 +41,7 @@ class JointLimitFactorPose2Vector
 
  public:
   /// shorthand for a smart pointer to a factor
-  typedef boost::shared_ptr<This> shared_ptr;
+  typedef std::shared_ptr<This> shared_ptr;
 
   /**
    * Constructor, all limit vector dim = cost_model.dim = pose.configuration.dof
@@ -65,12 +65,12 @@ class JointLimitFactorPose2Vector
           "[JointLimitFactorVector] ERROR: limit vector dim does not fit.");
   }
 
-  virtual ~JointLimitFactorPose2Vector() {}
+  ~JointLimitFactorPose2Vector() {}
 
   /// error function
   gtsam::Vector evaluateError(
       const gpmp2::Pose2Vector& pose,
-      boost::optional<gtsam::Matrix&> H1 = boost::none) const {
+      gtsam::OptionalMatrixType H1 = nullptr) const override {
     using namespace gtsam;
     // get configuration
     const gtsam::Vector& conf = pose.configuration();
@@ -82,9 +82,9 @@ class JointLimitFactorPose2Vector
     for (size_t i = 0; i < (size_t)conf.size(); i++) {
       if (H1) {
         double Hp;
-        err(i + 3) =
-            hingeLossJointLimitCost(conf(i), down_limit_(i + 3),
-                                    up_limit_(i + 3), limit_thresh_(i + 3), Hp);
+        err(i + 3) = hingeLossJointLimitCost(conf(i), down_limit_(i + 3),
+                                             up_limit_(i + 3),
+                                             limit_thresh_(i + 3), &Hp);
         (*H1)(i + 3, i + 3) = Hp;
       } else {
         err(i + 3) =
@@ -96,8 +96,8 @@ class JointLimitFactorPose2Vector
   }
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
-    return boost::static_pointer_cast<gtsam::NonlinearFactor>(
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
+    return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
 
@@ -111,6 +111,7 @@ class JointLimitFactorPose2Vector
   }
 
  private:
+#ifdef GPMP2_ENABLE_BOOST_SERIALIZATION
   /** Serialization function */
   friend class boost::serialization::access;
   template <class ARCHIVE>
@@ -118,6 +119,7 @@ class JointLimitFactorPose2Vector
     ar& boost::serialization::make_nvp(
         "NoiseModelFactor1", boost::serialization::base_object<Base>(*this));
   }
+#endif
 };
 
 }  // namespace gpmp2

@@ -54,17 +54,17 @@ TEST(SDFutils, test) {
   // access
   SignedDistanceField::float_index idx;
   idx = field.convertPoint3toCell(Point3(0, 0, 0));
-  EXPECT_DOUBLES_EQUAL(2, idx.get<0>(), 1e-9);
-  EXPECT_DOUBLES_EQUAL(2, idx.get<1>(), 1e-9);
-  EXPECT_DOUBLES_EQUAL(1, idx.get<2>(), 1e-9);
+  EXPECT_DOUBLES_EQUAL(2, std::get<0>(idx), 1e-9);
+  EXPECT_DOUBLES_EQUAL(2, std::get<1>(idx), 1e-9);
+  EXPECT_DOUBLES_EQUAL(1, std::get<2>(idx), 1e-9);
   EXPECT_DOUBLES_EQUAL(0, field.signed_distance(idx), 1e-9)
   idx = field.convertPoint3toCell(
       Point3(0.18, -0.18, 0.07));  // tri-linear interpolation
-  EXPECT_DOUBLES_EQUAL(0.2, idx.get<0>(), 1e-9);
-  EXPECT_DOUBLES_EQUAL(3.8, idx.get<1>(), 1e-9);
-  EXPECT_DOUBLES_EQUAL(1.7, idx.get<2>(), 1e-9);
+  EXPECT_DOUBLES_EQUAL(0.2, std::get<0>(idx), 1e-9);
+  EXPECT_DOUBLES_EQUAL(3.8, std::get<1>(idx), 1e-9);
+  EXPECT_DOUBLES_EQUAL(1.7, std::get<2>(idx), 1e-9);
   EXPECT_DOUBLES_EQUAL(1.488288, field.signed_distance(idx), 1e-9)
-  idx = boost::make_tuple(1.0, 2.0, 3.0);
+  idx = std::make_tuple(1.0, 2.0, 3.0);
   EXPECT(assert_equal(Point3(0.0, -0.1, 0.2), field.convertCelltoPoint3(idx)));
 
   // gradient
