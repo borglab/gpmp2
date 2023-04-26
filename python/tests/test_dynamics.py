@@ -8,4 +8,12 @@ import gpmp2
 
 
 class TestVehicleDynamicsFactorPose2(GtsamTestCase):
-    """Tests for VehicleDynamicsFactorPose2"""
+    """Tests for VehicleDynamicsFactorPose2 class"""
+
+
+class TestVehicleDynamicsFactorPose2Vector(GtsamTestCase):
+    """Tests for VehicleDynamicsFactorPose2Vector class"""
+
+
+class TestVehicleDynamicsFactorVector(GtsamTestCase):
+    """Tests for VehicleDynamicsFactorVector class"""
