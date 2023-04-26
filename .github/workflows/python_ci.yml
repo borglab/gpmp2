@@ -101,7 +101,8 @@ jobs:
       - name: GTSAM Python Package
         run: pip3 install gtsam
 
-      - name: GTwrap
+      - name: GTwrap (Linux)
+        if: runner.os == 'Linux'
         run: |
           git clone https://github.com/borglab/wrap.git /home/runner/work/gtwrap
           cd /home/runner/work/gtwrap
@@ -109,6 +110,16 @@ jobs:
           cmake ..
           sudo make -j$(nproc) install
           sudo ldconfig
+          cd $GITHUB_WORKSPACE # go back to home directory
+
+      - name: GTSAM (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          git clone https://github.com/borglab/wrap.git /Users/runner/work/gtwrap
+          cd /Users/runner/work/gtwrap
+          mkdir build && cd $_
+          cmake -DPYTHON_EXECUTABLE=/usr/local/bin/python3 ..
+          make -j$(sysctl -n hw.physicalcpu) install && make python-install
           cd $GITHUB_WORKSPACE # go back to home directory
 
       - name: Checkout
