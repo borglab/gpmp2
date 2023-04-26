@@ -21,11 +21,14 @@ if(NOT DEFINED CMAKE_MACOSX_RPATH)
 endif()
 
 # version indicator
-set(GPMP2_VERSION_MAJOR 0)
-set(GPMP2_VERSION_MINOR 3)
+set(GPMP2_VERSION_MAJOR 1)
+set(GPMP2_VERSION_MINOR 0)
 set(GPMP2_VERSION_PATCH 0)
 set(gpmp2_VERSION_STRING "${GPMP2_VERSION_MAJOR}.${GPMP2_VERSION_MINOR}.${GPMP2_VERSION_PATCH}")
 set(GPMP2_VERSION_STRING gpmp2_VERSION_STRING)
+# Versions
+set(GPMP2_VERSION   ${GPMP2_VERSION_MAJOR}.${GPMP2_VERSION_MINOR}.${GPMP2_VERSION_PATCH})
+set(gpmp2_soversion ${GPMP2_VERSION_MAJOR})
 
 # options: whether turn on Matlab/Python toolbox
 option(GPMP2_BUILD_STATIC_LIBRARY "whether build static library" OFF)
@@ -90,3 +93,15 @@ endif()
 # Install config and export files
 GtsamMakeConfigFile(gpmp2)
 export(TARGETS ${GPMP2_EXPORTED_TARGETS} FILE gpmp2-exports.cmake)
+
+message(STATUS "===============================================================")
+message(STATUS "================  Configuration Options  ======================")
+message(STATUS "Project                                     : ${PROJECT_NAME}")
+message(STATUS "Version                                     : ${GPMP2_VERSION}")
+message(STATUS "Install prefix                              : ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Build Type                                  : ${CMAKE_BUILD_TYPE}")
+message(STATUS "CMAKE_CXX_COMPILER_ID type                  : ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "CMAKE_CXX_COMPILER_VERSION                  : ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "GTSAM Version                               : ${GTSAM_VERSION}")
+message(STATUS "Boost Version                               : ${Boost_VERSION}")
+message(STATUS "Python Version                              : ${WRAP_PYTHON_VERSION}")
