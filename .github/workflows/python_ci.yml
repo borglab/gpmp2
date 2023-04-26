@@ -90,35 +90,22 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           # Install gtsam
-          sudo apt-get -y install libgtsam-no-tbb-dev libgtsam-no-tbb-unstable-dev
-
-      - name: GTSAM (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          # Install gtsam
-          brew install --HEAD gtsam@latest
-
-      - name: GTSAM Python Package
-        run: pip3 install gtsam
-
-      - name: GTwrap (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          git clone https://github.com/borglab/wrap.git /home/runner/work/gtwrap
-          cd /home/runner/work/gtwrap
+          git clone https://github.com/borglab/gtsam.git /home/runner/work/gtsam
+          cd /home/runner/work/gtsam
           mkdir build && cd $_
-          cmake ..
-          sudo make -j$(nproc) install
+          cmake -D GTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DGTSAM_BUILD_PYTHON=ON ..
+          sudo make -j$(nproc) install && sudo make python-install
           sudo ldconfig
           cd $GITHUB_WORKSPACE # go back to home directory
 
       - name: GTSAM (macOS)
         if: runner.os == 'macOS'
         run: |
-          git clone https://github.com/borglab/wrap.git /Users/runner/work/gtwrap
-          cd /Users/runner/work/gtwrap
+          # Install gtsam
+          git clone https://github.com/borglab/gtsam.git /Users/runner/work/gtsam
+          cd /Users/runner/work/gtsam
           mkdir build && cd $_
-          cmake -DPYTHON_EXECUTABLE=/usr/local/bin/python3 ..
+          cmake -D GTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DGTSAM_BUILD_PYTHON=ON -DPYTHON_EXECUTABLE=/usr/local/bin/python3 ..
           make -j$(sysctl -n hw.physicalcpu) install && make python-install
           cd $GITHUB_WORKSPACE # go back to home directory
 
