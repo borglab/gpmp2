@@ -98,6 +98,9 @@ jobs:
           # Install gtsam
           brew install --HEAD gtsam@latest
 
+      - name: GTSAM Python Package
+        run: pip3 install gtsam
+
       - name: GTwrap
         run: |
           git clone https://github.com/borglab/wrap.git /home/runner/work/gtwrap
