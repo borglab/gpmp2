@@ -11,7 +11,7 @@ class TestPose2Vector(GtsamTestCase):
     """Test the Pose2Vector class."""
 
     def test_constructor(self):
-        """Test the constructor."""
+        """Test the Pose2Vector constructor."""
         pose = gtsam.Pose2(0, 0, 0)
         c = np.random.rand(3)
         pose2vector = gpmp2.Pose2Vector(pose, c)
