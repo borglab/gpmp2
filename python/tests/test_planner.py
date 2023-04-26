@@ -9,4 +9,3 @@ import gpmp2
 
 class TestTrajOptimizerSetting(GtsamTestCase):
     """Unit tests for TrajOptimizerSetting class."""
-    
