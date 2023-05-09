@@ -25,19 +25,22 @@ namespace gpmp2 {
  */
 class GPMP2_EXPORT Arm
     : public ForwardKinematics<gtsam::Vector, gtsam::Vector> {
- private:
+
+private:
   // typedefs
   typedef ForwardKinematics<gtsam::Vector, gtsam::Vector> Base;
 
-  gtsam::Vector a_, alpha_, d_;  // raw DH parameters
+  gtsam::Vector a_, alpha_, d_; // raw DH parameters
   mutable gtsam::Pose3
-      base_pose_;  // base pose of the first link, allow change in const
-  gtsam::Vector theta_bias_;  // bias of theta
+      base_pose_; // base pose of the first link, allow change in const
+  gtsam::Vector theta_bias_; // bias of theta
 
   std::vector<gtsam::Pose3>
-      link_trans_notheta_;  // transformation of each link, no theta matrix
+      link_trans_notheta_; // transformation of each link, no theta matrix
 
- public:
+  Parameterization parameterization_;
+
+public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   /// default contructor
@@ -45,19 +48,22 @@ class GPMP2_EXPORT Arm
 
   /// Contructor take in number of joints for the arm, its DH parameters
   /// the base pose (default zero pose), and theta bias (default zero)
-  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
-      const gtsam::Vector& d)
-      : Arm(dof, a, alpha, d,
-            gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0, 0, 0)),
-            gtsam::Vector::Zero(dof)) {}
+  Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
+      const gtsam::Vector &d,
+      const Parameterization &parameterization = Parameterization::DH)
+      : Arm(dof, a, alpha, d, gtsam::Pose3(), gtsam::Vector::Zero(dof),
+            parameterization) {}
 
-  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
-      const gtsam::Vector& d, const gtsam::Pose3& base_pose)
-      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof)) {}
+  Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
+      const gtsam::Vector &d, const gtsam::Pose3 &base_pose,
+      const Parameterization &parameterization = Parameterization::DH)
+      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof),
+            parameterization) {}
 
-  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
-      const gtsam::Vector& d, const gtsam::Pose3& base_pose,
-      const gtsam::Vector& theta_bias);
+  Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
+      const gtsam::Vector &d, const gtsam::Pose3 &base_pose,
+      const gtsam::Vector &theta_bias,
+      const Parameterization &parameterization = Parameterization::DH);
 
   /// Default destructor
   virtual ~Arm() {}
@@ -65,7 +71,7 @@ class GPMP2_EXPORT Arm
   /**
    *  Forward kinematics: joint configuration to poses in workspace
    *  Velocity kinematics: optional joint velocities to linear velocities in
-   *workspace, no anuglar rate
+   *  workspace, no anuglar rate
    *
    *  @param jp joint position in config space
    *  @param jv joint velocity in config space
@@ -73,25 +79,69 @@ class GPMP2_EXPORT Arm
    *  @param jvx joint velocity in work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  void forwardKinematics(const gtsam::Vector& jp,
+  void forwardKinematics(const gtsam::Vector &jp,
                          std::optional<const gtsam::Vector> jv,
-                         std::vector<gtsam::Pose3>& jpx,
-                         std::vector<gtsam::Vector3>* jvx = nullptr,
+                         std::vector<gtsam::Pose3> &jpx,
+                         std::vector<gtsam::Vector3> *jvx = nullptr,
                          gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
 
+  /**
+   *  Forward kinematics with classical Denavit-Hartenberg parameterization.
+   *
+   *  Forward kinematics: joint configuration to poses in workspace
+   *  Velocity kinematics: optional joint velocities to linear velocities in
+   *  workspace, no anuglar rate
+   *
+   *  @param jp joint position in config space
+   *  @param jv joint velocity in config space
+   *  @param jpx joint pose in work space
+   *  @param jvx joint velocity in work space
+   *  @param J_jpx_jp et al. optional Jacobians
+   **/
+  void
+  forwardKinematicsDH(const gtsam::Vector &jp,
+                      std::optional<const gtsam::Vector> jv,
+                      std::vector<gtsam::Pose3> &jpx,
+                      std::vector<gtsam::Vector3> *jvx = nullptr,
+                      gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+                      gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+                      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
+
+  /**
+   *  Forward kinematics with Modified Denavit-Hartenberg parameterization.
+   *
+   *  Forward kinematics: joint configuration to poses in workspace
+   *  Velocity kinematics: optional joint velocities to linear velocities in
+   *  workspace, no anuglar rate
+   *
+   *  @param jp joint position in config space
+   *  @param jv joint velocity in config space
+   *  @param jpx joint pose in work space
+   *  @param jvx joint velocity in work space
+   *  @param J_jpx_jp et al. optional Jacobians
+   **/
+  void
+  forwardKinematicsMDH(const gtsam::Vector &jp,
+                       std::optional<const gtsam::Vector> jv,
+                       std::vector<gtsam::Pose3> &jpx,
+                       std::vector<gtsam::Vector3> *jvx = nullptr,
+                       gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+                       gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+                       gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
+
   /// update base pose in const
-  void updateBasePose(const gtsam::Pose3& p) const { base_pose_ = p; }
+  void updateBasePose(const gtsam::Pose3 &p) const { base_pose_ = p; }
 
-  /// accesses
-  const gtsam::Vector& a() const { return a_; }
-  const gtsam::Vector& d() const { return d_; }
-  const gtsam::Vector& alpha() const { return alpha_; }
-  const gtsam::Pose3& base_pose() const { return base_pose_; }
+  /// accessors (mutators)
+  const gtsam::Vector &a() const { return a_; }
+  const gtsam::Vector &d() const { return d_; }
+  const gtsam::Vector &alpha() const { return alpha_; }
+  const gtsam::Pose3 &base_pose() const { return base_pose_; }
 
- private:
-  /// Calculate the homogenous tranformation and matrix for joint j with angle
+private:
+  /// Calculate the homogenous transformation and matrix for joint j with angle
   /// theta in the configuration space
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
     assert(i < dof());
@@ -117,9 +167,9 @@ class GPMP2_EXPORT Arm
   }
 
   /// Calculate a single column j of the Jacobian (Jv(j)) for a given link
-  gtsam::Vector3 getJvj(const gtsam::Matrix4& Hoi,
-                        const gtsam::Matrix4& Hoj) const {
-    // z axis vector in the origin tranformation
+  gtsam::Vector3 getJvj(const gtsam::Matrix4 &Hoi,
+                        const gtsam::Matrix4 &Hoj) const {
+    // z axis vector in the origin transformation
     // gtsam::Matrix3 rot_z_j = gtsam::skewSymmetric(Hoj.col(2).head<3>());
     // position vector in the origin transformation
     // gtsam::Vector3 pos_o_i = Hoi.col(3).head<3>();
@@ -132,9 +182,9 @@ class GPMP2_EXPORT Arm
 
   /// Calculate derivative of a single column j of the Jacobian (Jv(j)) for a
   /// given link
-  gtsam::Vector3 getdJvj(const gtsam::Matrix4& Hoi, const gtsam::Matrix4& Hoj,
-                         const gtsam::Matrix4& dHoi,
-                         const gtsam::Matrix4& dHoj) const {
+  gtsam::Vector3 getdJvj(const gtsam::Matrix4 &Hoi, const gtsam::Matrix4 &Hoj,
+                         const gtsam::Matrix4 &dHoi,
+                         const gtsam::Matrix4 &dHoj) const {
     // gtsam::Matrix3 rot_z_j = gtsam::skewSymmetric(Hoj.col(2).head<3>());
     // gtsam::Matrix3 drot_z_j = gtsam::skewSymmetric(dHoj.col(2).head<3>());
     // gtsam::Vector3 pos_o_i = Hoi.col(3).head<3>();
@@ -150,4 +200,4 @@ class GPMP2_EXPORT Arm
   }
 };
 
-}  // namespace gpmp2
+} // namespace gpmp2
