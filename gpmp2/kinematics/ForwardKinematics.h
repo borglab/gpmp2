@@ -16,7 +16,7 @@
 
 namespace gpmp2 {
 
-/// Enum for specifying forward kinematics parameterization
+/// Enum for specifying Denavit-Hartenberg parameterization
 enum Parameterization { DH, MODIFIED_DH };
 
 /**
@@ -47,8 +47,8 @@ public:
   /**
    *  Forward kinematics: poses from configuration space to 3D workspace
    *  Velocity kinematics: optional velocities from configuration space to 3D
-   *workspace, no angular rate pure virtual method, need implementation in
-   *derived class
+   *  workspace, no angular rate pure virtual method, need implementation in
+   *  derived class
    *
    *  @param jp robot pose in config space
    *  @param jv robot velocity in config space
@@ -67,7 +67,7 @@ public:
   /**
    * Matrix wrapper for forwardKinematics, mainly used by matlab
    * each column is a single point / velocity of the joint, size 6xN, 3xN, 3xN
-   * No jacobians provided by this version
+   * No Jacobians provided by this version
    */
   gtsam::Matrix forwardKinematicsPose(const Pose &jp) const;
   gtsam::Matrix forwardKinematicsPosition(const Pose &jp) const;

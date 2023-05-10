@@ -38,16 +38,17 @@ private:
   std::vector<gtsam::Pose3>
       link_trans_notheta_; // transformation of each link, no theta matrix
 
-  Parameterization parameterization_;
+  Parameterization parameterization_; // kinematic DH parameterization
 
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  /// default contructor
+  /// default constructor
   Arm() {}
 
-  /// Contructor take in number of joints for the arm, its DH parameters
-  /// the base pose (default zero pose), and theta bias (default zero)
+  /// Constructor take in number of joints for the arm, its DH parameters
+  /// the base pose (default zero pose), theta bias (default zero), and DH
+  /// parameterization (default conventional DH)
   Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
       const gtsam::Vector &d,
       const Parameterization &parameterization = Parameterization::DH)
@@ -71,7 +72,7 @@ public:
   /**
    *  Forward kinematics: joint configuration to poses in workspace
    *  Velocity kinematics: optional joint velocities to linear velocities in
-   *  workspace, no anuglar rate
+   *  workspace, no angular rate
    *
    *  @param jp joint position in config space
    *  @param jv joint velocity in config space
@@ -92,7 +93,7 @@ public:
    *
    *  Forward kinematics: joint configuration to poses in workspace
    *  Velocity kinematics: optional joint velocities to linear velocities in
-   *  workspace, no anuglar rate
+   *  workspace, no angular rate
    *
    *  @param jp joint position in config space
    *  @param jv joint velocity in config space
@@ -100,21 +101,21 @@ public:
    *  @param jvx joint velocity in work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  void
-  forwardKinematicsDH(const gtsam::Vector &jp,
-                      std::optional<const gtsam::Vector> jv,
-                      std::vector<gtsam::Pose3> &jpx,
-                      std::vector<gtsam::Vector3> *jvx = nullptr,
-                      gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
-                      gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
-                      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
+  // void
+  // forwardKinematicsDH(const gtsam::Vector &jp,
+  //                     std::optional<const gtsam::Vector> jv,
+  //                     std::vector<gtsam::Pose3> &jpx,
+  //                     std::vector<gtsam::Vector3> *jvx = nullptr,
+  //                     gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+  //                     gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+  //                     gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
 
   /**
-   *  Forward kinematics with Modified Denavit-Hartenberg parameterization.
+   *  Forward kinematics with modified Denavit-Hartenberg parameterization.
    *
    *  Forward kinematics: joint configuration to poses in workspace
    *  Velocity kinematics: optional joint velocities to linear velocities in
-   *  workspace, no anuglar rate
+   *  workspace, no angular rate
    *
    *  @param jp joint position in config space
    *  @param jv joint velocity in config space
@@ -122,14 +123,14 @@ public:
    *  @param jvx joint velocity in work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  void
-  forwardKinematicsMDH(const gtsam::Vector &jp,
-                       std::optional<const gtsam::Vector> jv,
-                       std::vector<gtsam::Pose3> &jpx,
-                       std::vector<gtsam::Vector3> *jvx = nullptr,
-                       gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
-                       gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
-                       gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
+  // void
+  // forwardKinematicsMDH(const gtsam::Vector &jp,
+  //                      std::optional<const gtsam::Vector> jv,
+  //                      std::vector<gtsam::Pose3> &jpx,
+  //                      std::vector<gtsam::Vector3> *jvx = nullptr,
+  //                      gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+  //                      gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+  //                      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
 
   /// update base pose in const
   void updateBasePose(const gtsam::Pose3 &p) const { base_pose_ = p; }
@@ -145,10 +146,19 @@ private:
   /// theta in the configuration space
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
     assert(i < dof());
-    // DH transformation for each link, with theta matrix
-    return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
-                        gtsam::Point3(0, 0, 0)) *
-           link_trans_notheta_[i];
+    switch (parameterization_) {
+    case Parameterization::DH:
+      // DH transformation for each link, with theta matrix
+      return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
+                          gtsam::Point3(0, 0, 0)) *
+             link_trans_notheta_[i];
+      break;
+    case Parameterization::MODIFIED_DH:
+      return link_trans_notheta_[i] *
+             gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
+                          gtsam::Point3(0, 0, 0));
+      break;
+    }
   }
 
   gtsam::Matrix4 getH(size_t i, double theta) const {
@@ -163,7 +173,14 @@ private:
     const gtsam::Matrix4 dRot =
         (gtsam::Matrix4() << -s, -c, 0, 0, c, -s, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             .finished();
-    return dRot * link_trans_notheta_[i].matrix();
+    switch (parameterization_) {
+    case Parameterization::DH:
+      return dRot * link_trans_notheta_[i].matrix();
+      break;
+    case Parameterization::MODIFIED_DH:
+      return link_trans_notheta_[i].matrix() * dRot;
+      break;
+    }
   }
 
   /// Calculate a single column j of the Jacobian (Jv(j)) for a given link

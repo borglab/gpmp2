@@ -265,7 +265,7 @@ TEST(Arm, 2linkPlanarExamples) {
 /* ************************************************************************** */
 TEST(Arm, 3link3Dexample) {
   // random 3 link arm
-  // no link rotation groud truth
+  // no link rotation ground truth
 
   Vector3 a(3.6, 9.8, -10.2), alpha(-0.4, 0.7, 0.9), d(-12.3, -3.4, 5.0);
   Arm arm(3, a, alpha, d);
@@ -352,7 +352,7 @@ TEST(Arm, 3link3Dexample) {
 
 /* ************************************************************************** */
 TEST(Arm, WAMexample) {
-  // WAM arm exmaple, only joint position, no rotation
+  // WAM arm example, only joint position, no rotation
   Vector7 a = (Vector7() << 0.0, 0.0, 0.045, -0.045, 0.0, 0.0, 0.0).finished();
   Vector7 alpha = (Vector7() << -M_PI / 2.0, M_PI / 2.0, -M_PI / 2.0,
                    M_PI / 2.0, -M_PI / 2.0, M_PI / 2.0, 0.0)
@@ -544,6 +544,17 @@ TEST(Arm, WAMexample) {
 }
 
 /* ************************************************************************** */
+TEST(Arm, KinovaGen3) {
+  // Kinova Gen3 7DOF arm example, only joint position, no rotation
+  Vector7 a = (Vector7() << 0.0, 0.0, 0.045, -0.045, 0.0, 0.0, 0.0).finished();
+  Vector7 alpha = (Vector7() << -M_PI / 2.0, M_PI / 2.0, -M_PI / 2.0,
+                   M_PI / 2.0, -M_PI / 2.0, M_PI / 2.0, 0.0)
+                      .finished();
+  Vector7 d = (Vector7() << 0.0, 0.0, 0.55, 0.0, 0.3, 0.0, 0.06).finished();
+  Arm arm(7, a, alpha, d, Parameterization::MODIFIED_DH);
+}
+/* ************************************************************************** */
+
 /* main function */
 int main() {
   TestResult tr;
