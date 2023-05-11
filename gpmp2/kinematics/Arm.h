@@ -130,7 +130,8 @@ public:
   //                      std::vector<gtsam::Vector3> *jvx = nullptr,
   //                      gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
   //                      gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
-  //                      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
+  //                      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr)
+  //                      const;
 
   /// update base pose in const
   void updateBasePose(const gtsam::Pose3 &p) const { base_pose_ = p; }
@@ -147,8 +148,8 @@ private:
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
     assert(i < dof());
     switch (parameterization_) {
+    // DH transformation for each link, with theta matrix
     case Parameterization::DH:
-      // DH transformation for each link, with theta matrix
       return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
                           gtsam::Point3(0, 0, 0)) *
              link_trans_notheta_[i];
