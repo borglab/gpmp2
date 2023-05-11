@@ -91,12 +91,22 @@ public:
   /// update base pose in const
   void updateBasePose(const gtsam::Pose3 &p) const { base_pose_ = p; }
 
-  /// accessors (mutators)
+  /// accessors
   const gtsam::Vector &a() const { return a_; }
   const gtsam::Vector &d() const { return d_; }
   const gtsam::Vector &alpha() const { return alpha_; }
   const gtsam::Pose3 &base_pose() const { return base_pose_; }
-  const Parameterization &parameterization() const {return parameterization_; }
+  const Parameterization &parameterization() const { return parameterization_; }
+  const std::string parameterizationString() const {
+    switch (parameterization_) {
+    case Parameterization::DH:
+      return "Denavit-Hartenberg";
+      break;
+    case Parameterization::MODIFIED_DH:
+      return "Modified Denavit-Hartenberg";
+      break;
+    }
+  }
 
 private:
   /// Calculate the homogenous transformation and matrix for joint j with angle

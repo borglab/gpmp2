@@ -236,7 +236,8 @@ elseif strcmp(arm_str, 'KinovaGen3')
     a = zeros(7,1);
     d = [-0.2848, -0.0118, -0.4208, -0.0128, -0.3143, 0.0, -0.1674]';
     theta_bias = [0, 0, 0, 0, 0, 0]';
-    abs_arm = Arm(7, a, alpha, d, base_pose, theta_bias);
+    conv = gpmp2.Parameterization.MODIFIED_DH;
+    abs_arm = Arm(7, a, alpha, d, base_pose, theta_bias, conv);
     
 % no such dataset
 else

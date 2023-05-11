@@ -103,14 +103,22 @@ class GaussianProcessInterpolatorLinear {
 ////////////////////////////////////////////////////////////////////////////////
 // kinematics
 ////////////////////////////////////////////////////////////////////////////////
+#include <gpmp2/kinematics/ForwardKinematics.h>
+/// Enum for specifying Denavit-Hartenberg parameterization
+enum Parameterization { DH, MODIFIED_DH };
 
 // abstract arm class use DH params
 #include <gpmp2/kinematics/Arm.h>
 
 class Arm {
+  Arm(size_t dof, Vector a, Vector alpha, Vector d);
   Arm(size_t dof, Vector a, Vector alpha, Vector d, gpmp2::Parameterization parameterization);
   Arm(size_t dof, Vector a, Vector alpha, Vector d,
+      const gtsam::Pose3& base_pose);
+  Arm(size_t dof, Vector a, Vector alpha, Vector d,
       const gtsam::Pose3& base_pose, gpmp2::Parameterization parameterization);
+  Arm(size_t dof, Vector a, Vector alpha, Vector d,
+      const gtsam::Pose3& base_pose, Vector theta_bias);
   Arm(size_t dof, Vector a, Vector alpha, Vector d,
       const gtsam::Pose3& base_pose, Vector theta_bias, gpmp2::Parameterization parameterization);
   // full forward kinematics
@@ -124,6 +132,7 @@ class Arm {
   Vector alpha() const;
   gtsam::Pose3 base_pose() const;
   gpmp2::Parameterization parameterization() const;
+  string parameterizationString() const;
 };
 
 // abstract pose2 mobile base class
