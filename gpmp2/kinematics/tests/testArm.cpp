@@ -595,11 +595,11 @@ TEST(Arm, KinovaGen3) {
 
   // expected joint velocities
   vi_exp.push_back(Vector3(0, 0, 0));                   // J1
-  vi_exp.push_back(Vector3(0, 0, 0));              // J2
-  vi_exp.push_back(Vector3(-0.0298, 0, -0.0298));  // J3
-  vi_exp.push_back(Vector3(-0.0294, -0.0006, -0.0285));  // J4
-  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493));  // J5
-  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493));  // J6
+  vi_exp.push_back(Vector3(0, 0, 0));                   // J2
+  vi_exp.push_back(Vector3(-0.0298, 0, -0.0298));       // J3
+  vi_exp.push_back(Vector3(-0.0294, -0.0006, -0.0285)); // J4
+  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493)); // J5
+  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493)); // J6
   vi_exp.push_back(Vector3(-0.0968, -0.0380, -0.0068)); // J7
 
   // fk no velocity

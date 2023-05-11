@@ -108,11 +108,11 @@ class GaussianProcessInterpolatorLinear {
 #include <gpmp2/kinematics/Arm.h>
 
 class Arm {
-  Arm(size_t dof, Vector a, Vector alpha, Vector d);
+  Arm(size_t dof, Vector a, Vector alpha, Vector d, gpmp2::Parameterization parameterization);
   Arm(size_t dof, Vector a, Vector alpha, Vector d,
-      const gtsam::Pose3& base_pose);
+      const gtsam::Pose3& base_pose, gpmp2::Parameterization parameterization);
   Arm(size_t dof, Vector a, Vector alpha, Vector d,
-      const gtsam::Pose3& base_pose, Vector theta_bias);
+      const gtsam::Pose3& base_pose, Vector theta_bias, gpmp2::Parameterization parameterization);
   // full forward kinematics
   Matrix forwardKinematicsPose(Vector jp) const;
   Matrix forwardKinematicsPosition(Vector jp) const;
@@ -123,6 +123,7 @@ class Arm {
   Vector d() const;
   Vector alpha() const;
   gtsam::Pose3 base_pose() const;
+  gpmp2::Parameterization parameterization() const;
 };
 
 // abstract pose2 mobile base class
