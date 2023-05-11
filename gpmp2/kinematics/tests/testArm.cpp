@@ -557,7 +557,8 @@ TEST(Arm, KinovaGen3) {
           .finished();
 
   short int dof = 7;
-  Arm arm(dof, a, alpha, d, Parameterization::MODIFIED_DH);
+  bool modDF = true;
+  Arm arm(dof, a, alpha, d, modDF);
 
   Vector7 q, qdot;
 

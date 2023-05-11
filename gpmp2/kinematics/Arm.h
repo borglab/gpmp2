@@ -38,7 +38,8 @@ private:
   std::vector<gtsam::Pose3>
       link_trans_notheta_; // transformation of each link, no theta matrix
 
-  Parameterization parameterization_; // kinematic DH parameterization
+  bool modDH_; /// Boolean to switch to modified Denavit-Hartenberg
+               /// parameterization
 
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -50,21 +51,18 @@ public:
   /// the base pose (default zero pose), theta bias (default zero), and DH
   /// parameterization (default conventional DH)
   Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
-      const gtsam::Vector &d,
-      const Parameterization &parameterization = Parameterization::DH)
-      : Arm(dof, a, alpha, d, gtsam::Pose3(), gtsam::Vector::Zero(dof),
-            parameterization) {}
+      const gtsam::Vector &d, const bool &modDH = false)
+      : Arm(dof, a, alpha, d, gtsam::Pose3(), gtsam::Vector::Zero(dof), modDH) {
+  }
 
   Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
       const gtsam::Vector &d, const gtsam::Pose3 &base_pose,
-      const Parameterization &parameterization = Parameterization::DH)
-      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof),
-            parameterization) {}
+      const bool &modDH = false)
+      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof), modDH) {}
 
   Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
       const gtsam::Vector &d, const gtsam::Pose3 &base_pose,
-      const gtsam::Vector &theta_bias,
-      const Parameterization &parameterization = Parameterization::DH);
+      const gtsam::Vector &theta_bias, const bool &modDH = false);
 
   /// Default destructor
   virtual ~Arm() {}
@@ -96,16 +94,12 @@ public:
   const gtsam::Vector &d() const { return d_; }
   const gtsam::Vector &alpha() const { return alpha_; }
   const gtsam::Pose3 &base_pose() const { return base_pose_; }
-  const Parameterization &parameterization() const { return parameterization_; }
+  const bool &parameterization() const { return modDH_; }
   const std::string parameterizationString() const {
-    switch (parameterization_) {
-    case Parameterization::DH:
+    if (!modDH_)
       return "Denavit-Hartenberg";
-      break;
-    case Parameterization::MODIFIED_DH:
+    else if (modDH_)
       return "Modified Denavit-Hartenberg";
-      break;
-    }
   }
 
 private:
@@ -113,18 +107,15 @@ private:
   /// theta in the configuration space
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
     assert(i < dof());
-    switch (parameterization_) {
     // DH transformation for each link, with theta matrix
-    case Parameterization::DH:
+    if (!modDH_) {
       return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
                           gtsam::Point3(0, 0, 0)) *
              link_trans_notheta_[i];
-      break;
-    case Parameterization::MODIFIED_DH:
+    } else if (modDH_) {
       return link_trans_notheta_[i] *
              gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
                           gtsam::Point3(0, 0, 0));
-      break;
     }
   }
 
@@ -140,13 +131,10 @@ private:
     const gtsam::Matrix4 dRot =
         (gtsam::Matrix4() << -s, -c, 0, 0, c, -s, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             .finished();
-    switch (parameterization_) {
-    case Parameterization::DH:
+    if (!modDH_) {
       return dRot * link_trans_notheta_[i].matrix();
-      break;
-    case Parameterization::MODIFIED_DH:
+    } else if (modDH_) {
       return link_trans_notheta_[i].matrix() * dRot;
-      break;
     }
   }
 
