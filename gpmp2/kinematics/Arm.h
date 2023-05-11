@@ -88,51 +88,6 @@ public:
                          gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
 
-  /**
-   *  Forward kinematics with classical Denavit-Hartenberg parameterization.
-   *
-   *  Forward kinematics: joint configuration to poses in workspace
-   *  Velocity kinematics: optional joint velocities to linear velocities in
-   *  workspace, no angular rate
-   *
-   *  @param jp joint position in config space
-   *  @param jv joint velocity in config space
-   *  @param jpx joint pose in work space
-   *  @param jvx joint velocity in work space
-   *  @param J_jpx_jp et al. optional Jacobians
-   **/
-  // void
-  // forwardKinematicsDH(const gtsam::Vector &jp,
-  //                     std::optional<const gtsam::Vector> jv,
-  //                     std::vector<gtsam::Pose3> &jpx,
-  //                     std::vector<gtsam::Vector3> *jvx = nullptr,
-  //                     gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
-  //                     gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
-  //                     gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
-
-  /**
-   *  Forward kinematics with modified Denavit-Hartenberg parameterization.
-   *
-   *  Forward kinematics: joint configuration to poses in workspace
-   *  Velocity kinematics: optional joint velocities to linear velocities in
-   *  workspace, no angular rate
-   *
-   *  @param jp joint position in config space
-   *  @param jv joint velocity in config space
-   *  @param jpx joint pose in work space
-   *  @param jvx joint velocity in work space
-   *  @param J_jpx_jp et al. optional Jacobians
-   **/
-  // void
-  // forwardKinematicsMDH(const gtsam::Vector &jp,
-  //                      std::optional<const gtsam::Vector> jv,
-  //                      std::vector<gtsam::Pose3> &jpx,
-  //                      std::vector<gtsam::Vector3> *jvx = nullptr,
-  //                      gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
-  //                      gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
-  //                      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr)
-  //                      const;
-
   /// update base pose in const
   void updateBasePose(const gtsam::Pose3 &p) const { base_pose_ = p; }
 

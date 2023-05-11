@@ -38,23 +38,6 @@ Arm::Arm(size_t dof, const Vector &a, const Vector &alpha, const Vector &d,
 }
 
 /* ************************************************************************** */
-// void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
-//                             std::vector<gtsam::Pose3> &jpx,
-//                             std::vector<gtsam::Vector3> *jvx,
-//                             gtsam::OptionalMatrixVecType J_jpx_jp,
-//                             gtsam::OptionalMatrixVecType J_jvx_jp,
-//                             gtsam::OptionalMatrixVecType J_jvx_jv) const {
-//   switch (parameterization_) {
-//     case Parameterization::DH:
-//       return forwardKinematicsDH(jp, jv, jpx, jvx, J_jpx_jp, J_jvx_jp, J_jvx_jv);
-//       break;
-//     case Parameterization::MODIFIED_DH:
-//       return forwardKinematicsMDH(jp, jv, jpx, jvx, J_jpx_jp, J_jvx_jp, J_jvx_jv);
-//       break;
-//   }
-// }
-
-/* ************************************************************************** */
 void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
                               std::vector<gtsam::Pose3> &jpx,
                               std::vector<gtsam::Vector3> *jvx,
@@ -182,15 +165,5 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
       (*J_jvx_jv)[i] = J[i];
   }
 }
-
-/* ************************************************************************** */
-// void Arm::forwardKinematicsMDH(const Vector &jp, std::optional<const Vector> jv,
-//                                std::vector<gtsam::Pose3> &jpx,
-//                                std::vector<gtsam::Vector3> *jvx,
-//                                gtsam::OptionalMatrixVecType J_jpx_jp,
-//                                gtsam::OptionalMatrixVecType J_jvx_jp,
-//                                gtsam::OptionalMatrixVecType J_jvx_jv) const {
-//   // TODO
-// }
 
 } // namespace gpmp2
