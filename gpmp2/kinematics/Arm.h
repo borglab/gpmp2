@@ -37,27 +37,39 @@ class GPMP2_EXPORT Arm
   std::vector<gtsam::Pose3>
       link_trans_notheta_;  // transformation of each link, no theta matrix
 
+  bool modDH_;  /// Boolean to switch to modified Denavit-Hartenberg
+                /// parameterization
+
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  /// default contructor
+  /// default constructor
   Arm() {}
 
-  /// Contructor take in number of joints for the arm, its DH parameters
-  /// the base pose (default zero pose), and theta bias (default zero)
+  /**
+   * @brief Constructor takes in number of joints for the arm, its DH parameters
+   * the base pose (default zero pose), theta bias (default zero), and DH
+   * parameterization (default conventional DH)
+   *
+   * @param dof
+   * @param a
+   * @param alpha
+   * @param d
+   * @param modDH
+   */
   Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
-      const gtsam::Vector& d)
-      : Arm(dof, a, alpha, d,
-            gtsam::Pose3(gtsam::Rot3(), gtsam::Point3(0, 0, 0)),
-            gtsam::Vector::Zero(dof)) {}
-
-  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
-      const gtsam::Vector& d, const gtsam::Pose3& base_pose)
-      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof)) {}
+      const gtsam::Vector& d, const bool modDH = false)
+      : Arm(dof, a, alpha, d, gtsam::Pose3(), gtsam::Vector::Zero(dof), modDH) {
+  }
 
   Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
       const gtsam::Vector& d, const gtsam::Pose3& base_pose,
-      const gtsam::Vector& theta_bias);
+      const bool modDH = false)
+      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof), modDH) {}
+
+  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
+      const gtsam::Vector& d, const gtsam::Pose3& base_pose,
+      const gtsam::Vector& theta_bias, const bool modDH = false);
 
   /// Default destructor
   virtual ~Arm() {}
@@ -65,7 +77,7 @@ class GPMP2_EXPORT Arm
   /**
    *  Forward kinematics: joint configuration to poses in workspace
    *  Velocity kinematics: optional joint velocities to linear velocities in
-   *workspace, no anuglar rate
+   *  workspace, no angular rate
    *
    *  @param jp joint position in config space
    *  @param jv joint velocity in config space
@@ -84,21 +96,35 @@ class GPMP2_EXPORT Arm
   /// update base pose in const
   void updateBasePose(const gtsam::Pose3& p) const { base_pose_ = p; }
 
-  /// accesses
+  /// accessors
   const gtsam::Vector& a() const { return a_; }
   const gtsam::Vector& d() const { return d_; }
   const gtsam::Vector& alpha() const { return alpha_; }
   const gtsam::Pose3& base_pose() const { return base_pose_; }
+  const bool parameterization() const { return modDH_; }
+  const std::string parameterizationString() const {
+    if (modDH_) {
+      return "Modified Denavit-Hartenberg";
+    } else {
+      return "Denavit-Hartenberg";
+    }
+  }
 
  private:
-  /// Calculate the homogenous tranformation and matrix for joint j with angle
+  /// Calculate the homogenous transformation and matrix for joint j with angle
   /// theta in the configuration space
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
     assert(i < dof());
     // DH transformation for each link, with theta matrix
-    return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
-                        gtsam::Point3(0, 0, 0)) *
-           link_trans_notheta_[i];
+    if (modDH_) {
+      return link_trans_notheta_[i] *
+             gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
+                          gtsam::Point3(0, 0, 0));
+    } else {
+      return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
+                          gtsam::Point3(0, 0, 0)) *
+             link_trans_notheta_[i];
+    }
   }
 
   gtsam::Matrix4 getH(size_t i, double theta) const {
@@ -113,13 +139,17 @@ class GPMP2_EXPORT Arm
     const gtsam::Matrix4 dRot =
         (gtsam::Matrix4() << -s, -c, 0, 0, c, -s, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             .finished();
-    return dRot * link_trans_notheta_[i].matrix();
+    if (modDH_) {
+      return link_trans_notheta_[i].matrix() * dRot;
+    } else {
+      return dRot * link_trans_notheta_[i].matrix();
+    }
   }
 
   /// Calculate a single column j of the Jacobian (Jv(j)) for a given link
   gtsam::Vector3 getJvj(const gtsam::Matrix4& Hoi,
                         const gtsam::Matrix4& Hoj) const {
-    // z axis vector in the origin tranformation
+    // z axis vector in the origin transformation
     // gtsam::Matrix3 rot_z_j = gtsam::skewSymmetric(Hoj.col(2).head<3>());
     // position vector in the origin transformation
     // gtsam::Vector3 pos_o_i = Hoi.col(3).head<3>();

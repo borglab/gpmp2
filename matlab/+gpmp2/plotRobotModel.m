@@ -16,13 +16,13 @@ end
 body_points = robot.sphereCentersMat(conf);
 
 % show
-colormap(color_rgb);
 [X_ball, Y_ball, Z_ball] = sphere(16);
 
 for i=1:robot.nr_body_spheres()
     h(i) = surf(X_ball * robot.sphere_radius(i-1) + body_points(1, i), ...
                 Y_ball * robot.sphere_radius(i-1) + body_points(2, i), ...
                 Z_ball * robot.sphere_radius(i-1) + body_points(3, i));
+    h(i).FaceColor = color_rgb;
 end
 
 end
