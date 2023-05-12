@@ -16,14 +16,14 @@ using namespace gtsam;
 using namespace gpmp2;
 
 // fk wrapper
-Pose3 fkpose(const Arm &arm, const Vector &jp, const Vector &jv, size_t i) {
+Pose3 fkpose(const Arm& arm, const Vector& jp, const Vector& jv, size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
   arm.forwardKinematics(jp, jv, pos, &vel);
   return pos.at(i);
 }
 
-Vector3 fkvelocity(const Arm &arm, const Vector &jp, const Vector &jv,
+Vector3 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
                    size_t i) {
   vector<Pose3> pos;
   vector<Vector3> vel;
@@ -59,29 +59,29 @@ TEST(Arm, 2linkPlanarExamples) {
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJp_exp.clear();
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJv_exp.clear();
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(0))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
@@ -113,29 +113,29 @@ TEST(Arm, 2linkPlanarExamples) {
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJp_exp.clear();
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJv_exp.clear();
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(0))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
@@ -167,29 +167,29 @@ TEST(Arm, 2linkPlanarExamples) {
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJp_exp.clear();
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJv_exp.clear();
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(0))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
@@ -222,29 +222,29 @@ TEST(Arm, 2linkPlanarExamples) {
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector2 &)>(
+      std::function<Pose3(const Vector2&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJp_exp.clear();
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJv_exp.clear();
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(0))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2 &)>(
+      std::function<Vector3(const Vector2&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
 
@@ -293,41 +293,41 @@ TEST(Arm, 3link3Dexample) {
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector3 &)>(
+      std::function<Pose3(const Vector3&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector3 &)>(
+      std::function<Pose3(const Vector3&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector3 &)>(
+      std::function<Pose3(const Vector3&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   vJp_exp.clear();
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector3 &)>(
+      std::function<Vector3(const Vector3&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector3 &)>(
+      std::function<Vector3(const Vector3&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector3 &)>(
+      std::function<Vector3(const Vector3&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   vJv_exp.clear();
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector3 &)>(
+      std::function<Vector3(const Vector3&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(0))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector3 &)>(
+      std::function<Vector3(const Vector3&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector3 &)>(
+      std::function<Vector3(const Vector3&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(2))),
       qdot, 1e-6));
 
@@ -392,91 +392,91 @@ TEST(Arm, WAMexample) {
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector7 &)>(
+      std::function<Pose3(const Vector7&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector7 &)>(
+      std::function<Pose3(const Vector7&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector7 &)>(
+      std::function<Pose3(const Vector7&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector7 &)>(
+      std::function<Pose3(const Vector7&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(3))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector7 &)>(
+      std::function<Pose3(const Vector7&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(4))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector7 &)>(
+      std::function<Pose3(const Vector7&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(5))),
       q, 1e-6));
   pJp_exp.push_back(numericalDerivative11(
-      std::function<Pose3(const Vector7 &)>(
+      std::function<Pose3(const Vector7&)>(
           std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(6))),
       q, 1e-6));
 
   vJp_exp.clear();
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(0))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(1))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(2))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(3))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(4))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(5))),
       q, 1e-6));
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, std::placeholders::_1, qdot, size_t(6))),
       q, 1e-6));
 
   vJv_exp.clear();
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(0))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(1))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(2))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(3))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(4))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(5))),
       qdot, 1e-6));
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector7 &)>(
+      std::function<Vector3(const Vector7&)>(
           std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(6))),
       qdot, 1e-6));
 
@@ -615,17 +615,17 @@ TEST(Arm, KinovaGen3) {
 
   for (int kk = 0; kk < dof; kk++) {
     pJp_exp.push_back(numericalDerivative11(
-        std::function<Pose3(const Vector7 &)>(
+        std::function<Pose3(const Vector7&)>(
             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
         q, 1e-6));
 
     vJp_exp.push_back(numericalDerivative11(
-        std::function<Vector3(const Vector7 &)>(std::bind(
+        std::function<Vector3(const Vector7&)>(std::bind(
             &fkvelocity, arm, std::placeholders::_1, qdot, size_t(kk))),
         q, 1e-6));
 
     vJv_exp.push_back(numericalDerivative11(
-        std::function<Vector3(const Vector7 &)>(
+        std::function<Vector3(const Vector7&)>(
             std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(kk))),
         qdot, 1e-6));
 

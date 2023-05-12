@@ -12,8 +12,8 @@ using namespace gtsam;
 namespace gpmp2 {
 
 /* ************************************************************************** */
-Arm::Arm(size_t dof, const Vector &a, const Vector &alpha, const Vector &d,
-         const Pose3 &base_pose, const Vector &theta_bias, const bool &modDH)
+Arm::Arm(size_t dof, const Vector& a, const Vector& alpha, const Vector& d,
+         const Pose3& base_pose, const Vector& theta_bias, const bool modDH)
     : Base(dof, dof),
       a_(a),
       alpha_(alpha),
@@ -42,9 +42,9 @@ Arm::Arm(size_t dof, const Vector &a, const Vector &alpha, const Vector &d,
 }
 
 /* ************************************************************************** */
-void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
-                            std::vector<gtsam::Pose3> &jpx,
-                            std::vector<gtsam::Vector3> *jvx,
+void Arm::forwardKinematics(const Vector& jp, std::optional<const Vector> jv,
+                            std::vector<gtsam::Pose3>& jpx,
+                            std::vector<gtsam::Vector3>* jvx,
                             gtsam::OptionalMatrixVecType J_jpx_jp,
                             gtsam::OptionalMatrixVecType J_jvx_jp,
                             gtsam::OptionalMatrixVecType J_jvx_jv) const {
@@ -118,7 +118,7 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
 
     // diff Ho[i] = Ho[i-1] * H[i] to get pJp
     if (J_jpx_jp) {
-      Matrix &Jp = (*J_jpx_jp)[i];
+      Matrix& Jp = (*J_jpx_jp)[i];
       // Jp.setZero();         // when j > i all are zeros
       // Jp each col
       const Matrix4 inv_jpx_i = jpx[i].inverse().matrix();
@@ -133,7 +133,7 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
 
     // diff Jvj to vJp
     if (J_jvx_jp) {
-      Matrix &Jv = (*J_jvx_jp)[i];
+      Matrix& Jv = (*J_jvx_jp)[i];
       // Jv.setZero();
       // Jv each col <= j (j <= i)
       // Jv.col(j) = dvxi_dq.col(j) = d_Ji_qj * vi

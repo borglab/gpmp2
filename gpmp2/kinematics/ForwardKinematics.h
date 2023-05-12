@@ -54,9 +54,9 @@ class ForwardKinematics {
    *  @param J_jpx_jp et al. optional Jacobians
    **/
   virtual void forwardKinematics(
-      const Pose &jp, std::optional<const Velocity> jv,
-      std::vector<gtsam::Pose3> &jpx,
-      std::vector<gtsam::Vector3> *jvx = nullptr,
+      const Pose& jp, std::optional<const Velocity> jv,
+      std::vector<gtsam::Pose3>& jpx,
+      std::vector<gtsam::Vector3>* jvx = nullptr,
       gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
       gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
       gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const = 0;
@@ -66,9 +66,9 @@ class ForwardKinematics {
    * each column is a single point / velocity of the joint, size 6xN, 3xN, 3xN
    * No Jacobians provided by this version
    */
-  gtsam::Matrix forwardKinematicsPose(const Pose &jp) const;
-  gtsam::Matrix forwardKinematicsPosition(const Pose &jp) const;
-  gtsam::Matrix forwardKinematicsVel(const Pose &jp, const Velocity &jv) const;
+  gtsam::Matrix forwardKinematicsPose(const Pose& jp) const;
+  gtsam::Matrix forwardKinematicsPosition(const Pose& jp) const;
+  gtsam::Matrix forwardKinematicsVel(const Pose& jp, const Velocity& jv) const;
 
   /// accesses
   size_t dof() const { return dof_; }

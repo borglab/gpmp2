@@ -101,7 +101,7 @@ class GPMP2_EXPORT Arm
   const gtsam::Vector& d() const { return d_; }
   const gtsam::Vector& alpha() const { return alpha_; }
   const gtsam::Pose3& base_pose() const { return base_pose_; }
-  const bool &parameterization() const { return modDH_; }
+  const bool parameterization() const { return modDH_; }
   const std::string parameterizationString() const {
     if (!modDH_)
       return "Denavit-Hartenberg";
