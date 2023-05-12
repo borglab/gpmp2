@@ -21,7 +21,15 @@ Arm::Arm(size_t dof, const Vector& a, const Vector& alpha, const Vector& d,
       base_pose_(base_pose),
       theta_bias_(theta_bias),
       modDH_(modDH) {
-  if (!modDH_) {
+  if (modDH_) {
+    // DH transformation for each link, without theta matrix
+    // https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters
+    for (size_t i = 0; i < dof; i++)
+      link_trans_notheta_.push_back(
+          Pose3(Rot3::Rx(alpha_(i)), Point3(0, 0, 0)) *
+          Pose3(Rot3(), Point3(a_(i), 0, 0)) *
+          Pose3(Rot3(), Point3(0, 0, d_(i))));
+  } else {
     // DH transformation for each link, without theta matrix
     // Spong06book, page. 69, eq. (3.10)
     for (size_t i = 0; i < dof; i++)
@@ -29,15 +37,6 @@ Arm::Arm(size_t dof, const Vector& a, const Vector& alpha, const Vector& d,
           Pose3(Rot3(), Point3(0, 0, d_(i))) *
           Pose3(Rot3(), Point3(a_(i), 0, 0)) *
           Pose3(Rot3::Rx(alpha_(i)), Point3(0, 0, 0)));
-  } else if (modDH_) {
-    // DH transformation for each link, without theta matrix
-    // source:
-    // https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters
-    for (size_t i = 0; i < dof; i++)
-      link_trans_notheta_.push_back(
-          Pose3(Rot3::Rx(alpha_(i)), Point3(0, 0, 0)) *
-          Pose3(Rot3(), Point3(a_(i), 0, 0)) *
-          Pose3(Rot3(), Point3(0, 0, d_(i))));
   }
 }
 

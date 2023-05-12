@@ -103,10 +103,11 @@ class GPMP2_EXPORT Arm
   const gtsam::Pose3& base_pose() const { return base_pose_; }
   const bool parameterization() const { return modDH_; }
   const std::string parameterizationString() const {
-    if (!modDH_)
-      return "Denavit-Hartenberg";
-    else if (modDH_)
+    if (modDH_) {
       return "Modified Denavit-Hartenberg";
+    } else {
+      return "Denavit-Hartenberg";
+    }
   }
 
  private:
@@ -115,14 +116,14 @@ class GPMP2_EXPORT Arm
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
     assert(i < dof());
     // DH transformation for each link, with theta matrix
-    if (!modDH_) {
-      return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
-                          gtsam::Point3(0, 0, 0)) *
-             link_trans_notheta_[i];
-    } else if (modDH_) {
+    if (modDH_) {
       return link_trans_notheta_[i] *
              gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
                           gtsam::Point3(0, 0, 0));
+    } else {
+      return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
+                          gtsam::Point3(0, 0, 0)) *
+             link_trans_notheta_[i];
     }
   }
 
@@ -138,10 +139,10 @@ class GPMP2_EXPORT Arm
     const gtsam::Matrix4 dRot =
         (gtsam::Matrix4() << -s, -c, 0, 0, c, -s, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             .finished();
-    if (!modDH_) {
-      return dRot * link_trans_notheta_[i].matrix();
-    } else if (modDH_) {
+    if (modDH_) {
       return link_trans_notheta_[i].matrix() * dRot;
+    } else {
+      return dRot * link_trans_notheta_[i].matrix();
     }
   }
 
