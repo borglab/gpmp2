@@ -46,22 +46,30 @@ class GPMP2_EXPORT Arm
   /// default constructor
   Arm() {}
 
-  /// Constructor take in number of joints for the arm, its DH parameters
-  /// the base pose (default zero pose), theta bias (default zero), and DH
-  /// parameterization (default conventional DH)
-  Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
-      const gtsam::Vector &d, const bool &modDH = false)
+  /**
+   * @brief Constructor takes in number of joints for the arm, its DH parameters
+   * the base pose (default zero pose), theta bias (default zero), and DH
+   * parameterization (default conventional DH)
+   *
+   * @param dof
+   * @param a
+   * @param alpha
+   * @param d
+   * @param modDH
+   */
+  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
+      const gtsam::Vector& d, const bool modDH = false)
       : Arm(dof, a, alpha, d, gtsam::Pose3(), gtsam::Vector::Zero(dof), modDH) {
   }
 
-  Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
-      const gtsam::Vector &d, const gtsam::Pose3 &base_pose,
-      const bool &modDH = false)
+  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
+      const gtsam::Vector& d, const gtsam::Pose3& base_pose,
+      const bool modDH = false)
       : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof), modDH) {}
 
-  Arm(size_t dof, const gtsam::Vector &a, const gtsam::Vector &alpha,
-      const gtsam::Vector &d, const gtsam::Pose3 &base_pose,
-      const gtsam::Vector &theta_bias, const bool &modDH = false);
+  Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
+      const gtsam::Vector& d, const gtsam::Pose3& base_pose,
+      const gtsam::Vector& theta_bias, const bool modDH = false);
 
   /// Default destructor
   virtual ~Arm() {}
@@ -77,22 +85,22 @@ class GPMP2_EXPORT Arm
    *  @param jvx joint velocity in work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  void forwardKinematics(const gtsam::Vector &jp,
+  void forwardKinematics(const gtsam::Vector& jp,
                          std::optional<const gtsam::Vector> jv,
-                         std::vector<gtsam::Pose3> &jpx,
-                         std::vector<gtsam::Vector3> *jvx = nullptr,
+                         std::vector<gtsam::Pose3>& jpx,
+                         std::vector<gtsam::Vector3>* jvx = nullptr,
                          gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
 
   /// update base pose in const
-  void updateBasePose(const gtsam::Pose3 &p) const { base_pose_ = p; }
+  void updateBasePose(const gtsam::Pose3& p) const { base_pose_ = p; }
 
   /// accessors
-  const gtsam::Vector &a() const { return a_; }
-  const gtsam::Vector &d() const { return d_; }
-  const gtsam::Vector &alpha() const { return alpha_; }
-  const gtsam::Pose3 &base_pose() const { return base_pose_; }
+  const gtsam::Vector& a() const { return a_; }
+  const gtsam::Vector& d() const { return d_; }
+  const gtsam::Vector& alpha() const { return alpha_; }
+  const gtsam::Pose3& base_pose() const { return base_pose_; }
   const bool &parameterization() const { return modDH_; }
   const std::string parameterizationString() const {
     if (!modDH_)
@@ -138,8 +146,8 @@ class GPMP2_EXPORT Arm
   }
 
   /// Calculate a single column j of the Jacobian (Jv(j)) for a given link
-  gtsam::Vector3 getJvj(const gtsam::Matrix4 &Hoi,
-                        const gtsam::Matrix4 &Hoj) const {
+  gtsam::Vector3 getJvj(const gtsam::Matrix4& Hoi,
+                        const gtsam::Matrix4& Hoj) const {
     // z axis vector in the origin transformation
     // gtsam::Matrix3 rot_z_j = gtsam::skewSymmetric(Hoj.col(2).head<3>());
     // position vector in the origin transformation
@@ -153,9 +161,9 @@ class GPMP2_EXPORT Arm
 
   /// Calculate derivative of a single column j of the Jacobian (Jv(j)) for a
   /// given link
-  gtsam::Vector3 getdJvj(const gtsam::Matrix4 &Hoi, const gtsam::Matrix4 &Hoj,
-                         const gtsam::Matrix4 &dHoi,
-                         const gtsam::Matrix4 &dHoj) const {
+  gtsam::Vector3 getdJvj(const gtsam::Matrix4& Hoi, const gtsam::Matrix4& Hoj,
+                         const gtsam::Matrix4& dHoi,
+                         const gtsam::Matrix4& dHoj) const {
     // gtsam::Matrix3 rot_z_j = gtsam::skewSymmetric(Hoj.col(2).head<3>());
     // gtsam::Matrix3 drot_z_j = gtsam::skewSymmetric(dHoj.col(2).head<3>());
     // gtsam::Vector3 pos_o_i = Hoi.col(3).head<3>();
