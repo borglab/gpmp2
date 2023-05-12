@@ -33,8 +33,23 @@ if strcmp(dataset_str, 'SmallDemo')
     dataset.corner_idx = [];
     [dataset.map, dataset.corner_idx] = add_obstacle([150 150 150], [20, 20, 20], dataset.map, dataset.corner_idx);
     
+% dataset 2:     
+elseif strcmp(dataset_str, 'KinovaBoxDataset')
+    % params
+    dataset.cols = 200;
+    dataset.rows = 200;
+    dataset.z = 200;
+    dataset.origin_x = 0;
+    dataset.origin_y = 0;
+    dataset.origin_z = 0;
+    dataset.cell_size = 0.01;
+    % map
+    dataset.map = zeros(dataset.rows, dataset.cols, dataset.z);
+    % obstacles
+    dataset.corner_idx = [];
+    [dataset.map, dataset.corner_idx] = add_obstacle([15 15 95], [20, 20, 20], dataset.map, dataset.corner_idx);
     
-% dataset 2: desk dataset for WAM WAMDeskDataset
+% dataset 3: desk dataset for WAM WAMDeskDataset
 elseif strcmp(dataset_str, 'WAMDeskDataset')
     % params
     dataset.cols = 300;

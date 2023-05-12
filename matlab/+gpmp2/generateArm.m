@@ -1,17 +1,23 @@
 function arm_model = generateArm(arm_str, base_pose)
-%GENERATEARM Generate arm model
-%
-%   Usage: arm_model = GENERATEARM(arm_str)
-%   @arm_str       dataset string, existing datasets:
-%                  'SimpleTwoLinksArm', 'SimpleThreeLinksArm', 'WAMArm',
-%                  'PR2Arm', 'KinovaGen3'
-%   @base_pose     arm's base pose, default is origin with no rotation
-%
-%   @theta_bias    bias of joint angle inputs
-%   
-%   @
-%   Output Format:
-%   arm_model      an ArmModel object, contains kinematics and model information
+%{
+GENERATEARM Generate arm model
+
+Usage: arm_model = GENERATEARM(arm_str)
+Parameters:
+@arm_str        dataset string, existing datasets:
+                'SimpleTwoLinksArm', 'SimpleThreeLinksArm', 'WAMArm',
+                'PR2Arm', 'KinovaGen3'
+
+@base_pose      arm's base pose, default is origin with no rotation
+
+@theta_bias     joint angle bias, defulat is zero
+
+@useModDh       boolean flag to use modified Devanit-Hartenberg 
+                parameterization, default is false
+
+Output Format:
+arm_model      an ArmModel object, contains kinematics and model information
+%}
 
 import gtsam.*
 import gpmp2.*
@@ -230,15 +236,48 @@ elseif strcmp(arm_str, 'JACO2Arm')
     end
     arm_model = ArmModel(abs_arm, sphere_vec);
 
+% 7DOF Kinova Gen3 arm
 elseif strcmp(arm_str, 'KinovaGen3')
-    % arm: Kinova Gen3 7DOF arm (modified DH parameterization)
+    % arm: Kinova Gen3 7DOF arm (using modified DH parameterization)
     alpha = [pi, pi/2, -pi/2, pi/2, -pi/2, pi/2, -pi/2]';
     a = zeros(7,1);
     d = [-0.2848, -0.0118, -0.4208, -0.0128, -0.3143, 0.0, -0.1674]';
     theta_bias = [0, 0, 0, 0, 0, 0]';
-    conv = gpmp2.Parameterization.MODIFIED_DH;
-    abs_arm = Arm(7, a, alpha, d, base_pose, theta_bias, conv);
+    useModDH = true;
+    abs_arm = Arm(7, a, alpha, d, base_pose, theta_bias, useModDH);
     
+    % physical arm
+    % sphere data [id x y z r]
+    radius = 0.0475;
+    spheres_data = [...
+        0   0.0     0.0     0.0     radius
+        0   0.0     0.0     0.095   radius
+        0   0.0     0.0     0.19    radius
+        0   0.0     0.0     0.24    radius
+        1   0.0     0.0     0.0     radius
+        1   0.0     -0.095  0.0     radius
+        1   0.0     -0.19   0.0     radius
+        1   0.0     -0.285  0.0     radius
+        1   0.0     -0.38   0.0     radius
+        2   0.0     0.0     0.0     radius
+        3   0.0     0.0     0.0     radius
+        3   0.0     -0.095  0.0     radius
+        3   0.0     -0.19   0.0     radius
+        3   0.0     -0.285  0.0     radius
+        4   0.0     0.0     0.0     radius
+        5   0.0     0.0     0.0     radius
+        5   0.0     -0.095  0.0     radius
+        5   0.0     -0.19   0.0     radius
+        ];
+
+    nr_body = size(spheres_data, 1);
+    
+    sphere_vec = BodySphereVector;
+    for i=1:nr_body
+        sphere_vec.push_back(BodySphere(spheres_data(i,1), spheres_data(i,5), ...
+            Point3(spheres_data(i,2:4)')));
+    end
+    arm_model = ArmModel(abs_arm, sphere_vec);
 % no such dataset
 else
     error('No such arm model exist');
