@@ -19,12 +19,13 @@ namespace gpmp2 {
  * Abstract forward kinematics model, without actual model and physical
  * representation template parameters are system pose and velocity state types
  */
-template <class POSE, class VELOCITY> class ForwardKinematics {
-private:
-  size_t dof_;      // system degree of freedom
-  size_t nr_links_; // number of links (piece of robot part)
+template <class POSE, class VELOCITY>
+class ForwardKinematics {
+ private:
+  size_t dof_;       // system degree of freedom
+  size_t nr_links_;  // number of links (piece of robot part)
 
-public:
+ public:
   /// type defs
   typedef POSE Pose;
   typedef VELOCITY Velocity;
@@ -52,13 +53,13 @@ public:
    *  @param jvx link velocities in 3D work space, no angular rate
    *  @param J_jpx_jp et al. optional Jacobians
    **/
-  virtual void
-  forwardKinematics(const Pose &jp, std::optional<const Velocity> jv,
-                    std::vector<gtsam::Pose3> &jpx,
-                    std::vector<gtsam::Vector3> *jvx = nullptr,
-                    gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
-                    gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
-                    gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const = 0;
+  virtual void forwardKinematics(
+      const Pose &jp, std::optional<const Velocity> jv,
+      std::vector<gtsam::Pose3> &jpx,
+      std::vector<gtsam::Vector3> *jvx = nullptr,
+      gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
+      gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
+      gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const = 0;
 
   /**
    * Matrix wrapper for forwardKinematics, mainly used by matlab
@@ -74,6 +75,6 @@ public:
   size_t nr_links() const { return nr_links_; }
 };
 
-} // namespace gpmp2
+}  // namespace gpmp2
 
 #include <gpmp2/kinematics/ForwardKinematics-inl.h>

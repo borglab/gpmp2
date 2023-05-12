@@ -38,7 +38,7 @@ TEST(Arm, 2linkPlanarExamples) {
   Pose3 base_pose(Rot3::Ypr(M_PI / 4.0, 0, 0), Point3(2.0, 1.0, -1.0));
   Arm arm(2, a, alpha, d, base_pose);
   Vector2 q, qdot;
-  Vector qdymc; // dynamic size version qdot
+  Vector qdymc;  // dynamic size version qdot
   vector<Pose3> pvec_exp, pvec_act;
   vector<Vector3> vvec_exp, vvec_act;
   vector<Matrix> vJp_exp, vJp_act, vJv_exp, vJv_act;
@@ -270,7 +270,7 @@ TEST(Arm, 3link3Dexample) {
   Vector3 a(3.6, 9.8, -10.2), alpha(-0.4, 0.7, 0.9), d(-12.3, -3.4, 5.0);
   Arm arm(3, a, alpha, d);
   Vector3 q, qdot;
-  Vector qdymc; // dynamic size version qdot
+  Vector qdymc;  // dynamic size version qdot
   vector<Point3> pointvec_exp;
   vector<Pose3> pvec_act;
   vector<Vector3> vvec_exp, vvec_act;
@@ -360,7 +360,7 @@ TEST(Arm, WAMexample) {
   Vector7 d = (Vector7() << 0.0, 0.0, 0.55, 0.0, 0.3, 0.0, 0.06).finished();
   Arm arm(7, a, alpha, d);
   Vector7 q, qdot;
-  Vector qdymc; // dynamic size version qdot
+  Vector qdymc;  // dynamic size version qdot
   vector<Point3> pvec_exp;
   vector<Pose3> pvec_act1, pvec_act2;
   vector<Vector3> vvec_exp, vvec_act;
@@ -580,28 +580,28 @@ TEST(Arm, KinovaGen3) {
   qdot = (Vector7() << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1).finished();
 
   // expected joint positions
-  pi_exp.push_back(Point3(0, 0, 0.2848));             // J1
-  pi_exp.push_back(Point3(0, 0.0118, 0.2848));        // J2
-  pi_exp.push_back(Point3(-0.2976, 0.0118, 0.5824));  // J3
-  pi_exp.push_back(Point3(-0.2930, 0.0229, 0.5869));  // J4
-  pi_exp.push_back(Point3(-0.3893, -0.0557, 0.8756)); // J5
-  pi_exp.push_back(Point3(-0.3893, -0.0557, 0.8756)); // J6
-  pi_exp.push_back(Point3(-0.2428, -0.0044, 0.9384)); // J7
+  pi_exp.push_back(Point3(0, 0, 0.2848));              // J1
+  pi_exp.push_back(Point3(0, 0.0118, 0.2848));         // J2
+  pi_exp.push_back(Point3(-0.2976, 0.0118, 0.5824));   // J3
+  pi_exp.push_back(Point3(-0.2930, 0.0229, 0.5869));   // J4
+  pi_exp.push_back(Point3(-0.3893, -0.0557, 0.8756));  // J5
+  pi_exp.push_back(Point3(-0.3893, -0.0557, 0.8756));  // J6
+  pi_exp.push_back(Point3(-0.2428, -0.0044, 0.9384));  // J7
 
   // expected end-effector pose
   pEE_exp.push_back(
       Pose3(Rot3(0.3062, 0.3750, -0.8750, 0.2500, -0.9186, -0.3062, -0.9186,
                  -0.1250, -0.3750),
-            Point3(-0.2428, -0.0044, 0.9384))); // J7 pose (end-effector)
+            Point3(-0.2428, -0.0044, 0.9384)));  // J7 pose (end-effector)
 
   // expected joint velocities
-  vi_exp.push_back(Vector3(0, 0, 0));                   // J1
-  vi_exp.push_back(Vector3(0, 0, 0));                   // J2
-  vi_exp.push_back(Vector3(-0.0298, 0, -0.0298));       // J3
-  vi_exp.push_back(Vector3(-0.0294, -0.0006, -0.0285)); // J4
-  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493)); // J5
-  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493)); // J6
-  vi_exp.push_back(Vector3(-0.0968, -0.0380, -0.0068)); // J7
+  vi_exp.push_back(Vector3(0, 0, 0));                    // J1
+  vi_exp.push_back(Vector3(0, 0, 0));                    // J2
+  vi_exp.push_back(Vector3(-0.0298, 0, -0.0298));        // J3
+  vi_exp.push_back(Vector3(-0.0294, -0.0006, -0.0285));  // J4
+  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493));  // J5
+  vi_exp.push_back(Vector3(-0.0916, -0.0006, -0.0493));  // J6
+  vi_exp.push_back(Vector3(-0.0968, -0.0380, -0.0068));  // J7
 
   // fk no velocity
   arm.forwardKinematics(q, {}, pi_act_wo_fwdVel, nullptr, &pJp_act_wo_fwdVel);

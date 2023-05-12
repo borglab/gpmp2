@@ -13,10 +13,14 @@ namespace gpmp2 {
 
 /* ************************************************************************** */
 Arm::Arm(size_t dof, const Vector &a, const Vector &alpha, const Vector &d,
-         const Pose3 &base_pose, const Vector &theta_bias,
-         const bool &modDH)
-    : Base(dof, dof), a_(a), alpha_(alpha), d_(d), base_pose_(base_pose),
-      theta_bias_(theta_bias), modDH_(modDH) {
+         const Pose3 &base_pose, const Vector &theta_bias, const bool &modDH)
+    : Base(dof, dof),
+      a_(a),
+      alpha_(alpha),
+      d_(d),
+      base_pose_(base_pose),
+      theta_bias_(theta_bias),
+      modDH_(modDH) {
   if (!modDH_) {
     // DH transformation for each link, without theta matrix
     // Spong06book, page. 69, eq. (3.10)
@@ -48,27 +52,22 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
 
   // space for output
   jpx.resize(dof());
-  if (jvx)
-    jvx->resize(dof());
-  if (J_jpx_jp)
-    J_jpx_jp->assign(dof(), Matrix::Zero(6, dof()));
-  if (J_jvx_jp)
-    J_jvx_jp->assign(dof(), Matrix::Zero(3, dof()));
-  if (J_jvx_jv)
-    J_jvx_jv->assign(dof(), Matrix::Zero(3, dof()));
+  if (jvx) jvx->resize(dof());
+  if (J_jpx_jp) J_jpx_jp->assign(dof(), Matrix::Zero(6, dof()));
+  if (J_jvx_jp) J_jvx_jp->assign(dof(), Matrix::Zero(3, dof()));
+  if (J_jvx_jv) J_jvx_jv->assign(dof(), Matrix::Zero(3, dof()));
 
   // variables
   vector<Matrix4> H(dof());
-  vector<Matrix4> Ho(dof() + 1); // start from 1
+  vector<Matrix4> Ho(dof() + 1);  // start from 1
   vector<Matrix> J;
-  if (jv)
-    J.assign(dof(), Matrix::Zero(3, dof()));
+  if (jv) J.assign(dof(), Matrix::Zero(3, dof()));
   // vars cached for calculate output Jacobians
   vector<Matrix4> dH(dof());
-  vector<Matrix4> Hoinv(dof() + 1); // start from 1
+  vector<Matrix4> Hoinv(dof() + 1);  // start from 1
 
   // first iteration
-  Ho[0] = base_pose_.matrix(); // H matrix for each joint, refer to origin
+  Ho[0] = base_pose_.matrix();  // H matrix for each joint, refer to origin
   Hoinv[0] = Ho[0].inverse();
 
   // calculate needed vars
@@ -83,8 +82,7 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
     // 0]
     if (jv) {
       // J[i-1].setZero();
-      for (size_t j = 0; j < i; j++)
-        J[i - 1].col(j) = getJvj(Ho[i], Ho[j]);
+      for (size_t j = 0; j < i; j++) J[i - 1].col(j) = getJvj(Ho[i], Ho[j]);
     }
 
     // cache for jacobians
@@ -116,8 +114,7 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
                    Point3(Ho[i + 1].col(3).head<3>()));
 
     // and end effector velocities
-    if (jv && jvx)
-      (*jvx)[i] = J[i] * (*jv);
+    if (jv && jvx) (*jvx)[i] = J[i] * (*jv);
 
     // diff Ho[i] = Ho[i-1] * H[i] to get pJp
     if (J_jpx_jp) {
@@ -145,8 +142,9 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
 
         // for d_Ji_qj only first i cols have values
         // d_Ji_qj.col(k) = d(getJvj(i, k-1))_dqj  (k <= i)
-        d_Ji_qj.col(0) = getdJvj(Ho[i + 1], Ho[0], dHo_dq[i][j],
-                                 Matrix4::Zero()); // k-1 < 0, use zero for dH-1
+        d_Ji_qj.col(0) =
+            getdJvj(Ho[i + 1], Ho[0], dHo_dq[i][j],
+                    Matrix4::Zero());  // k-1 < 0, use zero for dH-1
         for (size_t k = 1; k <= i; k++) {
           if (k - 1 >= j)
             d_Ji_qj.col(k) =
@@ -154,16 +152,15 @@ void Arm::forwardKinematics(const Vector &jp, std::optional<const Vector> jv,
           else
             d_Ji_qj.col(k) =
                 getdJvj(Ho[i + 1], Ho[k], dHo_dq[i][j],
-                        Matrix4::Zero()); // zero dHo_dq when j > k-1
+                        Matrix4::Zero());  // zero dHo_dq when j > k-1
         }
         Jv.col(j) = d_Ji_qj * (*jv);
       }
     }
 
     // vJv is simply J
-    if (J_jvx_jv)
-      (*J_jvx_jv)[i] = J[i];
+    if (J_jvx_jv) (*J_jvx_jv)[i] = J[i];
   }
 }
 
-} // namespace gpmp2
+}  // namespace gpmp2

@@ -25,23 +25,22 @@ namespace gpmp2 {
  */
 class GPMP2_EXPORT Arm
     : public ForwardKinematics<gtsam::Vector, gtsam::Vector> {
-
-private:
+ private:
   // typedefs
   typedef ForwardKinematics<gtsam::Vector, gtsam::Vector> Base;
 
-  gtsam::Vector a_, alpha_, d_; // raw DH parameters
+  gtsam::Vector a_, alpha_, d_;  // raw DH parameters
   mutable gtsam::Pose3
-      base_pose_; // base pose of the first link, allow change in const
-  gtsam::Vector theta_bias_; // bias of theta
+      base_pose_;  // base pose of the first link, allow change in const
+  gtsam::Vector theta_bias_;  // bias of theta
 
   std::vector<gtsam::Pose3>
-      link_trans_notheta_; // transformation of each link, no theta matrix
+      link_trans_notheta_;  // transformation of each link, no theta matrix
 
-  bool modDH_; /// Boolean to switch to modified Denavit-Hartenberg
-               /// parameterization
+  bool modDH_;  /// Boolean to switch to modified Denavit-Hartenberg
+                /// parameterization
 
-public:
+ public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   /// default constructor
@@ -102,7 +101,7 @@ public:
       return "Modified Denavit-Hartenberg";
   }
 
-private:
+ private:
   /// Calculate the homogenous transformation and matrix for joint j with angle
   /// theta in the configuration space
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
@@ -172,4 +171,4 @@ private:
   }
 };
 
-} // namespace gpmp2
+}  // namespace gpmp2
