@@ -243,8 +243,8 @@ elseif strcmp(arm_str, 'KinovaGen3')
     a = zeros(7,1);
     d = [-0.2848, -0.0118, -0.4208, -0.0128, -0.3143, 0.0, -0.1674]';
     theta_bias = [0, 0, 0, 0, 0, 0]';
-    useModDH = true;
-    abs_arm = Arm(7, a, alpha, d, base_pose, theta_bias, useModDH);
+    DH_params = gtsam.Parameterization.MODIFIED_DH;
+    abs_arm = Arm(7, a, alpha, d, base_pose, theta_bias, DH_params);
     
     % physical arm
     % sphere data [id x y z r]

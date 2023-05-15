@@ -13,15 +13,16 @@ namespace gpmp2 {
 
 /* ************************************************************************** */
 Arm::Arm(size_t dof, const Vector& a, const Vector& alpha, const Vector& d,
-         const Pose3& base_pose, const Vector& theta_bias, const bool modDH)
+         const Pose3& base_pose, const Vector& theta_bias,
+         const Parameterization& parameterization)
     : Base(dof, dof),
       a_(a),
       alpha_(alpha),
       d_(d),
       base_pose_(base_pose),
       theta_bias_(theta_bias),
-      modDH_(modDH) {
-  if (modDH_) {
+      parameterization_(parameterization) {
+  if (parameterization_ == Parameterization::MODIFIED_DH) {
     // DH transformation for each link, without theta matrix
     // https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters
     for (size_t i = 0; i < dof; i++)
