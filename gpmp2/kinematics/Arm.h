@@ -88,7 +88,7 @@ class GPMP2_EXPORT Arm
   void forwardKinematics(const gtsam::Vector& jp,
                          std::optional<const gtsam::Vector> jv,
                          std::vector<gtsam::Pose3>& jpx,
-                         std::vector<gtsam::Vector3>* jvx = nullptr,
+                         std::vector<gtsam::Vector6>* jvx = nullptr,
                          gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
@@ -147,7 +147,7 @@ class GPMP2_EXPORT Arm
   }
 
   /// Calculate a single column j of the Jacobian (Jv(j)) for a given link
-  gtsam::Vector3 getJvj(const gtsam::Matrix4& Hoi,
+  gtsam::Vector6 getJvj(const gtsam::Matrix4& Hoi,
                         const gtsam::Matrix4& Hoj) const {
     // z axis vector in the origin transformation
     // gtsam::Matrix3 rot_z_j = gtsam::skewSymmetric(Hoj.col(2).head<3>());
@@ -156,13 +156,17 @@ class GPMP2_EXPORT Arm
     // gtsam::Vector3 pos_o_j = Hoj.col(3).head<3>();
     // return rot_z_j * (pos_o_i - pos_o_j);
 
-    return gtsam::skewSymmetric(Hoj.col(2).head<3>()) *
-           (Hoi.col(3).head<3>() - Hoj.col(3).head<3>());
+    gtsam::Vector3 linear = gtsam::skewSymmetric(Hoj.col(2).head<3>()) *
+                            (Hoi.col(3).head<3>() - Hoj.col(3).head<3>());
+    gtsam::Vector3 angular = Hoj.col(2).head<3>();
+    gtsam::Vector6 result;
+    result << linear, angular;
+    return result;
   }
 
   /// Calculate derivative of a single column j of the Jacobian (Jv(j)) for a
   /// given link
-  gtsam::Vector3 getdJvj(const gtsam::Matrix4& Hoi, const gtsam::Matrix4& Hoj,
+  gtsam::Vector6 getdJvj(const gtsam::Matrix4& Hoi, const gtsam::Matrix4& Hoj,
                          const gtsam::Matrix4& dHoi,
                          const gtsam::Matrix4& dHoj) const {
     // gtsam::Matrix3 rot_z_j = gtsam::skewSymmetric(Hoj.col(2).head<3>());
@@ -173,10 +177,15 @@ class GPMP2_EXPORT Arm
     // gtsam::Vector3 dpos_o_j = dHoj.col(3).head<3>();
     // return rot_z_j * (dpos_o_i - dpos_o_j) + drot_z_j * (pos_o_i - pos_o_j);
 
-    return gtsam::skewSymmetric(Hoj.col(2).head<3>()) *
-               (dHoi.col(3).head<3>() - dHoj.col(3).head<3>()) +
-           gtsam::skewSymmetric(dHoj.col(2).head<3>()) *
-               (Hoi.col(3).head<3>() - Hoj.col(3).head<3>());
+    gtsam::Vector3 linear =
+        gtsam::skewSymmetric(Hoj.col(2).head<3>()) *
+            (dHoi.col(3).head<3>() - dHoj.col(3).head<3>()) +
+        gtsam::skewSymmetric(dHoj.col(2).head<3>()) *
+            (Hoi.col(3).head<3>() - Hoj.col(3).head<3>());
+    gtsam::Vector3 angular = dHoj.col(2).head<3>();
+    gtsam::Vector6 result;
+    result << linear, angular;
+    return result;
   }
 };
 

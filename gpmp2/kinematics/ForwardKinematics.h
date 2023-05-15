@@ -56,7 +56,7 @@ class ForwardKinematics {
   virtual void forwardKinematics(
       const Pose& jp, std::optional<const Velocity> jv,
       std::vector<gtsam::Pose3>& jpx,
-      std::vector<gtsam::Vector3>* jvx = nullptr,
+      std::vector<gtsam::Vector6>* jvx = nullptr,
       gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
       gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
       gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const = 0;

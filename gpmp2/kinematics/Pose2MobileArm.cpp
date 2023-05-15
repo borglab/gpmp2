@@ -29,8 +29,7 @@ Pose2MobileArm::Pose2MobileArm(const Arm& arm, const gtsam::Pose3& base_T_arm)
 /* ************************************************************************** */
 void Pose2MobileArm::forwardKinematics(
     const Pose2Vector& p, std::optional<const gtsam::Vector> v,
-    std::vector<gtsam::Pose3>& px,
-    std::vector<gtsam::Vector3>* vx,
+    std::vector<gtsam::Pose3>& px, std::vector<gtsam::Vector6>* vx,
     gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
     gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v) throw runtime_error("[Pose2MobileArm] TODO: velocity not implemented");
@@ -45,8 +44,8 @@ void Pose2MobileArm::forwardKinematics(
   px.resize(nr_links());
   if (vx) vx->resize(nr_links());
   if (J_px_p) J_px_p->assign(nr_links(), Matrix::Zero(6, dof()));
-  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(3, dof()));
-  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(3, dof()));
+  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(6, dof()));
+  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(6, dof()));
 
   // vehicle & arm base pose
   Pose3 veh_base, arm_base;
@@ -68,14 +67,14 @@ void Pose2MobileArm::forwardKinematics(
   px[0] = veh_base;
   if (J_px_p) (*J_px_p)[0].block<6, 3>(0, 0) = Hveh_base;
   if (vx) {
-    (*vx)[0] = Vector3((*v)[0], (*v)[1], 0.0);
+    (*vx)[0] = Vector6((*v)[0], (*v)[1], 0.0, 0.0, 0.0, 0.0);
     // (*J_vx_p)[0] is zero
     if (J_vx_v) (*J_vx_v)[0].block<2, 2>(0, 0) = Matrix2::Identity();
   }
 
   // arm links
   vector<Pose3> armjpx;
-  vector<Vector3> armjvx;
+  vector<Vector6> armjvx;
   vector<Matrix> Jarm_jpx_jp, Jarm_jvx_jp, Jarm_jvx_jv;
 
   arm_.updateBasePose(arm_base);

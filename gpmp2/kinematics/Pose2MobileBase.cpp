@@ -19,7 +19,7 @@ namespace gpmp2 {
 void Pose2MobileBase::forwardKinematics(
     const gtsam::Pose2& p, std::optional<const gtsam::Vector> v,
     std::vector<gtsam::Pose3>& px,
-    std::vector<gtsam::Vector3>* vx,
+    std::vector<gtsam::Vector6>* vx,
     gtsam::OptionalMatrixVecType J_px_p,
     gtsam::OptionalMatrixVecType J_vx_p,
     gtsam::OptionalMatrixVecType J_vx_v) const {
@@ -36,8 +36,8 @@ void Pose2MobileBase::forwardKinematics(
   px.resize(nr_links());
   if (vx) vx->resize(nr_links());
   if (J_px_p) J_px_p->assign(nr_links(), Matrix::Zero(6, dof()));
-  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(3, dof()));
-  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(3, dof()));
+  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(6, dof()));
+  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(6, dof()));
 
   // assign values
   Matrix63 Hveh_base;
@@ -48,7 +48,7 @@ void Pose2MobileBase::forwardKinematics(
   }
   if (J_px_p) (*J_px_p)[0].block<6, 3>(0, 0) = Hveh_base;
   if (vx) {
-    (*vx)[0] = Vector3((*v)[0], (*v)[1], 0.0);
+    (*vx)[0] = Vector6((*v)[0], (*v)[1], 0.0, 0.0, 0.0, 0.0);
     // (*J_vx_p)[0] is zero
     if (J_vx_v) (*J_vx_v)[0].block<2, 2>(0, 0) = Matrix2::Identity();
   }
