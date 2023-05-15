@@ -177,7 +177,7 @@ for i=0:total_time_step
     hold on;
     % plot arm
     conf = result.atVector(symbol('x', i));
-    plotRobotModel(arm, conf, cyan)
+    plotRobotModel(arm, conf, cyan);
     pause(0.1);
 end
 hold off
