@@ -31,8 +31,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
   return vel.at(i);
 }
 
-// /* ************************************************************************** */
-// TEST_DISABLED(Arm, 2linkPlanarExamples) {
+// /* **************************************************************************
+// */ TEST_DISABLED(Arm, 2linkPlanarExamples) {
 //   // 2 link simple example, with none zero base poses
 //   Vector2 a(1, 1), alpha(0, 0), d(0, 0);
 //   Pose3 base_pose(Rot3::Ypr(M_PI / 4.0, 0, 0), Point3(2.0, 1.0, -1.0));
@@ -54,9 +54,11 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 
 //   // expected joint positions
 //   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
-//                            Point3(2.707106781186548, 1.707106781186548, -1.0)));
+//                            Point3(2.707106781186548, 1.707106781186548,
+//                            -1.0)));
 //   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
-//                            Point3(3.414213562373095, 2.414213562373095, -1.0)));
+//                            Point3(3.414213562373095, 2.414213562373095,
+//                            -1.0)));
 
 //   // expected joint velocities
 //   vvec_exp.push_back(Vector3(0, 0, 0));
@@ -65,7 +67,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   for (short int kk = 0; kk < dof; kk++) {
 //     pJp_exp.push_back(numericalDerivative11(
 //         std::function<Pose3(const Vector2&)>(
-//             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
+//             std::bind(&fkpose, arm, std::placeholders::_1, qdot,
+//             size_t(kk))),
 //         q, 1e-6));
 //     vJp_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(std::bind(
@@ -73,7 +76,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //         q, 1e-6));
 //     vJv_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(
-//             std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(kk))),
+//             std::bind(&fkvelocity, arm, q, std::placeholders::_1,
+//             size_t(kk))),
 //         qdot, 1e-6));
 //     EXPECT(assert_equal(pvec_exp[kk], pvec_act[kk], 1e-9));
 //     EXPECT(assert_equal(vvec_exp[kk], vvec_act[kk], 1e-9));
@@ -93,9 +97,11 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   // expected joint positions
 //   pvec_exp.clear();
 //   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
-//                            Point3(2.707106781186548, 1.707106781186548, -1.0)));
+//                            Point3(2.707106781186548, 1.707106781186548,
+//                            -1.0)));
 //   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
-//                            Point3(3.414213562373095, 2.414213562373095, -1.0)));
+//                            Point3(3.414213562373095, 2.414213562373095,
+//                            -1.0)));
 
 //   // expected joint velocities
 //   vvec_exp.clear();
@@ -108,7 +114,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   for (short int kk = 0; kk < dof; kk++) {
 //     pJp_exp.push_back(numericalDerivative11(
 //         std::function<Pose3(const Vector2&)>(
-//             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
+//             std::bind(&fkpose, arm, std::placeholders::_1, qdot,
+//             size_t(kk))),
 //         q, 1e-6));
 //     vJp_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(std::bind(
@@ -116,7 +123,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //         q, 1e-6));
 //     vJv_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(
-//             std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(kk))),
+//             std::bind(&fkvelocity, arm, q, std::placeholders::_1,
+//             size_t(kk))),
 //         qdot, 1e-6));
 //     EXPECT(assert_equal(pvec_exp[kk], pvec_act[kk], 1e-9));
 //     EXPECT(assert_equal(vvec_exp[kk], vvec_act[kk], 1e-9));
@@ -136,9 +144,11 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   // expected joint positions
 //   pvec_exp.clear();
 //   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
-//                            Point3(2.707106781186548, 1.707106781186548, -1.0)));
+//                            Point3(2.707106781186548, 1.707106781186548,
+//                            -1.0)));
 //   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
-//                            Point3(3.414213562373095, 2.414213562373095, -1.0)));
+//                            Point3(3.414213562373095, 2.414213562373095,
+//                            -1.0)));
 
 //   // expected joint velocities
 //   vvec_exp.clear();
@@ -151,7 +161,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   for (short int kk = 0; kk < dof; kk++) {
 //     pJp_exp.push_back(numericalDerivative11(
 //         std::function<Pose3(const Vector2&)>(
-//             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
+//             std::bind(&fkpose, arm, std::placeholders::_1, qdot,
+//             size_t(kk))),
 //         q, 1e-6));
 //     vJp_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(std::bind(
@@ -159,7 +170,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //         q, 1e-6));
 //     vJv_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(
-//             std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(kk))),
+//             std::bind(&fkvelocity, arm, q, std::placeholders::_1,
+//             size_t(kk))),
 //         qdot, 1e-6));
 //     EXPECT(assert_equal(pvec_exp[kk], pvec_act[kk], 1e-9));
 //     EXPECT(assert_equal(vvec_exp[kk], vvec_act[kk], 1e-9));
@@ -195,7 +207,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   for (short int kk = 0; kk < dof; kk++) {
 //     pJp_exp.push_back(numericalDerivative11(
 //         std::function<Pose3(const Vector2&)>(
-//             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
+//             std::bind(&fkpose, arm, std::placeholders::_1, qdot,
+//             size_t(kk))),
 //         q, 1e-6));
 //     vJp_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(std::bind(
@@ -203,7 +216,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //         q, 1e-6));
 //     vJv_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector2&)>(
-//             std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(kk))),
+//             std::bind(&fkvelocity, arm, q, std::placeholders::_1,
+//             size_t(kk))),
 //         qdot, 1e-6));
 //     EXPECT(assert_equal(pvec_exp[kk], pvec_act[kk], 1e-9));
 //     EXPECT(assert_equal(vvec_exp[kk], vvec_act[kk], 1e-9));
@@ -213,8 +227,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   }
 // }
 
-// /* ************************************************************************** */
-// TEST_DISABLED(Arm, 3link3Dexample) {
+// /* **************************************************************************
+// */ TEST_DISABLED(Arm, 3link3Dexample) {
 //   // random 3 link arm
 //   // no link rotation ground truth
 
@@ -249,7 +263,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   for (short int kk = 0; kk < dof; kk++) {
 //     pJp_exp.push_back(numericalDerivative11(
 //         std::function<Pose3(const Vector3&)>(
-//             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
+//             std::bind(&fkpose, arm, std::placeholders::_1, qdot,
+//             size_t(kk))),
 //         q, 1e-6));
 //     vJp_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector3&)>(std::bind(
@@ -257,7 +272,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //         q, 1e-6));
 //     vJv_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector3&)>(
-//             std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(kk))),
+//             std::bind(&fkvelocity, arm, q, std::placeholders::_1,
+//             size_t(kk))),
 //         qdot, 1e-6));
 //     EXPECT(assert_equal(pvec_exp[kk], pvec_act[kk].translation(), 1e-3));
 //     EXPECT(assert_equal(vvec_exp[kk], vvec_act[kk], 1e-3));
@@ -267,11 +283,12 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   }
 // }
 
-// /* ************************************************************************** */
-// TEST_DISABLED(Arm, WAMexample) {
+// /* **************************************************************************
+// */ TEST_DISABLED(Arm, WAMexample) {
 //   // WAM arm example, only joint position, no rotation
-//   Vector7 a = (Vector7() << 0.0, 0.0, 0.045, -0.045, 0.0, 0.0, 0.0).finished();
-//   Vector7 alpha = (Vector7() << -M_PI / 2.0, M_PI / 2.0, -M_PI / 2.0,
+//   Vector7 a = (Vector7() << 0.0, 0.0, 0.045, -0.045, 0.0, 0.0,
+//   0.0).finished(); Vector7 alpha = (Vector7() << -M_PI / 2.0, M_PI / 2.0,
+//   -M_PI / 2.0,
 //                    M_PI / 2.0, -M_PI / 2.0, M_PI / 2.0, 0.0)
 //                       .finished();
 //   Vector7 d = (Vector7() << 0.0, 0.0, 0.55, 0.0, 0.3, 0.0, 0.06).finished();
@@ -313,7 +330,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //   for (short int kk = 0; kk < dof; kk++) {
 //     pJp_exp.push_back(numericalDerivative11(
 //         std::function<Pose3(const Vector7&)>(
-//             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
+//             std::bind(&fkpose, arm, std::placeholders::_1, qdot,
+//             size_t(kk))),
 //         q, 1e-6));
 //     vJp_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector7&)>(std::bind(
@@ -321,7 +339,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 //         q, 1e-6));
 //     vJv_exp.push_back(numericalDerivative11(
 //         std::function<Vector3(const Vector7&)>(
-//             std::bind(&fkvelocity, arm, q, std::placeholders::_1, size_t(kk))),
+//             std::bind(&fkvelocity, arm, q, std::placeholders::_1,
+//             size_t(kk))),
 //         qdot, 1e-6));
 
 //     EXPECT(assert_equal(pvec_exp[kk], pvec_act1[kk].translation(), 1e-3));
@@ -386,15 +405,15 @@ TEST(Arm, KinovaGen3) {
             Point3(-0.2428, -0.0044, 0.9384)));  // J7 pose (end-effector)
 
   // expected joint velocities
-  vi_exp.push_back(Vector6(0, 0, 0, 0, 0, 0.1));                          // J1
-  vi_exp.push_back(Vector6(0, 0, 0, 0, 0.0, 0));                       // J2
-  vi_exp.push_back(Vector6(-0.0298, 0, -0.0298, 0.0707, -0.1, 0.070));  // J3
+  vi_exp.push_back(Vector6(0, 0, 0, 0, 0, 0.1));                        // J1
+  vi_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));                          // J2
+  vi_exp.push_back(Vector6(-0.0298, 0, -0.0298, 0, -0.1, 0));  // J3
   vi_exp.push_back(
-      Vector6(-0.0294, -0.0006, -0.0285, 0.0354, -0.1866, -0.1061));  // J4
+      Vector6(-0.0294, -0.0006, -0.0285, 0.0707, -0.1000, -0.0707));  // J4
   vi_exp.push_back(
-      Vector6(-0.0916, -0.0006, -0.0493, 0.066, -0.1616, -0.1979));  // J5
+      Vector6(-0.0916, -0.0006, -0.0493, 0.0354, -0.1866, -0.1061));  // J5
   vi_exp.push_back(
-      Vector6(-0.0916, -0.0006, -0.0493, 0.1035, -0.2535, -0.2104));  // J6
+      Vector6(-0.0916, -0.0006, -0.0493, 0.0660, -0.1616, -0.1979));  // J6
   vi_exp.push_back(Vector6(-0.0968, -0.0380, -0.0068, 0.1035, -0.2535,
                            -0.2104));  // J7
 
@@ -404,7 +423,7 @@ TEST(Arm, KinovaGen3) {
   // full fk with velocity
   arm.forwardKinematics(q, qdot, pi_act, &vi_act, &pJp_act, &vJp_act, &vJv_act);
 
-  for (int kk = 0; kk < 3; kk++) {
+  for (int kk = 0; kk < dof; kk++) {
     pJp_exp.push_back(numericalDerivative11(
         std::function<Pose3(const Vector7&)>(
             std::bind(&fkpose, arm, std::placeholders::_1, qdot, size_t(kk))),
@@ -428,6 +447,7 @@ TEST(Arm, KinovaGen3) {
 
     EXPECT(assert_equal(pJp_exp[kk], pJp_act_wo_fwdVel[kk], 1e-6));
     EXPECT(assert_equal(pi_exp[kk], pi_act_wo_fwdVel[kk].translation(), 1e-3));
+    std::cout << "joint" << kk << std::endl;
     EXPECT(assert_equal(pi_exp[kk], pi_act[kk].translation(), 1e-3));
     EXPECT(assert_equal(vi_exp[kk], vi_act[kk], 1e-3));
     // EXPECT(assert_equal(pJp_exp[kk], pJp_act[kk], 1e-6));
