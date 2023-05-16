@@ -44,8 +44,7 @@ class ForwardKinematics {
   /**
    *  Forward kinematics: poses from configuration space to 3D workspace
    *  Velocity kinematics: optional velocities from configuration space to 3D
-   *  workspace, no angular rate pure virtual method, need implementation in
-   *  derived class
+   *  workspace, pure virtual method, need implementation in derived class
    *
    *  @param jp robot pose in config space
    *  @param jv robot velocity in config space

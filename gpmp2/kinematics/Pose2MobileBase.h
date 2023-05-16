@@ -35,8 +35,7 @@ class GPMP2_EXPORT Pose2MobileBase
 
   /**
    *  Forward kinematics: joint configuration to poses in workspace
-   *  Velocity kinematics: optional joint velocities to linear velocities in
-   *workspace, no anuglar rate
+   *  Velocity kinematics: optional joint velocities to velocities workspace
    *
    *  @param p position in config space
    *  @param v velocity in config space

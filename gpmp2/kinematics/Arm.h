@@ -76,8 +76,7 @@ class GPMP2_EXPORT Arm
 
   /**
    *  Forward kinematics: joint configuration to poses in workspace
-   *  Velocity kinematics: optional joint velocities to linear velocities in
-   *  workspace, no angular rate
+   *  Velocity kinematics: optional joint velocities in workspace
    *
    *  @param jp joint position in config space
    *  @param jv joint velocity in config space
