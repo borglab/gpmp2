@@ -1,6 +1,6 @@
 /**
  *  @file  Pose2MobileVetLinArm.cpp
- *  @brief Abstract plannar mobile manipulator, Arm on a vetical linear actuator
+ *  @brief Abstract planar mobile manipulator, Arm on a vertical linear actuator
  *  @author Jing Dong
  *  @date  Aug 18, 2017
  **/
