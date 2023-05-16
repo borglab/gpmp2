@@ -31,8 +31,14 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
   return vel.at(i);
 }
 
-/* **************************************************************************
+/* 
+How the Kinematics were Verified: 
+
+All forward kinematics for each manipulator were verified in this repo:
+https://github.com/mattking-smith/Denavit-Hartenberg-Kinematics
  */
+
+/* ************************************************************************ */
 TEST(Arm, 2linkPlanarExamples) {
   // 2 link simple example, with none zero base poses
   Vector2 a(1, 1), alpha(0, 0), d(0, 0);
@@ -218,8 +224,7 @@ TEST(Arm, 2linkPlanarExamples) {
   }
 }
 
-/* **************************************************************************
- */
+/* ************************************************************************ */
 TEST(Arm, 3link3Dexample) {
   // random 3 link arm
   // no link rotation ground truth
@@ -274,8 +279,7 @@ TEST(Arm, 3link3Dexample) {
   }
 }
 
-/* **************************************************************************
- */
+/* ************************************************************************ */
 TEST(Arm, WAMexample) {
   // WAM arm example, only joint position, no rotation
   Vector7 a = (Vector7() << 0.0, 0.0, 0.045, -0.045, 0.0, 0.0, 0.0).finished();

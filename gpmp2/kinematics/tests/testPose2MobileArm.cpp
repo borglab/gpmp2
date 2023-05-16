@@ -381,7 +381,7 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
     Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
     size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_vvec_exp1,
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
     size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
     Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
