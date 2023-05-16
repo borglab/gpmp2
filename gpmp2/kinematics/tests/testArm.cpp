@@ -34,7 +34,8 @@ Vector6 fkvelocity(const Arm& arm, const Vector& jp, const Vector& jv,
 /* 
 How the Kinematics were Verified: 
 
-All forward kinematics for each manipulator were verified in this repo:
+We verified all the forward kinematics for each of the tests, both for linear and angular velocity.
+To reproduce the assertion values, please refer to repo-link:
 https://github.com/mattking-smith/Denavit-Hartenberg-Kinematics
  */
 
