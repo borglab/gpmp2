@@ -25,9 +25,9 @@ Pose3 fkpose(const Pose2MobileBase& r, const Pose2& p, const Vector& v) {
   return pos[0];
 }
 
-Vector3 fkvelocity(const Pose2MobileBase& r, const Pose2& p, const Vector& v) {
+Vector6 fkvelocity(const Pose2MobileBase& r, const Pose2& p, const Vector& v) {
   vector<Pose3> pos;
-  vector<Vector3> vel;
+  vector<Vector6> vel;
   r.forwardKinematics(p, v, pos, &vel);
   return vel[0];
 }
@@ -39,7 +39,7 @@ TEST(Pose2MobileBase, Example) {
   Vector3 qdot;
   Vector qdymc;
   vector<Pose3> pvec_exp, pvec_act;
-  vector<Vector3> vvec_exp, vvec_act;
+  vector<Vector6> vvec_exp, vvec_act;
   vector<Matrix> vJp_exp, vJp_act, vJv_exp, vJv_act;
   vector<Matrix> pJp_exp, pJp_act;
 
@@ -50,7 +50,7 @@ TEST(Pose2MobileBase, Example) {
   pvec_exp.clear();
   pvec_exp.push_back(Pose3());
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2&)>(
@@ -80,7 +80,7 @@ TEST(Pose2MobileBase, Example) {
   pvec_exp.clear();
   pvec_exp.push_back(Pose3());
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(1, 0, 1));
+  vvec_exp.push_back(Vector6(1, 0, 1, 0, 0, 0));
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2&)>(
@@ -110,7 +110,7 @@ TEST(Pose2MobileBase, Example) {
   pvec_exp.clear();
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 2.0, 0, 0), Point3(2.0, -1.0, 0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2&)>(
@@ -140,7 +140,7 @@ TEST(Pose2MobileBase, Example) {
   pvec_exp.clear();
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 2.0, 0, 0), Point3(2.0, -1.0, 0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(1, 0, 1));
+  vvec_exp.push_back(Vector6(1, 0, 1, 0, 0, 0));
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
       std::function<Pose3(const Pose2&)>(

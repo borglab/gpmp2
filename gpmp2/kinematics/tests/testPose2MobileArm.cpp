@@ -27,10 +27,10 @@ Pose3 fkpose(const Pose2MobileArm& r, const Pose2Vector& p, const Vector& v,
   return pos[i];
 }
 
-Vector3 fkvelocity(const Pose2MobileArm& r, const Pose2Vector& p,
+Vector6 fkvelocity(const Pose2MobileArm& r, const Pose2Vector& p,
                    const Vector& v, size_t i) {
   vector<Pose3> pos;
-  vector<Vector3> vel;
+  vector<Vector6> vel;
   r.forwardKinematics(p, v, pos, &vel);
   return vel[i];
 }
@@ -46,7 +46,7 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   Vector5 qdot;
   Vector qdymc;
   vector<Pose3> pvec_exp, pvec_act;
-  vector<Vector3> vvec_exp, vvec_act;
+  vector<Vector6> vvec_exp, vvec_act;
   vector<Matrix> vJp_exp, vJp_act, vJv_exp, vJv_act;
   vector<Matrix> pJp_exp, pJp_act;
 
@@ -61,9 +61,9 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
                            Point3(2.414213562373095, 1.414213562373095, 2.0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
@@ -134,9 +134,9 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
                            Point3(2.414213562373095, 1.414213562373095, 2.0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(1, 0, 1));
-  vvec_exp.push_back(Vector3(1, 0, 1));
-  vvec_exp.push_back(Vector3(1, 0, 1));
+  vvec_exp.push_back(Vector6(1, 0, 1, 0, 0, 0));
+  vvec_exp.push_back(Vector6(1, 0, 1, 0, 0, 0));
+  vvec_exp.push_back(Vector6(1, 0, 1, 0, 0, 0));
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
@@ -207,9 +207,9 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI / 4.0, 0, 0),
                            Point3(2.414213562373095, 1.414213562373095, 2.0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
@@ -278,9 +278,9 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI, 0, 0), Point3(1.0, 0.0, 2.0)));
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI, 0, 0), Point3(0.0, 0.0, 2.0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
@@ -349,9 +349,9 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI, 0, 0), Point3(1.0, 0.0, 2.0)));
   pvec_exp.push_back(Pose3(Rot3::Ypr(M_PI, 0, 0), Point3(0.0, 0.0, 2.0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
-  vvec_exp.push_back(Vector3(0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
+  vvec_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivativeDynamic(
@@ -381,7 +381,7 @@ TEST(Pose2MobileArm, 2linkPlanarExamples) {
     Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
     size_t(0))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
-    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
+    Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_vvec_exp1,
     size_t(1))), qdot, 1e-6));
     vJv_exp.push_back(numericalDerivativeDynamic(std::function<Vector3(const
     Vector5&)>( std::bind(&fkvelocity, marm, q, std::placeholders::_1,
