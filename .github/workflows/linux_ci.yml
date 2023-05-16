@@ -23,7 +23,6 @@ jobs:
         ]
 
         build_type: [Debug, Release]
-        build_unstable: [ON]
         include:
           - name: ubuntu-20.04-gcc-9
             os: ubuntu-20.04
@@ -73,9 +72,10 @@ jobs:
 
       - name: Install GTSAM
         run: |
-          sudo add-apt-repository -y ppa:borglab/gtsam-develop
-          sudo apt-get -y update
-          sudo apt-get -y install libgtsam-no-tbb-dev libgtsam-no-tbb-unstable-dev
+          git clone https://github.com/borglab/gtsam.git
+          cd gtsam && mkdir build && cd $_
+          cmake -DGTSAM_ALLOW_DEPRECATED_SINCE_V43=OFF -DGTSAM_WITH_TBB=OFF -DGTSAM_BUILD_UNSTABLE=OFF .. && sudo make -j4 install
+          cd ../../
 
       - name: Checkout
         uses: actions/checkout@v3
