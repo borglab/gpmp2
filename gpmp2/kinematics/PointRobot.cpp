@@ -14,7 +14,7 @@ namespace gpmp2 {
 /* ************************************************************************** */
 void PointRobot::forwardKinematics(
     const Vector& jp, std::optional<const Vector> jv,
-    std::vector<gtsam::Pose3>& jpx, std::vector<gtsam::Vector3>* jvx,
+    std::vector<gtsam::Pose3>& jpx, std::vector<gtsam::Vector6>* jvx,
     gtsam::OptionalMatrixVecType J_jpx_jp,
     gtsam::OptionalMatrixVecType J_jvx_jp,
     gtsam::OptionalMatrixVecType J_jvx_jv) const {
@@ -22,8 +22,8 @@ void PointRobot::forwardKinematics(
   jpx.resize(nr_links());
   if (jvx) jvx->resize(nr_links());
   if (J_jpx_jp) J_jpx_jp->assign(nr_links(), Matrix::Zero(6, dof()));
-  if (J_jvx_jp) J_jvx_jp->assign(nr_links(), Matrix::Zero(3, dof()));
-  if (J_jvx_jv) J_jvx_jv->assign(nr_links(), Matrix::Zero(3, dof()));
+  if (J_jvx_jp) J_jvx_jp->assign(nr_links(), Matrix::Zero(6, dof()));
+  if (J_jvx_jv) J_jvx_jv->assign(nr_links(), Matrix::Zero(6, dof()));
 
   Matrix H1, H2;
 
@@ -33,7 +33,7 @@ void PointRobot::forwardKinematics(
     jpx[i] = Pose3::Create(Rot3(), Point3(jp[0], jp[1], 0), H1, H2);
 
     // velocity in workspace
-    if (jv && jvx) (*jvx)[i] << (*jv)[0], (*jv)[1], 0;
+    if (jv && jvx) (*jvx)[i] << (*jv)[0], (*jv)[1], 0, 0, 0, 0;
 
     // Jacobians
     if (J_jpx_jp) {

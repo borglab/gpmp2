@@ -405,8 +405,8 @@ TEST(Arm, KinovaGen3) {
             Point3(-0.2428, -0.0044, 0.9384)));  // J7 pose (end-effector)
 
   // expected joint velocities
-  vi_exp.push_back(Vector6(0, 0, 0, 0, 0, 0.1));                        // J1
-  vi_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));                          // J2
+  vi_exp.push_back(Vector6(0, 0, 0, 0, 0, 0.1));               // J1
+  vi_exp.push_back(Vector6(0, 0, 0, 0, 0, 0));                 // J2
   vi_exp.push_back(Vector6(-0.0298, 0, -0.0298, 0, -0.1, 0));  // J3
   vi_exp.push_back(
       Vector6(-0.0294, -0.0006, -0.0285, 0.0707, -0.1000, -0.0707));  // J4

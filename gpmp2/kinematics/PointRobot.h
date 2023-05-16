@@ -52,7 +52,7 @@ class GPMP2_EXPORT PointRobot
   void forwardKinematics(const gtsam::Vector& jp,
                          std::optional<const gtsam::Vector> jv,
                          std::vector<gtsam::Pose3>& jpx,
-                         std::vector<gtsam::Vector3>* jvx = nullptr,
+                         std::vector<gtsam::Vector6>* jvx = nullptr,
                          gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;
