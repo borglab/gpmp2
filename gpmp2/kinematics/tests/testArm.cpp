@@ -447,12 +447,11 @@ TEST(Arm, KinovaGen3) {
 
     EXPECT(assert_equal(pJp_exp[kk], pJp_act_wo_fwdVel[kk], 1e-6));
     EXPECT(assert_equal(pi_exp[kk], pi_act_wo_fwdVel[kk].translation(), 1e-3));
-    std::cout << "joint" << kk << std::endl;
     EXPECT(assert_equal(pi_exp[kk], pi_act[kk].translation(), 1e-3));
     EXPECT(assert_equal(vi_exp[kk], vi_act[kk], 1e-3));
-    // EXPECT(assert_equal(pJp_exp[kk], pJp_act[kk], 1e-6));
-    // EXPECT(assert_equal(vJp_exp[kk], vJp_act[kk], 1e-6));
-    // EXPECT(assert_equal(vJv_exp[kk], vJv_act[kk], 1e-6));
+    EXPECT(assert_equal(pJp_exp[kk], pJp_act[kk], 1e-6));
+    EXPECT(assert_equal(vJp_exp[kk], vJp_act[kk], 1e-6));
+    EXPECT(assert_equal(vJv_exp[kk], vJv_act[kk], 1e-6));
   }
 }
 /* ************************************************************************** */

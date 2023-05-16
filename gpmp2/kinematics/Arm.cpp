@@ -137,7 +137,7 @@ void Arm::forwardKinematics(const Vector& jp, std::optional<const Vector> jv,
       // Jv each col <= j (j <= i)
       // Jv.col(j) = dvxi_dq.col(j) = d_Ji_qj * vi
       for (size_t j = 0; j <= i; j++) {
-        Matrix d_Ji_qj = Matrix::Zero(3, dof());
+        Matrix d_Ji_qj = Matrix::Zero(6, dof());
 
         // for d_Ji_qj only first i cols have values
         // d_Ji_qj.col(k) = d(getJvj(i, k-1))_dqj  (k <= i)
