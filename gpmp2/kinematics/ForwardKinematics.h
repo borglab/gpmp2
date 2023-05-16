@@ -44,8 +44,7 @@ class ForwardKinematics {
   /**
    *  Forward kinematics: poses from configuration space to 3D workspace
    *  Velocity kinematics: optional velocities from configuration space to 3D
-   *  workspace, no angular rate pure virtual method, need implementation in
-   *  derived class
+   *  workspace, pure virtual method, need implementation in derived class
    *
    *  @param jp robot pose in config space
    *  @param jv robot velocity in config space
@@ -56,7 +55,7 @@ class ForwardKinematics {
   virtual void forwardKinematics(
       const Pose& jp, std::optional<const Velocity> jv,
       std::vector<gtsam::Pose3>& jpx,
-      std::vector<gtsam::Vector3>* jvx = nullptr,
+      std::vector<gtsam::Vector6>* jvx = nullptr,
       gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
       gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
       gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const = 0;

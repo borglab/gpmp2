@@ -40,8 +40,7 @@ class GPMP2_EXPORT PointRobot
 
   /**
    *  Forward kinematics: robot configuration to poses in workspace
-   *  Velocity kinematics: optional robot velocities to linear velocities in
-   *workspace, no angular rate
+   *  Velocity kinematics: optional robot velocities to velocities in workspace
    *
    *  @param jp   robot pose in config space
    *  @param jv   robot velocity in config space
@@ -52,7 +51,7 @@ class GPMP2_EXPORT PointRobot
   void forwardKinematics(const gtsam::Vector& jp,
                          std::optional<const gtsam::Vector> jv,
                          std::vector<gtsam::Pose3>& jpx,
-                         std::vector<gtsam::Vector3>* jvx = nullptr,
+                         std::vector<gtsam::Vector6>* jvx = nullptr,
                          gtsam::OptionalMatrixVecType J_jpx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jp = nullptr,
                          gtsam::OptionalMatrixVecType J_jvx_jv = nullptr) const;

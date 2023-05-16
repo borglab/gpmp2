@@ -19,15 +19,15 @@ using namespace gpmp2;
 Pose3 fkpose(const PointRobot& pR, const Vector& jp, const Vector& jv,
              size_t i) {
   vector<Pose3> pos;
-  vector<Vector3> vel;
+  vector<Vector6> vel;
   pR.forwardKinematics(jp, jv, pos, &vel);
   return pos[i];
 }
 
-Vector3 fkvelocity(const PointRobot& pR, const Vector& jp, const Vector& jv,
+Vector6 fkvelocity(const PointRobot& pR, const Vector& jp, const Vector& jv,
                    size_t i) {
   vector<Pose3> pos;
-  vector<Vector3> vel;
+  vector<Vector6> vel;
   pR.forwardKinematics(jp, jv, pos, &vel);
   return vel[i];
 }
@@ -51,21 +51,20 @@ TEST(PointRobot, 2DExample) {
   PointRobot pR(2, 1);
   Vector2 p, v;
   vector<Pose3> pvec_exp, pvec_act;
-  vector<Vector3> vvec_exp, vvec_act;
+  vector<Vector6> vvec_exp, vvec_act;
   vector<Matrix> vJp_exp, vJp_act, vJv_exp, vJv_act;
   vector<Matrix> pJp_exp, pJp_act;
 
   // random position and velocity
   p = Vector2(1.0, 2.0);
   v = Vector2(0.1, 0.2);
-  Vector vdymc = Vector(v);
-  pR.forwardKinematics(p, vdymc, pvec_act, &vvec_act, &pJp_act, &vJp_act,
+  pR.forwardKinematics(p, v, pvec_act, &vvec_act, &pJp_act, &vJp_act,
                        &vJv_act);
 
   pvec_exp.clear();
   pvec_exp.push_back(Pose3(Rot3(), Point3(p(0), p(1), 0)));
   vvec_exp.clear();
-  vvec_exp.push_back(Vector3(v(0), v(1), 0));
+  vvec_exp.push_back(Vector6(v(0), v(1), 0, 0, 0, 0));
 
   pJp_exp.clear();
   pJp_exp.push_back(numericalDerivative11(
@@ -74,12 +73,12 @@ TEST(PointRobot, 2DExample) {
       p, 1e-6));
   vJp_exp.clear();
   vJp_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2&)>(
+      std::function<Vector6(const Vector2&)>(
           std::bind(&fkvelocity, pR, std::placeholders::_1, v, size_t(0))),
       p, 1e-6));
   vJv_exp.clear();
   vJv_exp.push_back(numericalDerivative11(
-      std::function<Vector3(const Vector2&)>(
+      std::function<Vector6(const Vector2&)>(
           std::bind(&fkvelocity, pR, p, std::placeholders::_1, size_t(0))),
       v, 1e-6));
 

@@ -35,8 +35,7 @@ class GPMP2_EXPORT Pose2MobileBase
 
   /**
    *  Forward kinematics: joint configuration to poses in workspace
-   *  Velocity kinematics: optional joint velocities to linear velocities in
-   *workspace, no anuglar rate
+   *  Velocity kinematics: optional joint velocities to velocities workspace
    *
    *  @param p position in config space
    *  @param v velocity in config space
@@ -47,7 +46,7 @@ class GPMP2_EXPORT Pose2MobileBase
   void forwardKinematics(const gtsam::Pose2& p,
                          std::optional<const gtsam::Vector> v,
                          std::vector<gtsam::Pose3>& px,
-                         std::vector<gtsam::Vector3>* vx = nullptr,
+                         std::vector<gtsam::Vector6>* vx = nullptr,
                          gtsam::OptionalMatrixVecType J_px_p = nullptr,
                          gtsam::OptionalMatrixVecType J_vx_p = nullptr,
                          gtsam::OptionalMatrixVecType J_vx_v = nullptr) const;

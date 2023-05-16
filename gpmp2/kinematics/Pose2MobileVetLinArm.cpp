@@ -1,6 +1,6 @@
 /**
  *  @file  Pose2MobileVetLinArm.cpp
- *  @brief Abstract plannar mobile manipulator, Arm on a vetical linear actuator
+ *  @brief Abstract planar mobile manipulator, Arm on a vertical linear actuator
  *  @author Jing Dong
  *  @date  Aug 18, 2017
  **/
@@ -36,8 +36,7 @@ Pose2MobileVetLinArm::Pose2MobileVetLinArm(const Arm& arm,
 /* ************************************************************************** */
 void Pose2MobileVetLinArm::forwardKinematics(
     const Pose2Vector& p, std::optional<const gtsam::Vector> v,
-    std::vector<gtsam::Pose3>& px,
-    std::vector<gtsam::Vector3>* vx,
+    std::vector<gtsam::Pose3>& px, std::vector<gtsam::Vector6>* vx,
     gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
     gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v) throw runtime_error("[Pose2MobileArm] TODO: velocity not implemented");
@@ -52,8 +51,8 @@ void Pose2MobileVetLinArm::forwardKinematics(
   px.resize(nr_links());
   if (vx) vx->resize(nr_links());
   if (J_px_p) J_px_p->assign(nr_links(), Matrix::Zero(6, dof()));
-  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(3, dof()));
-  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(3, dof()));
+  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(6, dof()));
+  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(6, dof()));
 
   // vehicle & arm base pose
   Pose3 veh_base, tso_base, arm_base;

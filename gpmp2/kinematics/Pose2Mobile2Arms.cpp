@@ -36,7 +36,7 @@ Pose2Mobile2Arms::Pose2Mobile2Arms(const Arm& arm1, const Arm& arm2,
 /* ************************************************************************** */
 void Pose2Mobile2Arms::forwardKinematics(
     const Pose2Vector& p, std::optional<const gtsam::Vector> v,
-    std::vector<gtsam::Pose3>& px, std::vector<gtsam::Vector3>* vx,
+    std::vector<gtsam::Pose3>& px, std::vector<gtsam::Vector6>* vx,
     gtsam::OptionalMatrixVecType J_px_p, gtsam::OptionalMatrixVecType J_vx_p,
     gtsam::OptionalMatrixVecType J_vx_v) const {
   if (v)
@@ -52,8 +52,8 @@ void Pose2Mobile2Arms::forwardKinematics(
   px.resize(nr_links());
   if (vx) vx->resize(nr_links());
   if (J_px_p) J_px_p->assign(nr_links(), Matrix::Zero(6, dof()));
-  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(3, dof()));
-  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(3, dof()));
+  if (J_vx_p) J_vx_p->assign(nr_links(), Matrix::Zero(6, dof()));
+  if (J_vx_v) J_vx_v->assign(nr_links(), Matrix::Zero(6, dof()));
 
   // vehicle & arm base pose
   Pose3 veh_base, arm1_base, arm2_base;

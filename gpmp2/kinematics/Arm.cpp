@@ -43,7 +43,7 @@ Arm::Arm(size_t dof, const Vector& a, const Vector& alpha, const Vector& d,
 /* ************************************************************************** */
 void Arm::forwardKinematics(const Vector& jp, std::optional<const Vector> jv,
                             std::vector<gtsam::Pose3>& jpx,
-                            std::vector<gtsam::Vector3>* jvx,
+                            std::vector<gtsam::Vector6>* jvx,
                             gtsam::OptionalMatrixVecType J_jpx_jp,
                             gtsam::OptionalMatrixVecType J_jvx_jp,
                             gtsam::OptionalMatrixVecType J_jvx_jv) const {
@@ -53,14 +53,14 @@ void Arm::forwardKinematics(const Vector& jp, std::optional<const Vector> jv,
   jpx.resize(dof());
   if (jvx) jvx->resize(dof());
   if (J_jpx_jp) J_jpx_jp->assign(dof(), Matrix::Zero(6, dof()));
-  if (J_jvx_jp) J_jvx_jp->assign(dof(), Matrix::Zero(3, dof()));
-  if (J_jvx_jv) J_jvx_jv->assign(dof(), Matrix::Zero(3, dof()));
+  if (J_jvx_jp) J_jvx_jp->assign(dof(), Matrix::Zero(6, dof()));
+  if (J_jvx_jv) J_jvx_jv->assign(dof(), Matrix::Zero(6, dof()));
 
   // variables
   vector<Matrix4> H(dof());
   vector<Matrix4> Ho(dof() + 1);  // start from 1
   vector<Matrix> J;
-  if (jv) J.assign(dof(), Matrix::Zero(3, dof()));
+  if (jv) J.assign(dof(), Matrix::Zero(6, dof()));
   // vars cached for calculate output Jacobians
   vector<Matrix4> dH(dof());
   vector<Matrix4> Hoinv(dof() + 1);  // start from 1
@@ -137,7 +137,7 @@ void Arm::forwardKinematics(const Vector& jp, std::optional<const Vector> jv,
       // Jv each col <= j (j <= i)
       // Jv.col(j) = dvxi_dq.col(j) = d_Ji_qj * vi
       for (size_t j = 0; j <= i; j++) {
-        Matrix d_Ji_qj = Matrix::Zero(3, dof());
+        Matrix d_Ji_qj = Matrix::Zero(6, dof());
 
         // for d_Ji_qj only first i cols have values
         // d_Ji_qj.col(k) = d(getJvj(i, k-1))_dqj  (k <= i)
