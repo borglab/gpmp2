@@ -80,7 +80,7 @@ class PriorWorkspacePoseVelocity
     Vector vel_error = des_vel_ - joint_vel[arm_.dof() - 1];
     if (H1) {
       // Jacobian for the joint positions
-      *H1 = H_ep * J_jpx_jp[arm_.dof() - 1];
+      *H1 = H_ep * J_jpx_jp[arm_.dof() - 1] - J_jvx_jp[arm_.dof() - 1];
     }
     if (H2) {
       // Jacobian for the joint rates

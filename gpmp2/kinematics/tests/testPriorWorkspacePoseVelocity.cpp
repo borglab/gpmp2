@@ -34,14 +34,16 @@ TEST(PriorWorkspacePoseVelocity, error) {
       noiseModel::Isotropic::Sigma(6, 1.0);
 
   q = Vector2(M_PI / 4.0, -M_PI / 2);
-  qdot = (Vector2() << 0, 0).finished();
+  qdot = (Vector2() << 0.1, 0.1).finished();
   des_pose = Pose3();
   Vector6 des_vel = (Vector6() << 0, 0, 0, 0, 0, 0).finished();
   PriorWorkspacePoseVelocity factor(0, 0, cost_model, arm, des_pose, des_vel);
   actual = factor.evaluateError(q, qdot, &H_pose_act, &H_vel_act);
-  expect = (Vector(6) << 0.613943126, 1.48218982, -0.613943126, 1.1609828,
-            0.706727485, -0.547039678)
+  expect = (Vector(6) << 0.613943126, 1.340768463762691, -0.613943126,
+            1.090272121881345, 0.777438163118655, -0.647039678)
                .finished();
+  // (original solution wo velocity): 0.613943126, 1.48218982,
+  // -0.613943126, 1.1609828, 0.706727485, -0.547039678
   H_pose_exp = numericalDerivative11(
       std::function<Vector(const Vector2&)>(
           std::bind(&PriorWorkspacePoseVelocity::evaluateError, factor,
@@ -74,7 +76,7 @@ TEST(PriorWorkspacePoseVelocity, optimization) {
   Vector q = (Vector(2) << 0, 0).finished();
   Vector qdot = (Vector(2) << 0, 0).finished();
   Vector qinit = (Vector(2) << M_PI / 2, M_PI / 2).finished();
-  Vector qdotinit = (Vector(2) << 0, 0).finished();
+  Vector qdotinit = (Vector(2) << 0.1, 0.1).finished();
 
   NonlinearFactorGraph graph;
   graph.add(PriorWorkspacePoseVelocity(qkey, qdotkey, cost_model, arm, des_pose,
