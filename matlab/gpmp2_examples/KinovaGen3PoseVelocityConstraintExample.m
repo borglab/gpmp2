@@ -71,12 +71,12 @@ cost_sigma = 0.02;
 epsilon_dist = 0.1;
 
 % noise model
-fix_sigma = 0.001;
+fix_sigma = 0.0001;
 pose_fix_model = noiseModel.Isotropic.Sigma(7, fix_sigma);
 vel_fix_model = noiseModel.Isotropic.Sigma(7, fix_sigma);
 
 % noise model for end-effector pose and rates
-ee_fix_model = noiseModel.Isotropic.Sigma(6, 5e-3);
+ee_fix_model = noiseModel.Isotropic.Sigma(12, 1e-5);
 
 % init sdf
 sdf = SignedDistanceField(origin_point3, cell_size, size(field, 1), ...

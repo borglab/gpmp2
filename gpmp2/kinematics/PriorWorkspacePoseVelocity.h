@@ -23,11 +23,11 @@ namespace gpmp2 {
  * binary factor Gaussian prior defined on the workspace pose and velocities
  */
 class PriorWorkspacePoseVelocity
-    : public gtsam::NoiseModelFactorN<gtsam::Vector, gtsam::Vector> {
+    : public gtsam::NoiseModelFactor2<gtsam::Vector, gtsam::Vector> {
  private:
   // typedefs
   typedef PriorWorkspacePoseVelocity This;
-  typedef gtsam::NoiseModelFactorN<gtsam::Vector, gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactor2<gtsam::Vector, gtsam::Vector> Base;
 
   // arm
   Arm arm_;
@@ -80,13 +80,17 @@ class PriorWorkspacePoseVelocity
     Vector vel_error = des_vel_ - joint_vel[arm_.dof() - 1];
     if (H1) {
       // Jacobian for the joint positions
-      *H1 = H_ep * J_jpx_jp[arm_.dof() - 1] - J_jvx_jp[arm_.dof() - 1];
+      *H1 = (Matrix(12, arm_.dof()) << H_ep * J_jpx_jp[arm_.dof() - 1],//
+                              - J_jvx_jp[arm_.dof() - 1]).finished();
     }
     if (H2) {
       // Jacobian for the joint rates
-      *H2 = -J_jvx_jv[arm_.dof() - 1];
+      *H2 = (Matrix(12, arm_.dof()) << Matrix::Zero(6, arm_.dof()), //
+                              -J_jvx_jv[arm_.dof() - 1]).finished();
     }
-    return pose_error + vel_error;
+    Vector12 tot_result;
+    tot_result << pose_error, vel_error;
+    return tot_result;
   }
 
   /// @return a deep copy of this factor
