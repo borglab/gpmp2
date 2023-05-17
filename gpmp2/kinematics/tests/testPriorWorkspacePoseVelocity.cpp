@@ -77,8 +77,8 @@ TEST(PriorWorkspacePoseVelocity, optimization) {
   Vector qdotinit = (Vector(2) << 0, 0).finished();
 
   NonlinearFactorGraph graph;
-  graph.add(PriorWorkspacePoseVelocity(qkey, qdotkey, cost_model, arm,
-                                          des_pose, des_vel));
+  graph.add(PriorWorkspacePoseVelocity(qkey, qdotkey, cost_model, arm, des_pose,
+                                       des_vel));
   Values init_values;
   init_values.insert(qkey, qinit);
   init_values.insert(qdotkey, qdotinit);

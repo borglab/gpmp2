@@ -62,10 +62,10 @@ class PriorWorkspacePoseVelocity
   ~PriorWorkspacePoseVelocity() {}
 
   /// error function
-  gtsam::Vector evaluateError(const gtsam::Vector& joint_conf,
-                              const gtsam::Vector& joint_rates,
-                              gtsam::OptionalMatrixType H1 = nullptr,
-                              gtsam::OptionalMatrixType H2 = nullptr) const override {
+  gtsam::Vector evaluateError(
+      const gtsam::Vector& joint_conf, const gtsam::Vector& joint_rates,
+      gtsam::OptionalMatrixType H1 = nullptr,
+      gtsam::OptionalMatrixType H2 = nullptr) const override {
     using namespace gtsam;
 
     // fk
