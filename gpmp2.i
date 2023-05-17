@@ -363,6 +363,14 @@ class PointRobotModel {
   double sphere_radius(size_t i) const;
 };
 
+// desired workspace pose and velocity for last link factor
+#include <gpmp2/kinematics/PriorWorkspacePoseVelocity.h>
+
+virtual class PriorWorkspacePoseVelocity : gtsam::NoiseModelFactor {
+  PriorWorkspacePoseVelocity(size_t poseKey, size_t velKey, const gtsam::noiseModel::Base* cost_model,
+                             const gpmp2::Arm& arm, const gtsam::Pose3& des_pose, const gtsam::Vector6& des_vel);
+};
+
 // goal destination factor
 #include <gpmp2/kinematics/GoalFactorArm.h>
 
