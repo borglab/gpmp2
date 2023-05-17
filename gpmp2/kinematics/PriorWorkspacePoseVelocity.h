@@ -23,11 +23,11 @@ namespace gpmp2 {
  * binary factor Gaussian prior defined on the workspace pose and velocities
  */
 class PriorWorkspacePoseVelocity
-    : public gtsam::NoiseModelFactorN<gtsam::Pose3, gtsam::Vector> {
+    : public gtsam::NoiseModelFactorN<gtsam::Vector, gtsam::Vector> {
  private:
   // typedefs
   typedef PriorWorkspacePoseVelocity This;
-  typedef gtsam::NoiseModelFactorN<gtsam::Pose3, gtsam::Vector> Base;
+  typedef gtsam::NoiseModelFactorN<gtsam::Vector, gtsam::Vector> Base;
 
   // arm
   Arm arm_;
@@ -62,10 +62,10 @@ class PriorWorkspacePoseVelocity
   ~PriorWorkspacePoseVelocity() {}
 
   /// error function
-  gtsam::Vector evaluateError(
-      const gtsam::Vector& joint_conf, const gtsam::Vector& joint_rates,
-      gtsam::OptionalMatrixType H1 = nullptr,
-      gtsam::OptionalMatrixType H2 = nullptr) const {
+  gtsam::Vector evaluateError(const gtsam::Vector& joint_conf,
+                              const gtsam::Vector& joint_rates,
+                              gtsam::OptionalMatrixType H1 = nullptr,
+                              gtsam::OptionalMatrixType H2 = nullptr) const override {
     using namespace gtsam;
 
     // fk
@@ -80,19 +80,17 @@ class PriorWorkspacePoseVelocity
     Vector vel_error = des_vel_ - joint_vel[arm_.dof() - 1];
     if (H1) {
       // Jacobian for the joint positions
-      *H1 = (Matrix(6, 2 * arm_.dof()) << H_ep * J_jpx_jp[arm_.dof() - 1],
-             J_jvx_jp[arm_.dof() - 1])
-                .finished();  // H_ep * J_jpx_jp[arm_.dof() - 1];
+      *H1 = H_ep * J_jpx_jp[arm_.dof() - 1];
     }
     if (H2) {
       // Jacobian for the joint rates
-      *H2 = J_jvx_jv[arm_.dof() - 1];
+      *H2 = -J_jvx_jv[arm_.dof() - 1];
     }
     return pose_error + vel_error;
   }
 
   /// @return a deep copy of this factor
-  virtual gtsam::NonlinearFactor::shared_ptr clone() const {
+  gtsam::NonlinearFactor::shared_ptr clone() const override {
     return std::static_pointer_cast<gtsam::NonlinearFactor>(
         gtsam::NonlinearFactor::shared_ptr(new This(*this)));
   }
