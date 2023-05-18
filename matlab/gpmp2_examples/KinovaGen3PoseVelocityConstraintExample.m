@@ -41,19 +41,19 @@ green = [0.4667 0.6745 0.1882];
 cyan = [0, 1, 1];
 
 % plot problem setting
-fig1 = figure(1);
-clf;
-hold on;
-set(fig1,'Name', 'Problem Settings');
-title('Problem Setup')
-plotRobotModel(arm, start_conf);
-plotRobotModel(arm, end_conf, green);
-plotMap3D(dataset.corner_idx, origin, cell_size);
-xlabel('x');
-ylabel('y');
-zlabel('z');
-grid on, view(3)
-hold off;
+% fig1 = figure(1);
+% clf;
+% hold on;
+% set(fig1,'Name', 'Problem Settings');
+% title('Problem Setup')
+% plotRobotModel(arm, start_conf);
+% plotRobotModel(arm, end_conf, green);
+% plotMap3D(dataset.corner_idx, origin, cell_size);
+% xlabel('x');
+% ylabel('y');
+% zlabel('z');
+% grid on, view(3)
+% hold off;
 
 %% settings
 total_time_sec = 10;
@@ -89,14 +89,14 @@ end
 init_values = initArmTrajStraightLine(start_conf, end_conf, total_time_step);
 
 % plot initial trajectory
-for i=0:total_time_step
-    hold on;
-    % plot arm
-    conf = init_values.atVector(symbol('x', i));
-    plotRobotModel(arm, conf, cyan);
-    pause(0.1)
-end
-hold off;
+% for i=0:total_time_step
+%     hold on;
+%     % plot arm
+%     conf = init_values.atVector(symbol('x', i));
+%     plotRobotModel(arm, conf, cyan);
+%     pause(0.1)
+% end
+% hold off;
 
 %% init optimization
 graph = NonlinearFactorGraph;
@@ -170,37 +170,160 @@ fprintf('Initial Error = %d\n', graph.error(init_values));
 optimizer.optimize();
 
 result = optimizer.values();
+
 fprintf(' Final Error = %d\n', graph.error(result));
 
+%% Save data
+
+% joint-space positions and rates
+init_joint_pos =  utilities.extractVectors(init_values,'x')';
+result_joint_pos = utilities.extractVectors(result,'x')';
+result_joint_rates = utilities.extractVectors(result,'v')';
+
+numSteps = total_time_step + 1;
+% workspace-space joint poses and velocities
+joints_poses = nan(6,7,numSteps);
+joints_vels = nan(6,7,numSteps);
+for i=1:total_time_step+1
+    joints_pose(:,:,i) = arm.fk_model().forwardKinematicsPose(result_joint_pos(:,i));
+    joints_vel(:,:,i) = arm.fk_model().forwardKinematicsVel(result_joint_pos(:,i),result_joint_rates(:,i));
+end
+
 %% Plot results
+import gtsam.*
+import gpmp2.*
+
+% Plotting sizes and settings
+if ~strcmp(get(0,'defaultTextInterpreter'),'latex')
+    set(0,'defaulttextinterpreter','latex');
+    set(0,'DefaultLegendInterpreter','latex');
+    set(0, 'defaultAxesTickLabelInterpreter','latex');
+    set(0,'defaultfigurecolor',[1 1 1]);
+    set(0,'defaultAxesFontName','Times New Roman');
+    set(0,'DefaultAxesXGrid','on');
+    set(0,'DefaultAxesYGrid','on');
+    set(0,'DefaultAxesZGrid','on');
+    set(0,'DefaultAxesBox','on');
+    set(0,'defaultAxesFontSize',16);
+    set(0,'DefaultLegendFontSize', 16);
+end
 
 % plot final values
-fig2 = figure(2);
-set(fig2, 'Name', 'Optimization Results');
+fig1 = figure(1);
+set(fig1, 'Name', 'Factore Graph Initialization and Optimization Results');
 clf;
-title('Result Values');
+for kk = 1:1:6 
+    ax(kk) = subplot(1,6,kk);
+end
+
+subplot(ax(1));
+title('\textbf{Initial Guess Trajectory}');
+
 % plot world, initial and terminal configurations
 hold on;
 plotMap3D(dataset.corner_idx, origin, cell_size);
 plotRobotModel(arm, start_conf);
 plotRobotModel(arm, end_conf, green);
-xlabel('x');
-ylabel('y');
-zlabel('z');
-grid on, view(3);
-hold off;
-for i=0:total_time_step
+xlabel('x [m]');
+ylabel('y [m]');
+zlabel('z [m]');
+axis([-0.2 0.6 -0.3, 0.5, 0 1.4])
+set(ax(1),'Position',[0.0422 -0.8174 0.2912 2.6390]);
+view(140,30);
+
+subplot(ax(2));
+title('\textbf{Factor Graph Optimization Result}');
+hold on;
+plotMap3D(dataset.corner_idx, origin, cell_size);
+plotRobotModel(arm, start_conf);
+plotRobotModel(arm, end_conf, green);
+xlabel('x [m]');
+ylabel('y [m]');
+zlabel('z [m]');
+axis([-0.2 0.6 -0.3, 0.5, 0 1.4])
+set(ax(2),'Position',[0.3866 -0.8236 0.2897 2.6390]);
+view(140,30);
+
+title(ax(3),'\textbf{End-Effector Plots}');
+xlabel(ax(3),'Time [s]');
+ylabel(ax(3),'Euler Angles [deg]')
+set(ax(3),'Position',[0.7443 0.79  0.2505 0.18]);
+
+xlabel(ax(4),'Time [s]');
+ylabel(ax(4),'Postion [m]')
+set(ax(4),'Position',[0.7443 0.5427 0.2505 0.18]);
+
+xlabel(ax(5),'Time [s]');
+ylabel(ax(5),'Angular Velocity [deg/s]')
+set(ax(5),'Position',[0.7443 0.3 0.2505 0.18]);
+
+xlabel(ax(6),'Time [s]');
+ylabel(ax(6),'Linear Velocity [m/s]')
+set(ax(6),'Position',[0.7443 0.0562 0.2505 0.18]);
+
+axis(ax(3), [0, total_time_sec, -10, 185]);
+axis(ax(4), [0, total_time_sec, min(min(joints_pose(4:6,end,:))), max(max(joints_pose(4:6,end,:)))]);
+axis(ax(5), [0, total_time_sec, min(min(rad2deg(joints_vel(4:6,end,:)))), max(max(rad2deg(joints_vel(4:6,end,:))))]);
+axis(ax(6), [0, total_time_sec, min(min(joints_vel(1:3,end,:))), max(max(joints_vel(1:3,end,:)))]);
+
+ee_ypr_deg = rad2deg(ee_des_pose.rotation.ypr);
+ee_pos_m = ee_des_pose.translation;
+
+clrs = {'r',green,'b'};
+for kk = 1:3
+    % terminal waypoint
+    line(ax(3),total_time_sec,ee_ypr_deg(kk),'marker','o','markerfacecolor',clrs{kk},'markeredgecolor',clrs{kk},'linestyle','none');
+    line(ax(4),total_time_sec,ee_pos_m(kk),'marker','o','markerfacecolor',clrs{kk},'markeredgecolor',clrs{kk},'linestyle','none');
+    line(ax(5),total_time_sec,ee_des_vel(kk+3),'marker','o','markerfacecolor',clrs{kk},'markeredgecolor',clrs{kk},'linestyle','none');
+    line(ax(6),total_time_sec,ee_des_vel(kk),'marker','o','markerfacecolor',clrs{kk},'markeredgecolor',clrs{kk},'linestyle','none');
+    
+    % actual poses and velocites
+    ee_ypr_h(kk) = line(ax(3),nan(1,1),nan(1,1),'color',clrs{kk});
+    ee_pos_h(kk) = line(ax(4),nan(1,1),nan(1,1),'color',clrs{kk});
+    ee_angVel_h(kk) = line(ax(5),nan(1,1),nan(1,1),'color',clrs{kk});
+    ee_linVel_h(kk) = line(ax(6),nan(1,1),nan(1,1),'color',clrs{kk});
+end
+
+legend(ax(3),ee_ypr_h, {'$\psi$','$\theta$','$\phi$'}, 'Position', [0.7445,0.875,0.0328,0.0704]);
+legend(ax(4),ee_pos_h, {'$x$','$y$','$z$'}, 'Position', [0.7445,0.631,0.0317,0.0704]);
+legend(ax(5),ee_angVel_h, {'$\omega_x$','$\omega_y$','$\omega_z$'}, 'Position', [0.7445,0.3,0.0363,0.0704]);
+legend(ax(6),ee_linVel_h, {'$\dot{x}$','$\dot{y}$','$\dot{z}$'}, 'Position', [0.7445,0.0562,0.0317,0.0704]);
+
+t = 0:delta_t:total_time_sec;
+for i=1:total_time_step+1
     hold on;
-    % plot arm
-    conf = result.atVector(symbol('x', i));
-    plotRobotModel(arm, conf, cyan);
+%     joints_pose(:,:,i) = arm.fk_model().forwardKinematicsPose(result_joint_pos(:,i));
+%     joints_vel(:,:,i) = arm.fk_model().forwardKinematicsVel(result_joint_pos(:,i),result_joint_rates(:,i));
+    subplot(ax(1));
+    plotRobotModel(arm, init_joint_pos(:,i), cyan);
+    subplot(ax(2));
+    plotRobotModel(arm, result_joint_pos(:,i), cyan);
+    for kk = 1:3
+        if kk ~= 3
+            set(ee_ypr_h(kk),'Xdata',t(1:i),'Ydata',rad2deg(joints_pose(kk,end,1:i)));
+        else
+            set(ee_ypr_h(kk),'Xdata',t(1:i),'Ydata',unwrap(rad2deg(joints_pose(kk,end,1:i))));
+        end
+        set(ee_pos_h(kk),'Xdata',t(1:i),'Ydata',joints_pose(kk+3,end,1:i));
+        set(ee_angVel_h(kk),'Xdata',t(1:i),'Ydata',rad2deg(joints_vel(kk+3,end,1:i)));
+        set(ee_linVel_h(kk),'Xdata',t(1:i),'Ydata',joints_vel(kk,end,1:i));
+    end
     pause(0.1);
 end
-hold off
-joints_pose = arm.fk_model().forwardKinematicsPose(result.atVector(symbol('x', i)));
-joints_vel = arm.fk_model().forwardKinematicsVel(result.atVector(symbol('x', i)),result.atVector(symbol('v', i)));
 
-% Errors
-ee_pose_err = [ee_des_pose.rotation.ypr; ee_des_pose.translation] - joints_pose(:,end);
-ee_vel_err = ee_des_vel- joints_vel(:,end);
+
+% for i=1:total_time_step
+%     hold on;
+%     % plot arm
+%     conf = result.atVector(symbol('x', i));
+%     plotRobotModel(arm, conf, cyan);
+%     pause(0.1);
+% end
+% hold off
+% joints_pose = arm.fk_model().forwardKinematicsPose(result.atVector(symbol('x', i)));
+% joints_vel = arm.fk_model().forwardKinematicsVel(result.atVector(symbol('x', i)),result.atVector(symbol('v', i)));
+% 
+% % Errors
+% ee_pose_err = [ee_des_pose.rotation.ypr; ee_des_pose.translation] - joints_pose(:,end);
+% ee_vel_err = ee_des_vel- joints_vel(:,end);
 

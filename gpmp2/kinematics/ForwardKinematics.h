@@ -49,7 +49,7 @@ class ForwardKinematics {
    *  @param jp robot pose in config space
    *  @param jv robot velocity in config space
    *  @param jpx link poses in 3D work space
-   *  @param jvx link velocities in 3D work space, no angular rate
+   *  @param jvx link velocities in 3D work space
    *  @param J_jpx_jp et al. optional Jacobians
    **/
   virtual void forwardKinematics(
@@ -62,7 +62,7 @@ class ForwardKinematics {
 
   /**
    * Matrix wrapper for forwardKinematics, mainly used by matlab
-   * each column is a single point / velocity of the joint, size 6xN, 3xN, 3xN
+   * each column is a single point / velocity of the joint, size 6xN, 3xN, 6xN
    * No Jacobians provided by this version
    */
   gtsam::Matrix forwardKinematicsPose(const Pose& jp) const;
