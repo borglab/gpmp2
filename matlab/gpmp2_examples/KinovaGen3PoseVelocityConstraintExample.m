@@ -9,6 +9,9 @@ clear;
 import gtsam.*
 import gpmp2.*
 
+% flag for recording a video of animation
+rcdVid = false;
+
 %% Generate dataset
 dataset = generate3Ddataset('KinovaBoxDataset');
 origin = [dataset.origin_x, dataset.origin_y, dataset.origin_z];
@@ -35,25 +38,6 @@ ee_des_pose = Pose3(Rot3.Ypr(jposes(1,end),jposes(2,end),jposes(3,end)), ...
 
 % ee_des_vel = [linear_rate; angular_rate]^T
 ee_des_vel = zeros(6,1);
-
-% plotting colors
-green = [0.4667 0.6745 0.1882];
-cyan = [0, 1, 1];
-
-% plot problem setting
-% fig1 = figure(1);
-% clf;
-% hold on;
-% set(fig1,'Name', 'Problem Settings');
-% title('Problem Setup')
-% plotRobotModel(arm, start_conf);
-% plotRobotModel(arm, end_conf, green);
-% plotMap3D(dataset.corner_idx, origin, cell_size);
-% xlabel('x');
-% ylabel('y');
-% zlabel('z');
-% grid on, view(3)
-% hold off;
 
 %% settings
 total_time_sec = 10;
@@ -85,20 +69,9 @@ for z = 1:size(field, 3)
     sdf.initFieldData(z-1, field(:,:,z)');
 end
 
-%% initial traj
+%% initial traj and optimization 
 init_values = initArmTrajStraightLine(start_conf, end_conf, total_time_step);
 
-% plot initial trajectory
-% for i=0:total_time_step
-%     hold on;
-%     % plot arm
-%     conf = init_values.atVector(symbol('x', i));
-%     plotRobotModel(arm, conf, cyan);
-%     pause(0.1)
-% end
-% hold off;
-
-%% init optimization
 graph = NonlinearFactorGraph;
 
 for i = 0 : total_time_step
@@ -189,9 +162,18 @@ for i=1:total_time_step+1
     joints_vel(:,:,i) = arm.fk_model().forwardKinematicsVel(result_joint_pos(:,i),result_joint_rates(:,i));
 end
 
+% correct for discontinuities when using euler angle representation
+joints_pose(1:3,end,:) = unwrap(joints_pose(1:3,end,:));
+
+% separate out translation and rotation
+ee_ypr_deg = rad2deg(ee_des_pose.rotation.ypr);
+ee_pos_m = ee_des_pose.translation;
+
 %% Plot results
-import gtsam.*
-import gpmp2.*
+
+% plotting colors
+green = [0.4667 0.6745 0.1882];
+cyan = [0, 1, 1];
 
 % Plotting sizes and settings
 if ~strcmp(get(0,'defaultTextInterpreter'),'latex')
@@ -266,9 +248,6 @@ axis(ax(4), [0, total_time_sec, min(min(joints_pose(4:6,end,:))), max(max(joints
 axis(ax(5), [0, total_time_sec, min(min(rad2deg(joints_vel(4:6,end,:)))), max(max(rad2deg(joints_vel(4:6,end,:))))]);
 axis(ax(6), [0, total_time_sec, min(min(joints_vel(1:3,end,:))), max(max(joints_vel(1:3,end,:)))]);
 
-ee_ypr_deg = rad2deg(ee_des_pose.rotation.ypr);
-ee_pos_m = ee_des_pose.translation;
-
 clrs = {'r',green,'b'};
 for kk = 1:3
     % terminal waypoint
@@ -290,40 +269,32 @@ legend(ax(5),ee_angVel_h, {'$\omega_x$','$\omega_y$','$\omega_z$'}, 'Position', 
 legend(ax(6),ee_linVel_h, {'$\dot{x}$','$\dot{y}$','$\dot{z}$'}, 'Position', [0.7445,0.0562,0.0317,0.0704]);
 
 t = 0:delta_t:total_time_sec;
+
+if rcdVid
+    v = VideoWriter('KinovaGen3_PoseStabilization','Uncompressed AVI');
+    open(v);
+end
+
 for i=1:total_time_step+1
     hold on;
-%     joints_pose(:,:,i) = arm.fk_model().forwardKinematicsPose(result_joint_pos(:,i));
-%     joints_vel(:,:,i) = arm.fk_model().forwardKinematicsVel(result_joint_pos(:,i),result_joint_rates(:,i));
     subplot(ax(1));
     plotRobotModel(arm, init_joint_pos(:,i), cyan);
     subplot(ax(2));
     plotRobotModel(arm, result_joint_pos(:,i), cyan);
     for kk = 1:3
-        if kk ~= 3
-            set(ee_ypr_h(kk),'Xdata',t(1:i),'Ydata',rad2deg(joints_pose(kk,end,1:i)));
-        else
-            set(ee_ypr_h(kk),'Xdata',t(1:i),'Ydata',unwrap(rad2deg(joints_pose(kk,end,1:i))));
-        end
+        set(ee_ypr_h(kk),'Xdata',t(1:i),'Ydata',rad2deg(joints_pose(kk,end,1:i)));
         set(ee_pos_h(kk),'Xdata',t(1:i),'Ydata',joints_pose(kk+3,end,1:i));
         set(ee_angVel_h(kk),'Xdata',t(1:i),'Ydata',rad2deg(joints_vel(kk+3,end,1:i)));
         set(ee_linVel_h(kk),'Xdata',t(1:i),'Ydata',joints_vel(kk,end,1:i));
     end
-    pause(0.1);
+    if rcdVid
+        frame = getframe(gcf);
+        writeVideo(v,frame);
+    else
+        pause(0.1);
+    end
 end
-
-
-% for i=1:total_time_step
-%     hold on;
-%     % plot arm
-%     conf = result.atVector(symbol('x', i));
-%     plotRobotModel(arm, conf, cyan);
-%     pause(0.1);
-% end
-% hold off
-% joints_pose = arm.fk_model().forwardKinematicsPose(result.atVector(symbol('x', i)));
-% joints_vel = arm.fk_model().forwardKinematicsVel(result.atVector(symbol('x', i)),result.atVector(symbol('v', i)));
-% 
-% % Errors
-% ee_pose_err = [ee_des_pose.rotation.ypr; ee_des_pose.translation] - joints_pose(:,end);
-% ee_vel_err = ee_des_vel- joints_vel(:,end);
-
+hold off;
+if rcdVid
+    close(v);
+end
