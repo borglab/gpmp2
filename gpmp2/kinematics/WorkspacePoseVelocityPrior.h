@@ -1,5 +1,5 @@
 /**
- *  @file   PriorWorkspacePoseVelocity.h
+ *  @file   WorkspacePoseVelocityPrior.h
  *  @brief  Prior defined on the workspace pose and velocity of final joint
  *(end-effector) of a robot given its state in configuration space
  *  @author Matthew King-Smith
@@ -22,11 +22,11 @@ namespace gpmp2 {
 /**
  * binary factor Gaussian prior defined on the workspace pose and velocities
  */
-class PriorWorkspacePoseVelocity
+class WorkspacePoseVelocityPrior
     : public gtsam::NoiseModelFactor2<gtsam::Vector, gtsam::Vector> {
  private:
   // typedefs
-  typedef PriorWorkspacePoseVelocity This;
+  typedef WorkspacePoseVelocityPrior This;
   typedef gtsam::NoiseModelFactor2<gtsam::Vector, gtsam::Vector> Base;
 
   // arm
@@ -43,14 +43,14 @@ class PriorWorkspacePoseVelocity
   typedef std::shared_ptr<This> shared_ptr;
 
   /// Default constructor
-  PriorWorkspacePoseVelocity() {}
+  WorkspacePoseVelocityPrior() {}
 
   /**
    * Constructor
    * @param cost_model cost function covariance
    * @param des_vel desired velocity (linear and angular)
    */
-  PriorWorkspacePoseVelocity(gtsam::Key poseKey, gtsam::Key velKey,
+  WorkspacePoseVelocityPrior(gtsam::Key poseKey, gtsam::Key velKey,
                              const gtsam::SharedNoiseModel& cost_model,
                              const Arm& arm, const gtsam::Pose3& des_pose,
                              const gtsam::Vector6& des_vel)
@@ -59,7 +59,7 @@ class PriorWorkspacePoseVelocity
         des_pose_(des_pose),
         des_vel_(des_vel) {}
 
-  ~PriorWorkspacePoseVelocity() {}
+  ~WorkspacePoseVelocityPrior() {}
 
   /// error function
   gtsam::Vector evaluateError(
@@ -103,7 +103,7 @@ class PriorWorkspacePoseVelocity
   void print(const std::string& s = "",
              const gtsam::KeyFormatter& keyFormatter =
                  gtsam::DefaultKeyFormatter) const {
-    std::cout << s << "PriorWorkspacePoseVelocity :" << std::endl;
+    std::cout << s << "WorkspacePoseVelocityPrior :" << std::endl;
     Base::print("", keyFormatter);
     std::cout << "desired end-effector pose : ";
     des_pose_.print();  // << std::endl;

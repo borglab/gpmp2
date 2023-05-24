@@ -1,10 +1,10 @@
 /**
- *  @file    testPriorWorkspacePoseVelocity.cpp
+ *  @file    testWorkspacePoseVelocityPrior.cpp
  *  @author  Matthew King-Smith
  **/
 
 #include <CppUnitLite/TestHarness.h>
-#include <gpmp2/kinematics/PriorWorkspacePoseVelocity.h>
+#include <gpmp2/kinematics/WorkspacePoseVelocityPrior.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Testable.h>
 #include <gtsam/base/numericalDerivative.h>
@@ -20,14 +20,14 @@ using namespace gtsam;
 using namespace gpmp2;
 
 /* ************************************************************************** */
-TEST(PriorWorkspacePoseVelocity, error) {
+TEST(WorkspacePoseVelocityPrior, error) {
   Vector2 a(1, 1), alpha(M_PI / 2, 0), d(0, 0);
   Arm arm = Arm(2, a, alpha, d);
   Vector2 q;
   Vector2 qdot;
   Pose3 des_pose;
   // Vector6 des_vel;
-  // PriorWorkspacePoseVelocity factor;
+  // WorkspacePoseVelocityPrior factor;
   Vector actual, expect;
   Matrix H_pose_exp, H_pose_act, H_vel_exp, H_vel_act;
   noiseModel::Gaussian::shared_ptr cost_model =
@@ -37,7 +37,7 @@ TEST(PriorWorkspacePoseVelocity, error) {
   qdot = (Vector2() << 0.1, 0.1).finished();
   des_pose = Pose3();
   Vector6 des_vel = (Vector6() << 0, 0, 0, 0, 0, 0).finished();
-  PriorWorkspacePoseVelocity factor(0, 0, cost_model, arm, des_pose, des_vel);
+  WorkspacePoseVelocityPrior factor(0, 0, cost_model, arm, des_pose, des_vel);
   actual = factor.evaluateError(q, qdot, &H_pose_act, &H_vel_act);
   expect = (Vector(12) << 00.613943126, 1.48218982, -0.613943126, 1.1609828,
             0.706727485, -0.547039678, 0, -0.141421356237309, 0,
@@ -45,13 +45,13 @@ TEST(PriorWorkspacePoseVelocity, error) {
                .finished();
   H_pose_exp = numericalDerivative11(
       std::function<Vector(const Vector2&)>(
-          std::bind(&PriorWorkspacePoseVelocity::evaluateError, factor,
+          std::bind(&WorkspacePoseVelocityPrior::evaluateError, factor,
                     std::placeholders::_1, qdot, nullptr, nullptr)),
       q, 1e-6);
 
   H_vel_exp = numericalDerivative11(
       std::function<Vector(const Vector2&)>(
-          std::bind(&PriorWorkspacePoseVelocity::evaluateError, factor, q,
+          std::bind(&WorkspacePoseVelocityPrior::evaluateError, factor, q,
                     std::placeholders::_1, nullptr, nullptr)),
       qdot, 1e-6);
   EXPECT(assert_equal(expect, actual, 1e-6));
@@ -60,7 +60,7 @@ TEST(PriorWorkspacePoseVelocity, error) {
 }
 
 /* ************************************************************************** */
-TEST(PriorWorkspacePoseVelocity, optimization) {
+TEST(WorkspacePoseVelocityPrior, optimization) {
   noiseModel::Gaussian::shared_ptr cost_model =
       noiseModel::Isotropic::Sigma(12, 0.1);
 
@@ -78,7 +78,7 @@ TEST(PriorWorkspacePoseVelocity, optimization) {
   Vector qdotinit = (Vector(2) << 0.1, 0.1).finished();
 
   NonlinearFactorGraph graph;
-  graph.add(PriorWorkspacePoseVelocity(qkey, qdotkey, cost_model, arm, des_pose,
+  graph.add(WorkspacePoseVelocityPrior(qkey, qdotkey, cost_model, arm, des_pose,
                                        des_vel));
   Values init_values;
   init_values.insert(qkey, qinit);

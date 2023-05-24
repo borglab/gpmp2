@@ -364,10 +364,10 @@ class PointRobotModel {
 };
 
 // desired workspace pose and velocity for last link factor
-#include <gpmp2/kinematics/PriorWorkspacePoseVelocity.h>
+#include <gpmp2/kinematics/WorkspacePoseVelocityPrior.h>
 
-virtual class PriorWorkspacePoseVelocity : gtsam::NoiseModelFactor {
-  PriorWorkspacePoseVelocity(size_t poseKey, size_t velKey, const gtsam::noiseModel::Base* cost_model,
+virtual class WorkspacePoseVelocityPrior : gtsam::NoiseModelFactor {
+  WorkspacePoseVelocityPrior(size_t poseKey, size_t velKey, const gtsam::noiseModel::Base* cost_model,
                              const gpmp2::Arm& arm, const gtsam::Pose3& des_pose, const gtsam::Vector& des_vel);
 };
 
