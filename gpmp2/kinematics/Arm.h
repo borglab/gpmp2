@@ -37,8 +37,8 @@ class GPMP2_EXPORT Arm
   std::vector<gtsam::Pose3>
       link_trans_notheta_;  // transformation of each link, no theta matrix
 
-  bool modDH_;  /// Boolean to switch to modified Denavit-Hartenberg
-                /// parameterization
+  /// Kinematic Denavit-Hartenberg parameterization
+  Parameterization parameterization_;
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -55,21 +55,24 @@ class GPMP2_EXPORT Arm
    * @param a
    * @param alpha
    * @param d
-   * @param modDH
+   * @param parameterization
    */
   Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
-      const gtsam::Vector& d, const bool modDH = false)
-      : Arm(dof, a, alpha, d, gtsam::Pose3(), gtsam::Vector::Zero(dof), modDH) {
-  }
+      const gtsam::Vector& d,
+      const Parameterization& parameterization = Parameterization::DH)
+      : Arm(dof, a, alpha, d, gtsam::Pose3(), gtsam::Vector::Zero(dof),
+            parameterization) {}
 
   Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
       const gtsam::Vector& d, const gtsam::Pose3& base_pose,
-      const bool modDH = false)
-      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof), modDH) {}
+      const Parameterization& parameterization = Parameterization::DH)
+      : Arm(dof, a, alpha, d, base_pose, gtsam::Vector::Zero(dof),
+            parameterization) {}
 
   Arm(size_t dof, const gtsam::Vector& a, const gtsam::Vector& alpha,
       const gtsam::Vector& d, const gtsam::Pose3& base_pose,
-      const gtsam::Vector& theta_bias, const bool modDH = false);
+      const gtsam::Vector& theta_bias,
+      const Parameterization& parameterization = Parameterization::DH);
 
   /// Default destructor
   virtual ~Arm() {}
@@ -100,12 +103,15 @@ class GPMP2_EXPORT Arm
   const gtsam::Vector& d() const { return d_; }
   const gtsam::Vector& alpha() const { return alpha_; }
   const gtsam::Pose3& base_pose() const { return base_pose_; }
-  const bool parameterization() const { return modDH_; }
+  const Parameterization parameterization() const { return parameterization_; }
   const std::string parameterizationString() const {
-    if (modDH_) {
-      return "Modified Denavit-Hartenberg";
-    } else {
-      return "Denavit-Hartenberg";
+    switch (parameterization_) {
+      case Parameterization::DH:
+        return "Denavit-Hartenberg";
+        break;
+      case Parameterization::MODIFIED_DH:
+        return "Modified Denavit-Hartenberg";
+        break;
     }
   }
 
@@ -115,14 +121,17 @@ class GPMP2_EXPORT Arm
   gtsam::Pose3 getJointTrans(size_t i, double theta) const {
     assert(i < dof());
     // DH transformation for each link, with theta matrix
-    if (modDH_) {
+    if (parameterization_ == Parameterization::MODIFIED_DH) {
       return link_trans_notheta_[i] *
              gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
                           gtsam::Point3(0, 0, 0));
-    } else {
+    } else if (parameterization_ == Parameterization::DH) {
       return gtsam::Pose3(gtsam::Rot3::Rz(theta + theta_bias_(i)),
                           gtsam::Point3(0, 0, 0)) *
              link_trans_notheta_[i];
+    } else {
+      throw std::runtime_error(
+          "Invalid forward kinematics parameterization specified.");
     }
   }
 
@@ -138,9 +147,9 @@ class GPMP2_EXPORT Arm
     const gtsam::Matrix4 dRot =
         (gtsam::Matrix4() << -s, -c, 0, 0, c, -s, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             .finished();
-    if (modDH_) {
+    if (parameterization_ == Parameterization::MODIFIED_DH) {
       return link_trans_notheta_[i].matrix() * dRot;
-    } else {
+    } else if (parameterization_ == Parameterization::DH) {
       return dRot * link_trans_notheta_[i].matrix();
     }
   }

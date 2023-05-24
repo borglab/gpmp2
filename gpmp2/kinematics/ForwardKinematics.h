@@ -15,6 +15,10 @@
 #include <vector>
 
 namespace gpmp2 {
+
+/// Enum for specifying Denavit-Hartenberg parameterization
+enum Parameterization { DH, MODIFIED_DH };
+
 /**
  * Abstract forward kinematics model, without actual model and physical
  * representation template parameters are system pose and velocity state types
