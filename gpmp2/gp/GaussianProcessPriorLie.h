@@ -24,7 +24,7 @@ template <typename T>
 class GaussianProcessPriorLie
     : public gtsam::NoiseModelFactorN<T, gtsam::Vector, T, gtsam::Vector> {
  private:
-  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
+  GTSAM_CONCEPT_ASSERT(gtsam::IsLieGroup<T>);
   typedef GaussianProcessPriorLie<T> This;
   typedef gtsam::NoiseModelFactorN<T, gtsam::Vector, T, gtsam::Vector> Base;
 
