@@ -2,3 +2,4 @@ build*
 *.pyc
 *.asv
 **/.DS_Store
+.vscode

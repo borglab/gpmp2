@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 enable_testing()
 project(gpmp2
         LANGUAGES CXX C
@@ -13,11 +13,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #TODO(Varun) Verify C++17 is enabled on Windows as well
 # Look at GtsamBuildTypes L153
-
-# Mac ONLY. Define Relative Path on Mac OS
-if(NOT DEFINED CMAKE_MACOSX_RPATH)
-  set(CMAKE_MACOSX_RPATH 0)
-endif()
 
 # version indicator
 set(GPMP2_VERSION_MAJOR 1)
@@ -39,7 +34,7 @@ if(GPMP2_ENABLE_BOOST_SERIALIZATION)
 endif()
 
 if(GPMP2_BUILD_STATIC_LIBRARY AND GPMP2_BUILD_MATLAB_TOOLBOX)
-  message(FATAL_ERROR "Matlab toolbox needs static lib to be built")
+  message(FATAL_ERROR "Matlab toolbox needs shared lib to be built")
 endif()
 
 
@@ -49,11 +44,11 @@ include_directories(${GTSAM_INCLUDE_DIR})
 set(GTSAM_LIBRARIES gtsam)   # TODO: automatic search libs
 
 find_package(GTSAMCMakeTools)
-include(GtsamMakeConfigFile)
 include(GtsamBuildTypes)
 include(GtsamTesting)
+include(GtsamPrinting)
 
-# for unittest scripts
+# for unit tests and scripts
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${GTSAM_DIR}/../GTSAMCMakeTools")
 
 # Boost - same requirement as gtsam
@@ -65,8 +60,7 @@ include_directories(${Boost_INCLUDE_DIR})
 configure_file("gpmp2/config.h.in" "gpmp2/config.h")
 list(APPEND gpmp2_srcs "${PROJECT_BINARY_DIR}/gpmp2/config.h")
 include_directories(BEFORE ${PROJECT_BINARY_DIR}) # So we can include generated config header files
-install(FILES "${PROJECT_BINARY_DIR}/gpmp2/config.h" DESTINATION include/gpmp2)
-
+install(FILES "${PROJECT_BINARY_DIR}/gpmp2/config.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gpmp2)
 
 # include current source folder, at the very beginning
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -87,5 +81,5 @@ if(GPMP2_BUILD_PYTHON_TOOLBOX)
 endif()
 
 # Install config and export files
-GtsamMakeConfigFile(gpmp2)
-export(TARGETS ${GPMP2_EXPORTED_TARGETS} FILE gpmp2-exports.cmake)
+# GtsamMakeConfigFile(gpmp2)
+# export(TARGETS ${GPMP2_EXPORTED_TARGETS} FILE gpmp2-exports.cmake)
