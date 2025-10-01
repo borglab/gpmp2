@@ -26,7 +26,7 @@ namespace gpmp2 {
 template <typename T>
 class GaussianProcessInterpolatorLie {
  private:
-  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
+  static_assert(gtsam::IsLieGroup<T>::value, "T must satisfy the LieGroup concept");
   typedef GaussianProcessInterpolatorLie<T> This;
 
   size_t dof_;

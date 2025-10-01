@@ -24,14 +24,14 @@ namespace gpmp2 {
  */
 class GPMP2_EXPORT DynamicVector {
  private:
-  size_t dim_;
-  Eigen::VectorXd vector_;
+  size_t dim_{0};
+  Eigen::VectorXd vector_{};
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   /// Default constructor
-  DynamicVector() {}
+  DynamicVector() : dim_(0), vector_() {}
 
   // eigen constructor
   // non-explicit conversion enabled
@@ -89,6 +89,7 @@ class GPMP2_EXPORT DynamicVector {
 
   // equals
   bool equals(const DynamicVector& m2, double tol) const {
+    if(dim_ != m2.dim_) return false;
     return gtsam::equal_with_abs_tol(this->vector_, m2.vector_, tol);
   }
 
