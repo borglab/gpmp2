@@ -20,8 +20,8 @@ namespace gpmp2 {
 template <typename G, typename H>
 class ProductDynamicLieGroup : public std::pair<G, H> {
  private:
-  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<G>));
-  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<H>));
+  static_assert(gtsam::IsLieGroup<G>::value, "G must satisfy the LieGroup concept");
+  static_assert(gtsam::IsLieGroup<H>::value, "H must satisfy the LieGroup concept");
   typedef std::pair<G, H> Base;
 
  protected:
@@ -239,6 +239,19 @@ class ProductDynamicLieGroup : public std::pair<G, H> {
           gtsam::traits<H>::Logmap(p.second);
       return v;
     }
+  }
+
+  static Eigen::MatrixXd AdjointMap(const ProductDynamicLieGroup& m) {
+    const size_t d1 = m.dim1();
+    const size_t d2 = m.dim2();
+    const size_t d  = d1 + d2;
+
+    Eigen::MatrixXd Adj = Eigen::MatrixXd::Zero(d, d);
+
+    Adj.topLeftCorner(d1, d1) = gtsam::traits<G>::AdjointMap(m.first);
+    Adj.bottomRightCorner(d2, d2) = gtsam::traits<H>::AdjointMap(m.second);
+
+    return Adj;
   }
 
   ProductDynamicLieGroup expmap(const TangentVector& v) const {

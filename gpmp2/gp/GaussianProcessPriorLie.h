@@ -24,7 +24,7 @@ template <typename T>
 class GaussianProcessPriorLie
     : public gtsam::NoiseModelFactorN<T, gtsam::Vector, T, gtsam::Vector> {
  private:
-  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<T>));
+  static_assert(gtsam::IsLieGroup<T>::value, "T must satisfy the LieGroup concept");
   typedef GaussianProcessPriorLie<T> This;
   typedef gtsam::NoiseModelFactorN<T, gtsam::Vector, T, gtsam::Vector> Base;
 
