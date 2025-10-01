@@ -74,6 +74,8 @@ struct DynamicLieGroupTraits {
                        ChartJacobian H = {}) {
     return m.inverse(H);
   }
+
+  static Eigen::MatrixXd AdjointMap(const Class& m) { return m.AdjointMap(); }
   /// @}
 };
 

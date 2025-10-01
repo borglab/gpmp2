@@ -10,6 +10,7 @@
 
 #include <gpmp2/geometry/utilsDynamic.h>
 #include <gtsam/base/Lie.h>
+#include <gtsam/base/ProductLieGroup.h>
 
 #include <utility>  // pair
 
@@ -18,11 +19,11 @@ namespace gpmp2 {
 /// Template to construct the product Lie group of two other Lie groups
 /// Assumes Lie group structure for G and H, at least one is dynamic size types
 template <typename G, typename H>
-class ProductDynamicLieGroup : public std::pair<G, H> {
+class ProductDynamicLieGroup : public gtsam::ProductLieGroup<G, H> {
  private:
-  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<G>));
-  GTSAM_CONCEPT_ASSERT((gtsam::IsLieGroup<H>));
-  typedef std::pair<G, H> Base;
+  GTSAM_CONCEPT_ASSERT(gtsam::IsLieGroup<G>);
+  GTSAM_CONCEPT_ASSERT(gtsam::IsLieGroup<H>);
+  typedef gtsam::ProductLieGroup<G, H> Base;
 
  protected:
   // static dimensions
