@@ -29,14 +29,6 @@ foreach(subdir ${gpmp2_subdirs})
   add_subdirectory(${subdir})
 endforeach(subdir)
 
-
-# Versions
-set(gpmp2_version   ${GPMP2_VERSION_MAJOR}.${GPMP2_VERSION_MINOR}.${GPMP2_VERSION_PATCH})
-set(gpmp2_soversion ${GPMP2_VERSION_MAJOR})
-message(STATUS "GPMP2 Version: ${gpmp2_version}")
-message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
-
-
 # build shared lib
 if(GPMP2_BUILD_STATIC_LIBRARY)
   # static
@@ -46,7 +38,7 @@ if(GPMP2_BUILD_STATIC_LIBRARY)
   set_target_properties(gpmp2 PROPERTIES
       OUTPUT_NAME         gpmp2
       CLEAN_DIRECT_OUTPUT 1
-      VERSION             ${gpmp2_version}
+      VERSION             ${GPMP2_VERSION}
       SOVERSION           ${gpmp2_soversion})
   if(WIN32) # Add 'lib' prefix to static library to avoid filename collision with shared library
     set_target_properties(gpmp2 PROPERTIES
@@ -62,7 +54,7 @@ else()
   set_target_properties(gpmp2 PROPERTIES
       OUTPUT_NAME         gpmp2
       CLEAN_DIRECT_OUTPUT 1
-      VERSION             ${gpmp2_version}
+      VERSION             ${GPMP2_VERSION}
       SOVERSION           ${gpmp2_soversion})
   if(WIN32)
     set_target_properties(gpmp2 PROPERTIES
