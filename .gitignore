@@ -1,4 +1,6 @@
 build*
+deps*
+install*
 *.pyc
 *.asv
 **/.DS_Store

@@ -13,30 +13,12 @@ This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) a
 
 ## Installation (C++ only)
 
-- Install GTSAM.
-  ```bash
-  git clone https://github.com/borglab/gtsam.git
-  cd gtsam
-  mkdir build && cd build
-  cmake -DGTSAM_ALLOW_DEPRECATED_SINCE_V42:=OFF .. # disable deprecated functionality for compatibility
-  make -j4 check # optional, run unit tests  
-  sudo make install
-  ```
-
-- Setup paths.
-  ```bash
-  echo 'export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}' >> ~/.bashrc
-  echo 'export LD_LIBRARY_PATH=/usr/local/share:${LD_LIBRARY_PATH}' >> ~/.bashrc
-  source ~/.bashrc
-  ```
-
 - Install gpmp2.
   ```bash
-  git clone https://github.com/borglab/gpmp2.git
-  cd gpmp2 && mkdir build && cd build
-  cmake ..
-  make -j4 check  # optional, run unit tests
-  sudo make install
+  mkdir -p build && cd build
+  cmake .. # Initialize and build compatible GTSAM git submodule locally
+  make -j$(nproc)
+  make install
   ```
 
 ## Python Package Installation
@@ -49,7 +31,7 @@ This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) a
   ```
 
 - Install the `gtwrap` project.
-  
+
   If you compile and install GTSAM with the python wrapper enabled, you will automatically have `gtwrap` and you can continue to the next step.
   Else, please clone and install the [gtwrap project](https://github.com/borglab/wrap).
 
