@@ -1,6 +1,6 @@
 name: macOS CI
 
-on: [pull_request]
+on: [pull_request, workflow_dispatch]
 
 jobs:
   build:
@@ -38,18 +38,14 @@ jobs:
           brew install boost
           brew tap borglab/core
 
-      - name: GTSAM
-        run: brew install --HEAD gtsam@latest
-
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Build Directory
         run: mkdir ./build
 
-      - name: Configure
-        run: |
-          cmake -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF ..
+      - name: Configure GPMP2
+        run: cmake ..
         working-directory: ./build
 
       - name: Build
