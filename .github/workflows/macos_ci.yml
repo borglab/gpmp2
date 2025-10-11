@@ -40,6 +40,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive # initialize submodules (GTSAM)
 
       - name: Build Directory
         run: mkdir ./build
