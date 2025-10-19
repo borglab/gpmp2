@@ -35,7 +35,7 @@ gtsam::Matrix ForwardKinematics<POSE, VELOCITY>::forwardKinematicsPosition(
   forwardKinematics(jp, {}, jpx, nullptr);
 
   // convert vector in matrix
-  gtsam::Matrix jpx_mat(6, nr_links_);
+  gtsam::Matrix jpx_mat(3, nr_links_);
   for (size_t i = 0; i < nr_links_; i++) jpx_mat.col(i) = jpx[i].translation();
   return jpx_mat;
 }
