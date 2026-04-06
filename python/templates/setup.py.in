@@ -17,7 +17,7 @@ package_data = {
 }
 
 dependency_list = open("${PYTHON_REQUIREMENTS_PATH}").read().split('\n')
-dependencies = [x for x in dependency_list if x[0] != '#']
+dependencies = [x for x in dependency_list if not x.startswith('#')]
 
 setup(
     name='${PROJECT_NAME}',
