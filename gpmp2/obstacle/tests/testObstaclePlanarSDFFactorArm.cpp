@@ -5,6 +5,7 @@
 
 #include <CppUnitLite/TestHarness.h>
 #include <gpmp2/obstacle/ObstaclePlanarSDFFactorArm.h>
+#include <gpmp2/obstacle/DistanceTransform.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Testable.h>
 #include <gtsam/base/numericalDerivative.h>
@@ -54,7 +55,10 @@ TEST(ObstaclePlanarSDFFactorArm, data) {
   Point2 origin(0, 0);
   double cell_size = 1.0;
 
-  sdf = PlanarSDF(origin, cell_size, field);
+  Matrix signedDistField = gpmp2::dt::computeSignedDistanceField(map_ground_truth, cell_size);
+  signedDistField = gpmp2::dt::roundMatrix(signedDistField, 4);
+  EXPECT(assert_equal(field, signedDistField, 1e-6));
+  sdf = PlanarSDF(origin, cell_size, signedDistField);
 }
 
 /* ************************************************************************** */

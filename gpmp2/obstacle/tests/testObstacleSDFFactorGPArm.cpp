@@ -5,6 +5,7 @@
 
 #include <CppUnitLite/TestHarness.h>
 #include <gpmp2/obstacle/ObstacleSDFFactorGPArm.h>
+#include <gpmp2/obstacle/DistanceTransform.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Testable.h>
 #include <gtsam/base/numericalDerivative.h>
@@ -67,7 +68,18 @@ TEST(ObstacleSDFFactorGPArm, data) {
               0.3464, 0.3000, 0.2828, 0.2828, 0.2828, 0.3000, 0.3464)
                  .finished();
 
-  sdf2 = SignedDistanceField(origin, cell_size, field);
+  std::vector<Matrix> obstacleMap(3, Matrix::Zero(7,7));
+  // obstacle only in first slice
+  obstacleMap[0].block(2,2,3,3).setOnes();
+
+  auto computedSDF = gpmp2::dt::computeSignedDistanceField(obstacleMap, cell_size);
+  for(size_t ii(0); ii < computedSDF.size(); ++ii)
+  {
+      computedSDF.at(ii) = gpmp2::dt::roundMatrix(computedSDF.at(ii), 4);
+      EXPECT(assert_equal(field.at(ii), computedSDF.at(ii), 1e-6));
+  }
+
+  sdf2 = SignedDistanceField(origin, cell_size, computedSDF);
 }
 
 /* ************************************************************************** */
